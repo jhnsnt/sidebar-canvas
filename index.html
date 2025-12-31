@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Canvas Sidebar & Library</title>
+<link rel="stylesheet" href="css/styles.css" />
+
+</head>
+
+<body>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <h2>Canvases</h2>
+
+    <input
+        type="text"
+        id="searchInput"
+        class="search"
+        placeholder="Search canvases..."
+    />
+
+    <ul class="folders" id="folderList">
+        <li class="active" data-folder="all">All</li>
+        <li data-folder="marketing">Marketing</li>
+        <li data-folder="product">Product</li>
+        <li data-folder="personal">Personal</li>
+    </ul>
+
+    <button class="library-btn" id="libraryBtn">
+        Open Library View
+    </button>
+</aside>
+
+<!-- Library View -->
+
+<div class="canvas-view" id="canvasView">
+    <h2>Canvas Editor</h2>
+    <p>This is the placeholder for editing a selected canvas.</p>
+</div>
+<main class="main hidden" id="libraryView">
+    <div class="library-title">Library</div>
+    <div id="canvasGrid">
+        <div class="library">
+            <div class="category" data-folder="marketing">
+                <h3>Marketing</h3>
+                <div class="canvas-grid">
+                    <div class="canvas-card" draggable="true" data-folder="marketing">
+                        <h4>Campaign Planning</h4>
+                        <span>Marketing</span>
+                    </div>
+                    <div class="canvas-card" draggable="true" data-folder="marketing">
+                        <h4>Landing Page Ideas</h4>
+                        <span>Marketing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category" data-folder="product">
+                <h3>Product</h3>
+                <div class="canvas-grid">
+                    <div class="canvas-card" draggable="true" data-folder="product">
+                        <h4>Feature Roadmap</h4>
+                        <span>Product</span>
+                    </div>
+                    <div class="canvas-card" draggable="true" data-folder="product">
+                        <h4>User Flow Draft</h4>
+                        <span>Product</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category" data-folder="personal">
+                <h3>Personal</h3>
+                <div class="canvas-grid">
+                    <div class="canvas-card" draggable="true" data-folder="personal">
+                        <h4>Personal Notes</h4>
+                        <span>Personal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
