@@ -44,7 +44,7 @@ libraryBtn.addEventListener("click", () => {
     libraryBtn.classList.remove("primary");
     libraryBtn.classList.add("secondary");
   } else {
-    libraryBtn.textContent = "Open Library View";
+    libraryBtn.textContent = "Open Library";
     libraryBtn.classList.remove("secondary");
     libraryBtn.classList.add("primary");
   }
