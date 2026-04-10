@@ -57,11 +57,11 @@
             <img src="img/gobluetours_logo.svg" alt="GoBlue" class="relative h-7 md:h-10 w-auto">
         </div>
         
-        <a href="#quote" class="bg-primary md:flex text-white font-brand italic uppercase tracking-tighter px-8 py-2 hover:scale-105 hover:bg-white hover:text-primary transition-all duration-300">
+        <a href="#" id="headerQuoteBtn" class="bg-primary md:flex text-white font-brand italic uppercase tracking-tighter px-8 py-2 hover:scale-105 hover:bg-white hover:text-primary transition-all duration-300">
             Get My Quote
         </a>
 
-        <button id="menu-toggle" class="flex md:hidden relative z-[120] flex flex-col items-end gap-1.5 p-2 group outline-none">
+        <button id="menu-toggle" class="flex hidden relative z-[120] flex flex-col items-end gap-1.5 p-2 group outline-none">
             <span class="w-4 h-0.5 bg-white transition-all duration-300 ease-in-out transform-gpu origin-center" id="bar-1"></span>
             <span class="w-6 h-0.5 bg-white transition-all duration-300 ease-in-out" id="bar-2"></span>
             <span class="w-5 h-0.5 bg-white transition-all duration-300 ease-in-out transform-gpu origin-center" id="bar-3"></span>
@@ -86,7 +86,119 @@
                 <a href="https://www.youtube.com/channel/UCyIJOzP3hPTvkq5XFG3Zi4g" class="hover:text-primary transition">Youtube</a>
             </div>
         </div>
+
     </header>
+    <div id="quoteModal" class="fixed overflow-x-hidden inset-0 z-[100] flex items-center justify-center p-4 md:p-6 hidden opacity-0 transition-opacity duration-300">
+        <div id="modalBackdrop" class="absolute inset-0 bg-midnight/95 backdrop-blur-2xl"></div>
+
+        <div class="relative bg-white w-full max-w-3xl border border-white/5 shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
+            
+            <button id="closeModal" class="absolute top-3 right-3 md:top-6 md:right-6 text-black/40 hover:text-black transition-colors">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox  ="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="p-13 md:p-5">
+                <div class="py-7 px-5 md:px-5 md:py-5">
+                    <h3 class="font-brand text-xl md:text-2xl uppercase italic text-black mb-3 text-center">
+                        Get Your Free Quote
+                    </h3>
+                    <p class="text-black/50 text-center uppercase  text-[11px] font-bold mb-4 md:mb-8 md:mb-14 max-w-md mx-auto">
+                        We'll text you a custom price based on your destination, group size, and preferred week.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-5 md:gap-y-10 mb-7 md:mb-16">
+                        <div class="col-span-2 relative">
+                            <label class="block text-black/40 uppercase tracking-[0.2em] text-[10px] font-bold mb-3">DESTINATION</label>
+                            
+                            <div id="destTrigger" class="relative group cursor-pointer bg-black/5 border border-black/10 p-3 hover:border-hype/50 transition-all flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <img id="selectedIcon" src="img/cancun-icon.jpg" class="w-7 h-7 md:w-10 md:h-10 rounded-full object-cover transition">
+                                    <span id="selectedName" class="text-xs font-bold text-black uppercase tracking-tight">CANCUN, MEXICO</span>
+                                </div>
+                                <svg id="destArrow" class="w-6 h-6 text-black/30 group-hover:text-hype transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+
+                            <div id="destList" class="absolute z-[110] left-0 right-0 mt-2 bg-white border border-black/10 rounded-xl overflow-hidden shadow-2xl hidden opacity-0 transition-all duration-200">
+                                <div class="grid grid-cols-1 md:grid-cols-2 p-2 gap-1">
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="CANCUN, MEXICO" data-img="img/cancun-icon.jpg">
+                                        <img src="img/cancun-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">CANCUN</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="PUNTA CANA, DR" data-img="img/punta-cana-icon.jpg">
+                                        <img src="img/punta-cana-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">PUNTA CANA</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="CABO SAN LUCAS, MEXICO" data-img="img/cabo-icon.jpg">
+                                        <img src="img/cabo-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">CABO SAN LUCAS</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="NASSAU, BAHAMAS" data-img="img/nassau-icon.jpg">
+                                        <img src="img/nassau-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">NASSAU</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="FREEPORT, BAHAMAS" data-img="img/freeport-icon.jpg">
+                                        <img src="img/freeport-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">FREEPORT</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="PANAMA CITY BEACH, FLORIDA, USA" data-img="img/panama-icon.jpg">
+                                        <img src="img/panama-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">PANAMA CITY BEACH</span>
+                                    </div>
+                                    <div class="dest-option flex items-center gap-4 p-2 md:p-4 hover:bg-black/10 cursor-pointer rounded-lg transition group" data-name="SOUTH PADRE ISLAND, TEXAS, USA" data-img="img/south-padre-icon.jpg">
+                                        <img src="img/south-padre-icon.jpg" class="w-8 h-8 rounded-full object-cover">
+                                        <span class="text-black font-bold uppercase text-xs">SOUTH PADRE ISLAND</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 md:col-span-1 relative group">
+                            <label for="trip-start" class="block text-black/40 uppercase tracking-[0.2em] text-[10px] font-bold mb-1 md:mb-3 group-hover:text-hype transition">START DATE</label>
+                            <div class="relative">
+                                <input type="date" id="trip-start"
+                                    class="block w-full px-0 py-1 md:py-3 text-sm md:text-lg font-bold bg-transparent border-b-2 border-black/10 text-black focus:outline-none focus:border-hype transition-all cursor-pointer [color-scheme:white]">
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 md:col-span-1 relative group">
+                            <label for="trip-return" class="block text-black/40 uppercase tracking-[0.2em] text-[10px] font-bold mb-1 md:mb-3 group-hover:text-hype transition">RETURN DATE</label>
+                            <div class="relative">
+                                <input type="date" id="trip-return"
+                                    class="block w-full px-0 py-1 md:py-3 text-sm md:text-lg font-bold bg-transparent border-b-2 border-black/10 text-black focus:outline-none focus:border-hype transition-all cursor-pointer [color-scheme:white]">
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="group-size" class="block text-black/40 uppercase tracking-[0.2em] text-[10px] font-bold mb-1 md:mb-3">NUMBER IN GROUP</label>
+                            <div class="relative flex items-center border-b-2 border-black/10 focus-within:border-hype transition">
+                                <input type="number" id="group-size" placeholder="e.g. 12" min="1"
+                                    class="block w-full px-0 py-1 md:py-3 text-sm md:text-lg font-bold bg-transparent text-black appearance-none focus:outline-none focus:ring-0 peer placeholder:text-gray-700">
+                                <span class="text-black/30 font-bold uppercase tracking-widest text-xs pr-2">PEOPLE</span>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="phone-number" class="block text-black/40 uppercase tracking-[0.2em] text-[10px] font-bold mb-1 md:mb-3">SMS NUMBER (for Quote Delivery)</label>
+                            <input type="tel" id="phone-number" placeholder="(555) 000-0000"
+                                class="block w-full px-0 py-1 md:py-3 text-sm md:text-lg font-bold bg-transparent border-b-2 border-black/10 text-hype appearance-none focus:outline-none focus:ring-0 focus:border-hype peer placeholder:text-gray-700">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button class="bg-[#FF4500] hover:bg-hype hover:text-midnight text-white font-brand text-normal w-full md:text-3xl uppercase italic py-3 md:py-6 px-12 transition-all duration-300 tracking-tighter transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,69,0,0.4)]">
+                            Text Me My Quote
+                            <i class="fas fa-paper-plane text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <p class="text-center mt-5 md:mt-10 text-[9px] text-black/40 uppercase tracking-[0.2em]">
+                        We respond in under 60 seconds. No spam, unsubscribe anytime.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <main class="relative h-[100vh] w-screen overflow-hidden grain">
         <section class="relative h-[100vh] w-full overflow-hidden bg-midnight">
             <div class="absolute inset-0 z-0 pointer-events-none">
@@ -123,14 +235,14 @@
         <div class="mb-8 md:mb-12">
             <span class="text-gobue font-bold uppercase tracking-[0.2em] text-[16px]">2027 Packages</span>
             <h2 class="text-midnight font-brand text-3xl md:text-7xl uppercase italic tracking-tighter leading-none mt-2">
-                Choose Your <span class="text-primary px-2">Vibe.</span>
+                Choose Your <span class="text-primary">Vibe.</span>
             </h2>
         </div>
 
         <div class="grid gap-4">
             <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[700px]">
                 <a href="https://2026.gobluetours.com/destination/cancun-spring-break.html" class="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-[2rem] bg-slate-100 min-h-[300px]">
-                    <img src="img/cancun.jpeg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Cancun">
+                    <img src="img/cancun.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Cancun">
                     <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors"></div>
                     <div class="absolute bottom-6 left-6 right-8">
                         <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold py-1 px-3 rounded-full uppercase tracking-widest mb-4 inline-block">🔥 Most Popular</span>
@@ -225,7 +337,7 @@
             <div class="flex flex-col bg-white md:flex-row items-center p-0 md:p-2 justify-center gap-0 max-w-xl mx-auto overflow-hidden shadow-2xl">
                 <input type="tel" placeholder="(555) 000-0000" 
                     class="w-full md:w-3/4 py-4 px-6 text-midnight outline-none text-lg font-normal placeholder:text-gray-400">
-                <button class="w-full md:w-[110] bg-[#FF5C3A] hover:bg-blue-800 text-white font-normal py-4 px-6 transition-colors duration-300 uppercase tracking-tighter">
+                <button class="w-full md:w-[110] bg-[#FF5C3A] hover:bg-blue-800 text-white font-brand font-bold py-4 px-6 transition-colors duration-300 uppercase tracking-tighter">
                     Text Me My Quote
                 </button>
             </div>
@@ -327,6 +439,134 @@
                 // When at the top: Make it transparent again
                 header.classList.remove('bg-midnight/90', 'backdrop-blur-md', 'py-3', 'border-b', 'border-white/10');
                 header.classList.add('py-4');
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('quoteModal');
+        const modalContent = document.getElementById('modalContent');
+        const openBtn = document.getElementById('headerQuoteBtn'); // Ensure your header button has this ID
+        const closeBtn = document.getElementById('closeModal');
+        const backdrop = document.getElementById('modalBackdrop');
+
+        // Function to Open Modal
+        const openModal = () => {
+            modal.classList.remove('hidden');
+            // Small timeout to allow the transition to trigger after removing 'hidden'
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        };
+
+        // Function to Close Modal
+        const closeModal = () => {
+            modal.classList.remove('opacity-100');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            // Wait for animation to finish before hiding
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        };
+
+        // Event Listeners
+        if(openBtn) openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+
+        if(closeBtn) closeBtn.addEventListener('click', closeModal);
+        
+        // Close on Backdrop click
+        if(backdrop) backdrop.addEventListener('click', closeModal);
+
+        // Close on 'Escape' key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    });
+    </script>
+
+    <script>
+        // Dropdown Logic
+        const destTrigger = document.getElementById('destTrigger');
+        const destList = document.getElementById('destList');
+        const destArrow = document.getElementById('destArrow');
+        const selectedName = document.getElementById('selectedName');
+        const selectedIcon = document.getElementById('selectedIcon');
+        const options = document.querySelectorAll('.dest-option');
+
+        // Toggle Dropdown
+        destTrigger.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent modal backdrop clicks
+            const isHidden = destList.classList.contains('hidden');
+            
+            if (isHidden) {
+                destList.classList.remove('hidden');
+                setTimeout(() => {
+                    destList.classList.add('opacity-100');
+                    destArrow.classList.add('rotate-180');
+                }, 10);
+            } else {
+                closeDestDropdown();
+            }
+        });
+
+        // Select Option
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                const name = option.getAttribute('data-name');
+                const img = option.getAttribute('data-img');
+                
+                selectedName.innerText = name;
+                selectedIcon.src = img;
+                
+                closeDestDropdown();
+            });
+        });
+
+        // Helper to close dropdown
+        function closeDestDropdown() {
+            destList.classList.remove('opacity-100');
+            destArrow.classList.remove('rotate-180');
+            setTimeout(() => {
+                destList.classList.add('hidden');
+            }, 200);
+        }
+
+        // Close dropdown if clicking outside
+        window.addEventListener('click', () => {
+            if (!destList.classList.contains('hidden')) {
+                closeDestDropdown();
+            }
+        });
+    </script>
+
+    <script>
+        // Date Logic: Set Min Date to Today
+        const dateInputs = [document.getElementById('trip-start'), document.getElementById('trip-return')];
+        const today = new Date().toISOString().split('T')[0];
+
+        dateInputs.forEach(input => {
+            if(input) {
+                input.setAttribute('min', today);
+                
+                // Add listener to ensure Return Date isn't before Start Date
+                if(input.id === 'trip-start') {
+                    input.addEventListener('change', (e) => {
+                        const returnInput = document.getElementById('trip-return');
+                        returnInput.setAttribute('min', e.target.value);
+                    });
+                }
             }
         });
     </script>
