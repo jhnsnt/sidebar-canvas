@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Go Blue Tours – Spring Break Destinations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,700;0,800;0,900;1,900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Montserrat', 'sans-serif'],
+            body:    ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'go-blue': '#0054A1',
+            'go-navy': '#0C1340',
+            'go-dark': '#070A1A',
+            'go-red':  '#E53E3E',
+            'go-orange': '#FF5C3A',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; }
+
+    /* ── Heading: Montserrat Black Italic ── */
+    .h-style {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+    }
+
+    /* ── Dot texture ── */
+    .dots-bg {
+      background-color: #f2f4fc;
+      background-image: radial-gradient(rgba(0,0,0,.07) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    /* ── Frosted glass card ── */
+    .frost-card {
+      background: rgba(255,255,255,0.80);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 48px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+    }
+
+    /* ── Buttons — Montserrat Black Italic (used everywhere except nav) ── */
+    .btn-blue {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%);
+      color: #fff;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .62rem 1.5rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, filter .2s;
+      white-space: nowrap;
+    }
+    .btn-blue:hover { opacity: .88; filter: brightness(1.08); }
+
+    .btn-outline {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      background: transparent;
+      color: #0057FF;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .62rem 1.5rem;
+      border-radius: 6px;
+      border: 2px solid #0057FF;
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .btn-outline:hover { background: linear-gradient(90deg,#0057FF,#00AAFF); color: #fff; border-color: transparent; }
+
+    /* ── Header glassmorphism pill buttons ── */
+    .nav-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 999px;
+      padding: 7px 18px 7px 10px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .nav-pill:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+    }
+    .nav-pill-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── NAV — fixed, transparent → solid on scroll ── */
+    #main-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: transparent;
+      transition: background .35s ease, box-shadow .35s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    #main-nav.scrolled {
+      background: #0054A1;
+      box-shadow: 0 2px 20px rgba(0,0,0,.25);
+    }
+
+    /* Nav link base */
+    .nav-link {
+      font-family: 'Inter', sans-serif;
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      transition: color .2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: #fff; }
+    .nav-link svg { transition: transform .25s; }
+
+    /* Dropdown container */
+    .nav-item { position: relative; }
+    .nav-item:hover .nav-link svg { transform: rotate(180deg); }
+
+    /* Dropdown panel */
+    .dropdown-panel {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: -16px;
+      min-width: 210px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity .22s ease, visibility .22s ease, transform .22s ease;
+      z-index: 100;
+    }
+    .dropdown-panel::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: 0; right: 0;
+      height: 12px;
+    }
+    .nav-item:hover .dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dropdown-inner {
+      background: rgba(0, 0, 0, 0.20);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 14px;
+      padding: 8px 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .dropdown-link {
+      display: block;
+      padding: 10px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.8);
+      transition: color .15s, background .15s;
+      text-decoration: none;
+    }
+    .dropdown-link:hover { color: #fff; background: rgba(255,255,255,.1); }
+
+    /* Mobile menu */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+
+    /* Mobile accordion */
+    .mob-sub { display: none; }
+    .mob-sub.open { display: block; }
+
+    /* ── Scroll entrance ── */
+    .dest-row {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .dest-row.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Image zoom ── */
+    .img-wrap { overflow: hidden; border-radius: 28px; }
+    .img-wrap img { transition: transform .8s ease; width: 100%; height: 100%; object-fit: cover; }
+    .img-wrap:hover img { transform: scale(1.06); }
+
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+  </style>
+</head>
+<body class="bg-white overflow-x-hidden">
+
+<!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
+<nav id="main-nav">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 flex items-center justify-between h-[64px]">
+
+    <!-- Logo -->
+    <a href="/" class="flex-shrink-0">
+      <img src="./logo.svg" alt="Go Blue Tours" style="height:34px;width:auto;object-fit:contain;filter:brightness(0) invert(1);" />
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-6">
+
+      <!-- Deals dropdown -->
+      <div class="nav-item">
+        <button class="nav-link">
+          Deals
+          <svg class="w-2.5 h-2.5 fill-current opacity-70" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div class="dropdown-panel">
+          <div class="dropdown-inner">
+            <a href="#" class="dropdown-link">Hotel Packages</a>
+            <a href="#" class="dropdown-link">Party Packages</a>
+            <a href="#" class="dropdown-link">Trip Add-ons</a>
+            <a href="#" class="dropdown-link">Spring Break Packages</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destinations dropdown -->
+      <div class="nav-item">
+        <button class="nav-link">
+          Destinations
+          <svg class="w-2.5 h-2.5 fill-current opacity-70" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div class="dropdown-panel">
+          <div class="dropdown-inner">
+            <a href="#" class="dropdown-link">Cancun</a>
+            <a href="#" class="dropdown-link">Cabo</a>
+            <a href="#" class="dropdown-link">Punta Cana</a>
+            <a href="#" class="dropdown-link">Freeport</a>
+            <a href="#" class="dropdown-link">Panama City</a>
+            <a href="#" class="dropdown-link">Nassau</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Go Blue (no dropdown) -->
+      <div class="nav-item">
+        <a href="#" class="nav-link">Why Go Blue</a>
+      </div>
+
+      <!-- Resources dropdown -->
+      <div class="nav-item">
+        <button class="nav-link">
+          Resources
+          <svg class="w-2.5 h-2.5 fill-current opacity-70" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div class="dropdown-panel">
+          <div class="dropdown-inner">
+            <a href="#" class="dropdown-link">Testimonials</a>
+            <a href="#" class="dropdown-link">Campus Manager</a>
+            <a href="#" class="dropdown-link">When is My Spring Break</a>
+            <a href="#" class="dropdown-link">Travel Protection</a>
+            <a href="#" class="dropdown-link">FAQs</a>
+            <a href="#" class="dropdown-link">Blog</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact (no dropdown) -->
+      <div class="nav-item">
+        <a href="#" class="nav-link">Contact</a>
+      </div>
+    </div>
+
+    <!-- Desktop Right Actions — glassmorphism pill buttons -->
+    <div class="hidden md:flex items-center gap-3">
+
+      <!-- SPECIALS pill -->
+      <a href="#" class="nav-pill">
+        <span class="nav-pill-icon" style="background:transparent;border:2px solid #FF5C3A;">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <circle cx="5" cy="5" r="3" fill="#FF5C3A"/>
+          </svg>
+        </span>
+        Specials
+      </a>
+
+      <!-- MY ACCOUNT pill -->
+      <a href="#" class="nav-pill">
+        <span class="nav-pill-icon" style="background:#FF5C3A;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          </svg>
+        </span>
+        My Account
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="hamburger-btn" class="md:hidden p-2" style="color:rgba(255,255,255,.8);" aria-label="Toggle menu">
+      <svg id="icon-open"  class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border-top:1px solid rgba(255,255,255,0.15);font-family:'Inter',sans-serif;">
+    <div class="px-6 py-5 space-y-1 border-t border-white/10">
+
+      <!-- Deals accordion -->
+      <div>
+        <button class="mob-toggle w-full flex items-center justify-between py-3 text-xs font-semibold tracking-widest text-white/80 uppercase" data-target="mob-deals">
+          Deals
+          <svg class="w-3.5 h-3.5 fill-current mob-arrow transition-transform" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div id="mob-deals" class="mob-sub pl-4 pb-2 space-y-2">
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Hotel Packages</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Party Packages</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Trip Add-ons</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Spring Break Packages</a>
+        </div>
+      </div>
+
+      <!-- Destinations accordion -->
+      <div>
+        <button class="mob-toggle w-full flex items-center justify-between py-3 text-xs font-semibold tracking-widest text-white/80 uppercase" data-target="mob-dest">
+          Destinations
+          <svg class="w-3.5 h-3.5 fill-current mob-arrow transition-transform" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div id="mob-dest" class="mob-sub pl-4 pb-2 space-y-2">
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Cancun</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Cabo</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Punta Cana</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Freeport</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Panama City</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Nassau</a>
+        </div>
+      </div>
+
+      <a href="#" class="mobile-link block py-3 text-xs font-semibold tracking-widest text-white/80 uppercase hover:text-white">Why Go Blue</a>
+
+      <!-- Resources accordion -->
+      <div>
+        <button class="mob-toggle w-full flex items-center justify-between py-3 text-xs font-semibold tracking-widest text-white/80 uppercase" data-target="mob-res">
+          Resources
+          <svg class="w-3.5 h-3.5 fill-current mob-arrow transition-transform" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+        <div id="mob-res" class="mob-sub pl-4 pb-2 space-y-2">
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Testimonials</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Campus Manager</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">When is My Spring Break</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Travel Protection</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">FAQs</a>
+          <a href="#" class="mobile-link block py-2 text-xs text-white/70 hover:text-white uppercase tracking-wide">Blog</a>
+        </div>
+      </div>
+
+      <a href="#" class="mobile-link block py-3 text-xs font-semibold tracking-widest text-white/80 uppercase hover:text-white">Contact</a>
+      <div class="pt-3 border-t border-white/10 flex items-center gap-4">
+        <a href="#" class="text-xs font-semibold text-white/80 uppercase tracking-wider hover:text-white">⭐ Specials</a>
+        <a href="#" style="font-family:'Inter',sans-serif;" class="inline-block bg-go-red text-white text-xs font-bold px-5 py-2 rounded-full uppercase tracking-wider">My Account</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="relative flex items-center justify-center overflow-hidden" style="height:100vh;min-height:560px;">
+  <!-- Background -->
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80"
+         alt="Tropical beach" class="w-full h-full object-cover object-center" />
+    <div class="absolute inset-0 bg-gradient-to-b from-black/25 via-black/40 to-black/65"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
+
+    <!-- "Choose Your" badge — #FF5C3A bg, rotated -5deg -->
+    <div class="flex justify-center mb-3" style="transform:rotate(-5deg);">
+      <span class="h-style text-white tracking-[.2em] uppercase inline-block px-8 py-2 text-base md:text-lg"
+            style="background:#FF5C3A; border-radius:6px; box-shadow:0 4px 16px rgba(255,92,58,.45);">
+        Choose Your
+      </span>
+    </div>
+
+    <h1 class="h-style uppercase leading-[.9] tracking-tight" style="font-size:clamp(2.8rem,9vw,7rem);">
+      Spring Break<br>Destination
+    </h1>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+      <!-- Hero buttons — Montserrat Black Italic -->
+      <button class="btn-blue" style="font-size:.78rem;padding:.9rem 2.4rem;">Start Planning Today</button>
+      <button class="btn-outline" style="font-size:.78rem;padding:.9rem 2.4rem;border-color:white;color:white;"
+              onmouseover="this.style.background='white';this.style.color='#0C1340';"
+              onmouseout="this.style.background='transparent';this.style.color='white';">
+        Get A Quote
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ DESTINATIONS ═══════════════════════ -->
+<section id="destinations" class="dots-bg py-24">
+  <div class="max-w-6xl mx-auto px-6 space-y-28">
+
+    <!-- ─── CANCUN  |  card-left, image-right ─── -->
+    <div class="dest-row flex flex-col lg:flex-row items-center">
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-mr-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Mexico</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2.8rem,5vw,3.8rem);">Cancun</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          We don't have to tell you how epic Cancun Spring Break is. It's legendary. It's outrageous. It's Cancun. We'll be bringing you and your friends to the most-traveled Spring Break capital of the world. We're ready. Are you?
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1552074284-5e88ef1aef18?auto=format&fit=crop&w=1000&q=80" alt="Cancun arch" />
+      </div>
+    </div>
+
+    <!-- ─── CABO  |  image-left, card-right ─── -->
+    <div class="dest-row flex flex-col-reverse lg:flex-row items-center">
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1000&q=80" alt="Cabo mountains" />
+      </div>
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-ml-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Mexico</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2.8rem,5vw,3.8rem);">Cabo</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          Cabo is a well-known tourist destination favored by the rich &amp; famous, as well as an up &amp; coming vacation hot spot. If you want luxury and the best Spring Break experience, this is the go-to for your upcoming spring break.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PUNTA CANA  |  card-left, image-right ─── -->
+    <div class="dest-row flex flex-col lg:flex-row items-center">
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-mr-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Dominican Republic</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2.2rem,4.5vw,3.4rem);">Punta Cana</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          This amazing destination has everything you need for an unforgettable Spring Break trip. There is plenty to do and everything you could want is at your fingertips. Here are our top Punta Cana Spring Break Hotels.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?auto=format&fit=crop&w=1000&q=80" alt="Punta Cana pool" />
+      </div>
+    </div>
+
+    <!-- ─── FREEPORT  |  image-left, card-right ─── -->
+    <div class="dest-row flex flex-col-reverse lg:flex-row items-center">
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1000&q=80" alt="Freeport marina" />
+      </div>
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-ml-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Bahamas</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2.8rem,5vw,3.8rem);">Freeport</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          We offer beachfront options, an inclusive eat food &amp; drinks at the resort options, and budget-friendly options. Freeport delivers the full Bahamas experience in a laid-back setting.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PANAMA CITY  |  card-left, image-right ─── -->
+    <div class="dest-row flex flex-col lg:flex-row items-center">
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-mr-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Florida, USA</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2rem,4vw,3.1rem);">Panama City</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          This is the Spring Break you've dreamed of for years. Boasting 27 miles of pristine beaches and crystal-clear water, PCB is the most well-known spring break destination along the Gulf Coast. Stress-free, massive, and legendary.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1000&q=80" alt="Panama City Beach" />
+      </div>
+    </div>
+
+    <!-- ─── NASSAU  |  image-left, card-right ─── -->
+    <div class="dest-row flex flex-col-reverse lg:flex-row items-center">
+      <div class="img-wrap w-full lg:w-[65%] flex-shrink-0 shadow-2xl" style="height:clamp(280px,42vw,480px);">
+        <img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=1000&q=80" alt="Nassau Bahamas" />
+      </div>
+      <div class="frost-card p-10 lg:p-12 z-10 w-full lg:w-[46%] flex-shrink-0 lg:-ml-[110px] flex flex-col justify-center">
+        <p class="text-[.6rem] font-semibold tracking-[.28em] text-gray-400 uppercase mb-3">Bahamas</p>
+        <h2 class="h-style uppercase text-go-navy leading-none mb-5" style="font-size:clamp(2.8rem,5vw,3.8rem);">Nassau</h2>
+        <p class="text-sm text-gray-500 leading-relaxed mb-8">
+          We offer beachfront options, an inclusive eat food &amp; drinks at the resort options, and budget-friendly options. Nassau brings the best of the Bahamas to your Spring Break.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn-blue">Learn More</button>
+          <button class="btn-outline">Chat With Us</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<section class="py-24 px-4 text-center" style="background:linear-gradient(135deg,#0056A6 0%,#013769 100%);">
+  <p class="h-style text-white uppercase leading-tight" style="font-size:clamp(2.2rem,7vw,4.5rem);">Get Your Quote In</p>
+  <p class="h-style uppercase leading-tight" style="font-size:clamp(2.2rem,7vw,4.5rem);color:#0054A1;/* override with lighter for dark bg */color:#3B9EFF;">60 Seconds.</p>
+  <p class="text-gray-400 text-sm mt-5 mb-8">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+
+  <form id="quote-form" class="flex justify-center max-w-md mx-auto" onsubmit="handleQuote(event)" novalidate>
+    <input id="phone-input" type="tel" placeholder="Phone number" autocomplete="tel"
+           class="flex-1 px-5 py-[14px] text-sm font-medium rounded-l outline-none border-0 min-w-0"
+           style="font-family:'Inter',sans-serif;" />
+    <!-- CTA button — Montserrat Black Italic -->
+    <button type="submit" class="h-style bg-go-red text-white px-6 py-[14px] rounded-r uppercase tracking-[.1em] hover:bg-red-600 transition-colors whitespace-nowrap"
+            style="font-size:.72rem;">
+      Text Me My Quote
+    </button>
+  </form>
+  <p id="phone-error" class="hidden mt-3 text-red-400 text-xs font-semibold"></p>
+  <div id="quote-success" class="hidden mt-6 text-green-400 font-bold text-sm flex items-center justify-center gap-2">
+    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    Thanks! We'll text you shortly with your custom quote.
+  </div>
+  <p class="text-gray-600 text-xs mt-6 tracking-[.07em]">GO BLUE. UNSUBSCRIBE ANYTIME. FEES &amp; DATA RATES MAY APPLY.</p>
+</section>
+
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer style="background:#0056A6;" class="text-white/70">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+
+      <!-- Logo + Social -->
+      <div class="col-span-2 md:col-span-1">
+        <div class="mb-6">
+          <img src="./logo.svg" alt="Go Blue Tours" style="height:38px;width:auto;object-fit:contain;filter:brightness(0) invert(1);" />
+        </div>
+        <div class="flex gap-4 flex-wrap mt-4">
+          <a href="#" aria-label="Facebook" class="text-white/60 hover:text-white transition-colors"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="text-white/60 hover:text-white transition-colors"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="#" aria-label="X" class="text-white/60 hover:text-white transition-colors"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" aria-label="YouTube" class="text-white/60 hover:text-white transition-colors"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+          <a href="#" aria-label="Pinterest" class="text-white/60 hover:text-white transition-colors"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.223.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Destinations -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[.62rem] tracking-[.2em] uppercase mb-5">Destinations</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Cancun</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Cabo</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Punta Cana</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Freeport</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Panama City</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Nassau</a></li>
+        </ul>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[.62rem] tracking-[.2em] uppercase mb-5">Quick Links</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Deals</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Why Go Blue</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Spring Break Cities</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <h4 class="text-white/90 font-bold text-[.62rem] tracking-[.2em] uppercase mb-5">Support</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Travel Protection</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Campus Manager</a></li>
+          <li><a href="#" class="text-xs text-white/60 hover:text-white transition-colors">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/20 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-[.62rem] text-white/50 text-center sm:text-left">© 2025 Go Blue Tours. All rights reserved. A Sievert Company.</p>
+      <div class="flex gap-6">
+        <a href="#" class="text-[.62rem] text-white/50 hover:text-white uppercase tracking-wider transition-colors">Privacy Policy</a>
+        <a href="#" class="text-[.62rem] text-white/50 hover:text-white uppercase tracking-wider transition-colors">Terms And Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+<script>
+  /* ── Nav scroll: transparent → #0054A1 ── */
+  const mainNav = document.getElementById('main-nav');
+  function updateNav() {
+    if (window.scrollY > 40) {
+      mainNav.classList.add('scrolled');
+    } else {
+      mainNav.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav(); // run once on load
+
+  /* ── Mobile hamburger ── */
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileMenu   = document.getElementById('mobile-menu');
+  const iconOpen     = document.getElementById('icon-open');
+  const iconClose    = document.getElementById('icon-close');
+
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    iconOpen.classList.toggle('hidden', isOpen);
+    iconClose.classList.toggle('hidden', !isOpen);
+  });
+
+  /* ── Mobile accordion toggles ── */
+  document.querySelectorAll('.mob-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId  = btn.dataset.target;
+      const panel     = document.getElementById(targetId);
+      const arrow     = btn.querySelector('.mob-arrow');
+      const isOpen    = panel.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  });
+
+  /* ── Close mobile menu on link click ── */
+  document.querySelectorAll('.mobile-link').forEach(link =>
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+    })
+  );
+
+  /* ── Smooth scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        const navH = mainNav.offsetHeight;
+        window.scrollTo({ top: target.offsetTop - navH - 16, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ── Quote form ── */
+  function handleQuote(e) {
+    e.preventDefault();
+    const input = document.getElementById('phone-input');
+    const errEl = document.getElementById('phone-error');
+    const phone = input.value.trim();
+    const clean = phone.replace(/[\s\-\(\)\+]/g, '');
+    errEl.classList.add('hidden');
+    if (!phone) {
+      errEl.textContent = 'Please enter your phone number.';
+      errEl.classList.remove('hidden');
+      return input.focus();
+    }
+    if (!/^\d{7,15}$/.test(clean)) {
+      errEl.textContent = 'Please enter a valid phone number (7–15 digits).';
+      errEl.classList.remove('hidden');
+      return input.focus();
+    }
+    document.getElementById('quote-form').classList.add('hidden');
+    document.getElementById('quote-success').classList.remove('hidden');
+  }
+
+  /* ── Scroll entrance for destination cards ── */
+  const cardObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.dest-row').forEach(row => cardObserver.observe(row));
+</script>
+</body>
+</html>

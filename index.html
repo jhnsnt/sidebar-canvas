@@ -2,103 +2,1780 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Canvas Sidebar</title>
-<link rel="stylesheet" href="css/styles.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — Spring Break Starts Here</title>
 
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts: Montserrat + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['Montserrat', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            orange: '#FF5C3A',
+            blue: '#0054A1',         // ← primary (site-wide)
+            blueAccent: '#0A78E0',   // ← brighter accent for "VIBE." word etc.
+            blueLight: '#00AAFF',    // gradient endpoint
+            yellow: '#FFC02E',
+            ink: '#0E1116',
+          },
+        },
+        // Design tokens (typography scale)
+        //   Heading 1 : text-[7rem]    (112px)
+        //   Heading 2 : text-7xl       (72px)
+        //   Body      : text-normal    (16px)
+        //   Body 2    : text-md        (15px)
+        //   Body 3    : text-sm        (14px)
+        //   Small     : text-xs        (12px)
+        fontSize: {
+          'normal': ['1rem', { lineHeight: '1.6' }],
+          'md':     ['0.9375rem', { lineHeight: '1.55' }],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #0E1116;
+    background: #000;
+  }
+  .font-display {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  /* =========== HERO VIDEO (fixes: proper aspect + fallback image) =========== */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    /* Poster image as fallback while/if video fails */
+    background: #0E1116 center/cover no-repeat;
+    background-image: url('https://img.youtube.com/vi/pUtnT4qrX-U/maxresdefault.jpg');
+  }
+  .hero-bg iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Keep 16:9 and always cover the hero viewport */
+    width: 100vw;
+    height: 56.25vw;       /* 16:9 based on width */
+    min-height: 100vh;
+    min-width: calc(100vh * 16 / 9);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border: 0;
+  }
+
+  /* Grain overlay (exact SVG provided) */
+  .grain {
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.55) 100%);
+    z-index: 1;
+  }
+
+  /* =========== GLASSMORPHISM (exact spec) =========== */
+  .glass {
+    background: rgba(0, 0, 0, 0.20);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* =========== "HERE" CHIP =========== */
+  .here-chip {
+    box-shadow: 0 10px 30px -10px rgba(255, 92, 58, 0.65);
+  }
+
+  /* =========== GRADIENT BUTTON =========== */
+  .btn-gradient {
+    background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%);
+    transition: filter .2s ease, transform .15s ease;
+  }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-gradient:active { transform: translateY(1px); }
+
+  /* =========== PILL =========== */
+  .pill-outline { border: 1px solid rgba(255,255,255,0.35); }
+
+  /* =========== DROPDOWN (desktop: hover; mobile: toggle) =========== */
+  .nav-item { position: relative; }
+  .nav-item > .dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    min-width: 240px;
+    background: rgba(0, 0, 0, 0.75);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
+    z-index: 50;
+  }
+  .nav-item:hover > .dropdown,
+  .nav-item:focus-within > .dropdown,
+  .nav-item.open > .dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s;
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    white-space: nowrap;
+  }
+  .dropdown a:hover { background: rgba(255,92,58,0.15); color: #FF5C3A; }
+
+  /* Dropdown caret flip */
+  .nav-item:hover .caret,
+  .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  /* =========== MOBILE HEADER (sticky on mobile only) =========== */
+  @media (max-width: 1023px) {
+    .mobile-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin: -20px -20px 0 -20px;  /* counter the hero p-5 padding */
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.55);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+  }
+  /* Lock body scroll while mobile menu is open */
+  body.nav-open { overflow: hidden; }
+
+  /* =========== MOBILE NAV =========== */
+  .mobile-nav {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display: none; }
+  .mobile-accordion summary { list-style: none; cursor: pointer; }
+
+  /* =========== DATE INPUT ICON =========== */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.85;
+    cursor: pointer;
+  }
+  input[type="date"] { color-scheme: dark; }
+
+  /* =========== #1 RATED SECTION BG =========== */
+  /* White base + section-bg.svg (black w/ white specks) overlaid via       */
+  /* `difference` blend, which flips it to white-with-dark-specks.          */
+  .rated-bg {
+    position: relative;
+    background-color: #ffffff;
+  }
+  .rated-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url('section-bg.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    mix-blend-mode: difference;
+  }
+  .rated-bg > * { position: relative; z-index: 1; }
+
+  /* Orange text with subtle drop shadow seen in the design */
+  .orange-shadow {
+    text-shadow:
+      3px 4px 0 rgba(0,0,0,0.15),
+      6px 8px 24px rgba(0,0,0,0.08);
+  }
+
+  /* =========== INFINITE MARQUEE =========== */
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+  .marquee-track {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: marquee-scroll 28s linear infinite;
+  }
+  .marquee-reverse .marquee-track {
+    animation: marquee-scroll-rev 32s linear infinite;
+  }
+  .marquee-track > span { padding: 0 2rem; }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes marquee-scroll-rev {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+  /* Pause on hover for accessibility */
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  /* =========== DESTINATION / HOTEL CARD (shared, with hover zoom) =========== */
+  .dest-card, .hotel-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    min-height: 260px;
+    isolation: isolate;
+    background: #0b1220;  /* fallback while image loads */
+    display: flex;
+    flex-direction: column;
+  }
+  /* ::before = the zooming background image */
+  .dest-card::before, .hotel-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1);
+    z-index: 0;
+    will-change: transform;
+  }
+  .dest-card:hover::before,
+  .dest-card:focus-visible::before,
+  .hotel-card:hover::before,
+  .hotel-card:focus-visible::before {
+    transform: scale(1.08);
+  }
+  /* ::after = dark gradient overlay for text readability */
+  .dest-card::after, .hotel-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .dest-card > *, .hotel-card > * { position: relative; z-index: 2; }
+  .dest-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.55);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* =========== TESTIMONIAL CAROUSEL =========== */
+  .testi-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 24px 20px 32px;
+    cursor: grab;
+    scrollbar-width: none;
+  }
+  .testi-scroll::-webkit-scrollbar { display: none; }
+  .testi-scroll.dragging { cursor: grabbing; scroll-snap-type: none; }
+  .testi-scroll > .testi-card {
+    flex: 0 0 85%;
+    max-width: 360px;
+    scroll-snap-align: center;
+  }
+  .testi-card {
+    position: relative;
+    background: #F3F4F8;
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+  }
+  .testi-card .quote-bubble {
+    position: absolute;
+    top: -18px;
+    left: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: #0054A1;
+    color: #fff;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  /* =========== ENHANCE YOUR TRIP (draggable carousel) =========== */
+  .enhance-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+    padding-bottom: 12px;
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .enhance-scroll::-webkit-scrollbar { display: none; }
+  .enhance-scroll.dragging { cursor: grabbing; scroll-snap-type: none; }
+  .enhance-scroll > .enhance-card {
+    flex: 0 0 88%;
+    max-width: 420px;
+    scroll-snap-align: center;
+  }
+  @media (min-width: 1024px) {
+    .enhance-scroll {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 24px;
+      overflow: visible;
+      cursor: default;
+      margin: 0;
+      padding: 0;
+    }
+    .enhance-scroll > .enhance-card {
+      flex: none;
+      max-width: none;
+      width: 100%;
+    }
+  }
+
+  /* =========== IG + TIKTOK CARDS =========== */
+  .ig-card {
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 14px;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+  .tt-card {
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 9 / 16;
+  }
+
+  /* Partner logo row */
+  .partner-logo {
+    filter: grayscale(0.2);
+    transition: filter .3s ease, opacity .3s ease;
+    opacity: 0.9;
+  }
+  .partner-logo:hover { filter: none; opacity: 1; }
+</style>
 </head>
 
-<body>
-<!-- Sidebar -->
-<aside class="sidebar">
-    <h2>Canvases</h2>
+<body class="font-body text-white bg-black">
 
-    <input
-        type="text"
-        id="searchInput"
-        class="search"
-        placeholder="Search canvases..."
-    />
+<!-- =================== HERO =================== -->
+<section class="relative min-h-screen overflow-hidden">
+  <!-- Video BG -->
+  <div class="hero-bg">
+    <iframe
+      id="heroVideo"
+      src="https://www.youtube-nocookie.com/embed/pUtnT4qrX-U?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&playlist=pUtnT4qrX-U&playsinline=1"
+      title="Spring Break Background"
+      allow="autoplay; encrypted-media; picture-in-picture; accelerometer; gyroscope"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="grain"></div>
 
-    <ul class="folders" id="folderList">
-        <li class="active" data-folder="all">All</li>
-        <li data-folder="marketing">Marketing</li>
-        <li data-folder="product">Product</li>
-        <li data-folder="personal">Personal</li>
-    </ul>
+  <!-- 48px container padding on desktop, 20px mobile -->
+  <div class="relative z-10 w-full min-h-screen flex flex-col p-5 lg:p-12">
 
-    <button class="library-btn" id="libraryBtn">
-        Open Library
-    </button>
-</aside>
+    <!-- ============== HEADER / NAV ============== -->
+    <header class="mobile-header flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2 shrink-0">
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" />
+      </a>
 
-<!-- Library View -->
-
-<div class="canvas-view" id="canvasView">
-    <h2>Canvas Editor</h2>
-    <p>This is the placeholder for editing a selected canvas.</p>
-    <div id="canvasGrid">
-        <div class="library">
-            <div class="category" data-folder="marketing">
-                <h3>Marketing</h3>
-            </div>
-
-            <div class="category" data-folder="product">
-                <h3>Product</h3>
-            </div>
-
-            <div class="category" data-folder="personal">
-                <h3>Personal</h3>
-            </div>
+      <!-- Desktop nav -->
+      <nav class="hidden lg:flex items-center gap-8 text-white">
+        <!-- Deals -->
+        <div class="nav-item">
+          <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+            Deals
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="dropdown">
+            <a href="#">Hotel Packages</a>
+            <a href="#">Party Packages</a>
+            <a href="#">Trip Add-ons</a>
+            <a href="#">Spring Break Packages</a>
+          </div>
         </div>
-    </div>
-</div>
-<main class="main hidden" id="libraryView">
-    <div class="library-title">Library</div>
-    <div id="canvasGrid">
-        <div class="library">
-            <div class="category" data-folder="marketing">
-                <h3>Marketing</h3>
-                <div class="canvas-grid">
-                    <div class="canvas-card" draggable="true" data-folder="marketing">
-                        <h4>Campaign Planning</h4>
-                        <span>Marketing</span>
-                    </div>
-                    <div class="canvas-card" draggable="true" data-folder="marketing">
-                        <h4>Landing Page Ideas</h4>
-                        <span>Marketing</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="category" data-folder="product">
-                <h3>Product</h3>
-                <div class="canvas-grid">
-                    <div class="canvas-card" draggable="true" data-folder="product">
-                        <h4>Feature Roadmap</h4>
-                        <span>Product</span>
-                    </div>
-                    <div class="canvas-card" draggable="true" data-folder="product">
-                        <h4>User Flow Draft</h4>
-                        <span>Product</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="category" data-folder="personal">
-                <h3>Personal</h3>
-                <div class="canvas-grid">
-                    <div class="canvas-card" draggable="true" data-folder="personal">
-                        <h4>Personal Notes</h4>
-                        <span>Personal</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Destinations -->
+        <div class="nav-item">
+          <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+            <a href="destination.html">Destinations</a>
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="dropdown">
+            <a href="#">Cancún</a>
+            <a href="#">Cabo</a>
+            <a href="#">Punta Cana</a>
+            <a href="#">Freeport</a>
+            <a href="#">Panama City</a>
+            <a href="#">Nassau</a>
+          </div>
         </div>
-    </div>
-</main>
+        <!-- Why Go Blue -->
+        <a href="#" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+        <!-- Resources -->
+        <div class="nav-item">
+          <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+            Resources
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="dropdown">
+            <a href="#">Testimonials</a>
+            <a href="#">Campus Manager</a>
+            <a href="#">When is My Spring Break</a>
+            <a href="#">Travel Protection</a>
+            <a href="#">FAQs</a>
+            <a href="#">Blog</a>
+          </div>
+        </div>
+        <!-- Contact -->
+        <a href="#" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+      </nav>
 
-<script src="js/script.js"></script>
+      <!-- Right side CTAs -->
+      <div class="hidden lg:flex items-center gap-3 shrink-0">
+        <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
+          Specials
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+          <span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </span>
+          My Account
+        </a>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button id="mobileToggle" aria-label="Open menu" class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+        <svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </header>
+
+    <!-- Mobile nav -->
+    <div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top: 76px; max-height: calc(100vh - 92px);">
+      <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+        <details class="mobile-accordion border-b border-white/10">
+          <summary class="py-3 flex items-center justify-between">Deals
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="pb-3 pl-2 flex flex-col gap-2 normal-case tracking-normal font-semibold text-white/80">
+            <a href="#">Hotel Packages</a>
+            <a href="#">Party Packages</a>
+            <a href="#">Trip Add-ons</a>
+            <a href="#">Spring Break Packages</a>
+          </div>
+        </details>
+        <details class="mobile-accordion border-b border-white/10">
+          <summary class="py-3 flex items-center justify-between">Destinations
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="pb-3 pl-2 flex flex-col gap-2 normal-case tracking-normal font-semibold text-white/80">
+            <a href="#">Cancún</a>
+            <a href="#">Cabo</a>
+            <a href="#">Punta Cana</a>
+            <a href="#">Freeport</a>
+            <a href="#">Panama City</a>
+            <a href="#">Nassau</a>
+          </div>
+        </details>
+        <a href="#" class="py-3 border-b border-white/10">Why Go Blue</a>
+        <details class="mobile-accordion border-b border-white/10">
+          <summary class="py-3 flex items-center justify-between">Resources
+            <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="pb-3 pl-2 flex flex-col gap-2 normal-case tracking-normal font-semibold text-white/80">
+            <a href="#">Testimonials</a>
+            <a href="#">Campus Manager</a>
+            <a href="#">When is My Spring Break</a>
+            <a href="#">Travel Protection</a>
+            <a href="#">FAQs</a>
+            <a href="#">Blog</a>
+          </div>
+        </details>
+        <a href="#" class="py-3 border-b border-white/10">Contact</a>
+        <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span> Specials</a>
+        <a href="#" class="py-3 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </span>
+          My Account
+        </a>
+      </nav>
+    </div>
+
+    <!-- ============== HERO CONTENT ============== -->
+    <div class="flex-grow flex flex-col items-center justify-center text-center py-10 lg:py-16">
+      <!-- Badge rotated -->
+      <div class="mb-4" style="transform: rotate(-5deg);">
+        <span class="font-display text-white inline-block px-4 py-1.5 rounded-md shadow-lg" style="background:#FF5C3A; font-size: clamp(14px, 2vw, 22px);">
+          Exclusive 2027 Preview
+        </span>
+      </div>
+
+      <!-- Stacked headline -->
+      <h1 class="font-display uppercase text-white leading-[0.95]" style="font-size: clamp(48px, 10vw, 80px);">
+        <span class="block">Spring</span>
+        <span class="block">Break</span>
+        <span class="block">Starts</span>
+        <span class="inline-block mt-2 px-5 py-1 rounded-md here-chip" style="background:#FF5C3A;">Here</span>
+      </h1>
+    </div>
+
+    <!-- ============== TRIP SELECTOR (glass) ============== -->
+    <div class="glass w-full" style="border-radius:24px; padding:16px;">
+      <form id="tripForm" class="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_1fr_1fr_auto] gap-3 md:gap-0 items-center">
+
+        <!-- Destination -->
+        <label class="relative group md:pr-4 md:border-r md:border-white/15 px-4 py-2 block">
+          <div class="font-body font-semibold uppercase text-white/60" style="font-size:12px; letter-spacing:0.1em; font-family:Inter;">Destination</div>
+          <div class="mt-1 flex items-center gap-2">
+            <div id="destIcon" class="w-7 h-7 rounded-full bg-cover bg-center shrink-0" style="background-image:url('https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=120&q=80');"></div>
+            <select id="destinationSelect" class="bg-transparent appearance-none text-white font-semibold pr-6 focus:outline-none cursor-pointer w-full" style="font-family:Inter; font-size:16px;">
+              <option class="text-black" value="Cancún, Mexico">Cancún, Mexico</option>
+              <option class="text-black" value="Cabo">Cabo</option>
+              <option class="text-black" value="Punta Cana">Punta Cana</option>
+              <option class="text-black" value="Freeport">Freeport</option>
+              <option class="text-black" value="Panama City">Panama City</option>
+              <option class="text-black" value="Nassau">Nassau</option>
+            </select>
+            <svg class="w-4 h-4 text-white/70 -ml-6 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </label>
+
+        <!-- Depart -->
+        <label class="md:px-4 md:border-r md:border-white/15 px-4 py-2 block">
+          <div class="font-body font-semibold uppercase text-white/60" style="font-size:12px; letter-spacing:0.1em; font-family:Inter;">Depart Date</div>
+          <input id="departDate" type="date" value="2027-03-01" class="bg-transparent text-white font-semibold focus:outline-none w-full mt-1" style="font-family:Inter; font-size:16px;"/>
+        </label>
+
+        <!-- Return -->
+        <label class="md:px-4 md:border-r md:border-white/15 px-4 py-2 block">
+          <div class="font-body font-semibold uppercase text-white/60" style="font-size:12px; letter-spacing:0.1em; font-family:Inter;">Return Date</div>
+          <input id="returnDate" type="date" value="2027-03-06" class="bg-transparent text-white font-semibold focus:outline-none w-full mt-1" style="font-family:Inter; font-size:16px;"/>
+        </label>
+
+        <!-- Group Size -->
+        <label class="md:px-4 px-4 py-2 block">
+          <div class="font-body font-semibold uppercase text-white/60" style="font-size:12px; letter-spacing:0.1em; font-family:Inter;">Group Size</div>
+          <input id="groupSize" type="number" min="1" placeholder="Enter number..." class="bg-transparent text-white font-semibold focus:outline-none w-full mt-1 placeholder-white/40" style="font-family:Inter; font-size:16px;"/>
+        </label>
+
+        <!-- Free Quote button -->
+        <button type="submit" class="btn-gradient font-display italic text-white uppercase whitespace-nowrap" style="font-size:16px; border-radius:16px; padding:16px 28px;">
+          Free Quote
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =================== #1 RATED INTERNATIONAL =================== -->
+<section class="rated-bg relative py-20 lg:py-32 px-5 lg:px-12">
+  <div class="max-w-6xl mx-auto flex flex-col items-center text-center">
+
+    <!-- Headline -->
+    <h2 class="font-display uppercase leading-[1.02] tracking-tight" style="font-size: clamp(36px, 6vw, 54px);">
+      <span class="block text-black">#1 Rated International</span>
+      <span class="block orange-shadow" style="color:#FF5C3A;">Student Travel Company</span>
+    </h2>
+
+    <!-- CTA button -->
+    <a href="#" class="btn-gradient font-display italic text-white uppercase inline-flex items-center gap-3 mt-10 lg:mt-14 whitespace-nowrap" style="padding:32px 48px; border-radius:999px; font-size: clamp(14px, 1.4vw, 18px); box-shadow: 0 20px 40px -18px rgba(0,87,255,0.55);">
+      <!-- 4-point sparkle icon -->
+      <svg class="w-5 h-5 lg:w-6 lg:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0 L13.8 10.2 L24 12 L13.8 13.8 L12 24 L10.2 13.8 L0 12 L10.2 10.2 Z"/>
+      </svg>
+      Start Planning Today
+    </a>
+
+  </div>
+</section>
+
+<!-- =================== MARQUEE + STATS =================== -->
+<section class="rated-bg relative">
+
+  <!-- Black marquee strip (two rows: orange + white, opposite directions) -->
+  <div class="relative bg-black py-5 lg:py-7">
+    <!-- Row 1 — orange, scrolls left -->
+    <div class="marquee">
+      <div class="marquee-track font-display italic uppercase text-xl md:text-2xl lg:text-3xl" style="color:#FF5C3A;">
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <!-- duplicate for seamless loop -->
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+      </div>
+    </div>
+
+    <!-- Row 2 — white, scrolls right -->
+    <div class="marquee marquee-reverse mt-2 lg:mt-3">
+      <div class="marquee-track font-display italic uppercase text-xl md:text-2xl lg:text-3xl text-white">
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+        <span>Ready to Ditch the Book? Explore the Ultimate Spring Break Here! ✦</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats cards (4 in one row, even on mobile) -->
+  <div class="py-12 lg:py-24 px-5 lg:px-12">
+    <div class="max-w-6xl mx-auto grid grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
+
+      <!-- Travelers -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-ink mb-1 lg:mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 L3 6 V20 a2 2 0 0 0 2 2 h14 a2 2 0 0 0 2 -2 V6 L18 2 Z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10 a4 4 0 0 1 -8 0"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">100K+</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Travelers</div>
+      </div>
+
+      <!-- Partners -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05C16.19 13.99 17 15.12 17 16.5V19h7v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">102</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Partners</div>
+      </div>
+
+      <!-- Destinations -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13 8.6c-.4-2-2.1-3.6-4.3-3.6-1.1 0-2 .4-2.8 1 .6-.5 1.4-.8 2.3-.8 1.7 0 3.1 1.1 3.6 2.6l-3-1.2 1.1 2.9-2.7-.5 1.6 2.1-2.2.2L12 11.2l.1 10.8h2l.3-10.8 5.5-.9-2.4-.4 1.9-1.9-3 .3 1.4-2.4-2.8 1.3c.4-1.4 1.5-2.5 3-2.9-1.4-.2-2.8.4-3.7 1.4-.4-1.1-1.2-1.9-2.3-2.3V2h-1v.6c-1.1.4-1.9 1.2-2.3 2.3-.9-1-2.3-1.6-3.7-1.4 1.5.4 2.6 1.5 3 2.9L7.1 5.1l1.4 2.4-3-.3 1.9 1.9L5 9.5l5.5.9z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">10</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Destinations</div>
+      </div>
+
+      <!-- Schools -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3 L1 9 l11 6 9-4.91 V17 h2 V9 L12 3 z M5 13.18 v4 L12 21 l7-3.82 v-4 L12 17 l-7-3.82 z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">1598</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Schools</div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- =================== CHOOSE YOUR VIBE (DESTINATIONS) =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Heading -->
+    <div class="mb-8 lg:mb-12">
+      <div class="font-body font-bold uppercase tracking-[0.14em] text-brand-blue text-xs">2027 Destinations</div>
+      <h2 class="font-display italic uppercase leading-[1.02] mt-2" style="font-size: clamp(40px, 7vw, 96px);">
+        <span style="color:#0054A1;">Choose Your </span><span style="color:#0A78E0;">Vibe.</span>
+      </h2>
+      <p class="text-brand-ink/80 mt-3 text-normal">7 destinations. All-inclusive packages. Zero stress.</p>
+    </div>
+
+    <!-- Bento grid: 3 cols × 3 rows on desktop, stack on mobile — gap 16px -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-3 gap-4">
+
+      <!-- 1. CANCÚN, MEXICO — MOST POPULAR (big, col 1 spans 2 rows) -->
+      <a href="#" class="dest-card lg:col-start-1 lg:row-start-1 lg:row-span-2 p-5 lg:p-7" style="--bg:url('https://images.unsplash.com/photo-1552074283-f08b90b89e9b?w=1400&q=80'); min-height: 540px;">
+        <span class="dest-tag self-start"><span>🔥</span> Most Popular</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(30px, 3.5vw, 48px);">Cancún, Mexico</h3>
+          <p class="text-white/85 text-sm mt-2 max-w-md">The ultimate spring break spot. Insane hotels, non-stop nightlife, crystal water.</p>
+          <div class="mt-4 font-display italic text-white text-lg lg:text-xl">
+            from <span class="text-brand-yellow text-2xl lg:text-3xl">$899</span> <span class="font-body font-semibold not-italic text-sm">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2. CANCÚN, MEXICO — TOP RATED -->
+      <a href="#" class="dest-card lg:col-start-2 lg:row-start-1 p-5" style="--bg:url('https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=900&q=80');">
+        <span class="dest-tag self-start"><span>✦</span> Top Rated</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 28px);">Cancún, Mexico</h3>
+          <p class="text-white/85 text-sm mt-1.5">Palm trees, turquoise water, white sand.</p>
+          <div class="mt-3 font-display italic text-white">
+            from <span class="text-brand-yellow text-xl">$849</span> <span class="font-body font-semibold not-italic text-xs">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3. CABO SAN LUCAS — WILD NIGHTS -->
+      <a href="#" class="dest-card lg:col-start-3 lg:row-start-1 p-5" style="--bg:url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=900&q=80');">
+        <span class="dest-tag self-start"><span>🔥</span> Wild Nights</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 28px);">Cabo San Lucas</h3>
+          <p class="text-white/85 text-sm mt-1.5">Desert meets ocean. Zero rules, max fun.</p>
+          <div class="mt-3 font-display italic text-white">
+            from <span class="text-brand-yellow text-xl">$999</span> <span class="font-body font-semibold not-italic text-xs">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 4. NASSAU, BAHAMAS — ISLAND VIBES (wide, cols 2-3) -->
+      <a href="#" class="dest-card lg:col-start-2 lg:col-span-2 lg:row-start-2 p-5 lg:p-6" style="--bg:url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1400&q=80');">
+        <span class="dest-tag self-start"><span>🏝️</span> Island Vibes</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(28px, 3vw, 40px);">Nassau, Bahamas</h3>
+          <p class="text-white/85 text-sm mt-2 max-w-lg">Caribbean bliss. Crystal water, snorkel, swim, repeat.</p>
+          <div class="mt-3 font-display italic text-white text-lg">
+            from <span class="text-brand-yellow text-2xl">$929</span> <span class="font-body font-semibold not-italic text-sm">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 5. FREEPORT, BAHAMAS — BEST VALUE -->
+      <a href="#" class="dest-card lg:col-start-1 lg:row-start-3 p-5" style="--bg:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80');">
+        <span class="dest-tag self-start"><span>⭐</span> Best Value</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 28px);">Freeport, Bahamas</h3>
+          <p class="text-white/85 text-sm mt-1.5">Laid-back island energy with beachfront bars, local vibes.</p>
+          <div class="mt-3 font-display italic text-white">
+            from <span class="text-brand-yellow text-xl">$599</span> <span class="font-body font-semibold not-italic text-xs">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 6. PANAMA CITY BEACH — NO PASSPORT NEEDED -->
+      <a href="#" class="dest-card lg:col-start-2 lg:row-start-3 p-5" style="--bg:url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=900&q=80');">
+        <span class="dest-tag self-start"><span>🛂</span> No Passport Needed</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 28px);">Panama City Beach</h3>
+          <p class="text-white/85 text-sm mt-1.5">Sunset beaches and endless bars. Zero rules, max fun.</p>
+          <div class="mt-3 font-display italic text-white">
+            from <span class="text-brand-yellow text-xl">$499</span> <span class="font-body font-semibold not-italic text-xs">/ person</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 7. SOUTH PARADISE ISLAND — TEXAS PARTY -->
+      <a href="#" class="dest-card lg:col-start-3 lg:row-start-3 p-5" style="--bg:url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=900&q=80');">
+        <span class="dest-tag self-start"><span>🎉</span> Texas Party</span>
+        <div class="mt-auto">
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 28px);">South Paradise Island</h3>
+          <p class="text-white/85 text-sm mt-1.5">The Gulf Coast party island. Small island, massive parties.</p>
+          <div class="mt-3 font-display italic text-white">
+            from <span class="text-brand-yellow text-xl">$549</span> <span class="font-body font-semibold not-italic text-xs">/ person</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- =================== CUSTOMER REVIEWS =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Heading -->
+    <h2 class="font-display italic uppercase leading-[1.02] mb-10 lg:mb-16" style="color:#0054A1; font-size: clamp(48px, 7vw, 96px);">
+      Customer<br/>Reviews
+    </h2>
+
+    <!-- DESKTOP: 3-column staggered grid -->
+    <div class="hidden md:grid grid-cols-3 gap-8">
+      <!-- Col 1 -->
+      <div class="flex flex-col gap-10">
+        <!-- Luke D -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“Staff was incredible. Extremely nice and helpful. Very much exceeded my expectations.”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Luke D</span>
+          </div>
+        </div>
+        <!-- Suha K -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“Hosts were always available on sight and helped with every question we had.”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Suha K</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 2 (offset down) -->
+      <div class="flex flex-col gap-10 mt-16">
+        <!-- Sierrak K -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“Very good hospitality, food, events, and a very welcoming atmosphere environment. I always felt included and safe, definitely one of my best vacations I have ever had!”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Sierrak K</span>
+          </div>
+        </div>
+        <!-- Destiny S -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“Amazing company, Veronica and Alex made our experience at Krystal Cancun unforgettable!”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Destiny S</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="flex flex-col gap-10">
+        <!-- Ocianna M -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“This was such a fun experience! You get assistance at all times for all your needs like flights, excursions, and hotel info. Highly recommend if you're looking for a fun”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ocianna M</span>
+          </div>
+        </div>
+        <!-- Ezra H -->
+        <div class="testi-card">
+          <div class="quote-bubble">“</div>
+          <div class="flex gap-1 text-[#FFC02E] mb-3">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-brand-ink font-bold text-md">“Everything was exactly as advertised. The party package is a great deal!”</p>
+          <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+          <hr class="my-4 border-black/10"/>
+          <div class="flex items-center gap-3">
+            <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+            <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ezra H</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE: draggable horizontal carousel (fully scrollable + drag) -->
+    <div id="testiScroll" class="md:hidden testi-scroll -mx-5">
+      <!-- Luke D -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Staff was incredible. Extremely nice and helpful. Very much exceeded my expectations.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Luke D</span>
+        </div>
+      </div>
+      <!-- Sierrak K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Very good hospitality, food, events, and a very welcoming atmosphere environment. I always felt included and safe, definitely one of my best vacations I have ever had!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Sierrak K</span>
+        </div>
+      </div>
+      <!-- Ocianna M -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“This was such a fun experience! You get assistance at all times for all your needs like flights, excursions, and hotel info. Highly recommend if you're looking for a fun”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ocianna M</span>
+        </div>
+      </div>
+      <!-- Suha K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Hosts were always available on sight and helped with every question we had.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Suha K</span>
+        </div>
+      </div>
+      <!-- Destiny S -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Amazing company, Veronica and Alex made our experience at Krystal Cancun unforgettable!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Destiny S</span>
+        </div>
+      </div>
+      <!-- Ezra H -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Everything was exactly as advertised. The party package is a great deal!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ezra H</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== BEST PARTY PACKAGE DEALS =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Heading: image will overlap this by using negative margin on the image block -->
+    <h2 class="font-display italic uppercase leading-[1.02] relative z-10" style="font-size: clamp(44px, 9vw, 112px);">
+      <span style="color:#0054A1;">Best Party</span><br/>
+      <span style="color:#0A78E0;">Package Deals.</span>
+    </h2>
+
+    <!-- Party photo — aligned to the right, pulled UP so its top edge overlaps the "Package Deals." line -->
+    <div class="relative w-full lg:w-[78%] lg:ml-auto mt-6 lg:-mt-24 xl:-mt-32">
+      <!-- image container (rounded + overflow hidden for the hover zoom) -->
+      <a href="#" class="hotel-card block aspect-[16/10] rounded-[28px] shadow-[0_30px_60px_-25px_rgba(0,0,0,0.35)]"
+         style="--bg:url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600&q=80');">
+        <!-- Orange CTA at bottom-right -->
+        <span class="absolute bottom-5 right-5 lg:bottom-7 lg:right-7 inline-flex items-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl px-5 py-3 lg:px-7 lg:py-4" style="font-size: clamp(12px, 1vw, 15px); letter-spacing: 0.04em; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
+          Explore Party Packages
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== TOP HOTEL PACKAGES =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Heading row -->
+    <div class="flex items-start justify-between gap-4 mb-8 lg:mb-12">
+      <h2 class="font-display italic uppercase leading-[1.02]" style="font-size: clamp(36px, 6vw, 72px);">
+        <span style="color:#0054A1;">Top Hotel </span><span style="color:#0A78E0;">Packages</span>
+      </h2>
+      <!-- VIEW ALL button -->
+      <a href="#" class="shrink-0 inline-flex items-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl px-4 py-2.5 lg:px-6 lg:py-3" style="font-size: clamp(12px, 1vw, 14px); letter-spacing: 0.04em;">
+        View All
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"/>
+          <polyline points="7 7 17 7 17 17"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Bento: left tall card (row-span-2), right column has 2 stacked cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-4">
+
+      <!-- BIG LEFT — Occidental Punta Cana -->
+      <a href="#" class="hotel-card lg:row-span-2 p-5 lg:p-7 min-h-[320px] lg:min-h-[640px]"
+         style="--bg:url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1400&q=80');">
+        <!-- Price pill top-right -->
+        <span class="absolute top-5 right-5 lg:top-6 lg:right-6 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
+          <span class="font-display italic" style="color:#0054A1; font-size:22px;">$699</span>
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
+        </span>
+        <!-- Content bottom-left -->
+        <div class="mt-auto">
+          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Punta Cana</div>
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(26px, 3vw, 40px);">Occidental Punta Cana</h3>
+          <!-- Amenity pills -->
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">4-Person Room</span>
+          </div>
+        </div>
+        <!-- Arrow circle button -->
+        <span class="absolute bottom-5 right-5 lg:bottom-6 lg:right-6 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- TOP RIGHT — Riu Santa Fe, Cabo -->
+      <a href="#" class="hotel-card p-5 lg:p-6 min-h-[280px] lg:min-h-[312px]"
+         style="--bg:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&q=80');">
+        <span class="absolute top-5 right-5 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
+          <span class="font-display italic" style="color:#0054A1; font-size:20px;">$1154</span>
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
+        </span>
+        <div class="mt-auto">
+          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Cabo</div>
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 32px);">Riu Santa Fe</h3>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">3-Person Room</span>
+          </div>
+        </div>
+        <span class="absolute bottom-5 right-5 w-10 h-10 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
+          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- BOTTOM RIGHT — Occidental Caribe, Punta Cana -->
+      <a href="#" class="hotel-card p-5 lg:p-6 min-h-[280px] lg:min-h-[312px]"
+         style="--bg:url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=80');">
+        <span class="absolute top-5 right-5 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
+          <span class="font-display italic" style="color:#0054A1; font-size:20px;">$859</span>
+          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
+        </span>
+        <div class="mt-auto">
+          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Punta Cana</div>
+          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 32px);">Occidental Caribe</h3>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
+            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">4-Person Room</span>
+          </div>
+        </div>
+        <span class="absolute bottom-5 right-5 w-10 h-10 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
+          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- =================== SEE WHAT WE'RE UP TO (SOCIAL) =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <span class="inline-flex items-center gap-2 bg-[#0054A1] text-white font-body font-bold uppercase tracking-[0.14em] rounded-full px-4 py-1.5 text-xs">
+        Follow the Adventure
+      </span>
+      <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="color:#0054A1; font-size: clamp(36px, 6vw, 72px);">
+        See What We're Up To
+      </h2>
+      <p class="mt-3 max-w-xl mx-auto text-brand-ink/80 text-normal">
+        Catch our latest moments on Instagram and TikTok — tours, behind-the-scenes, and travel tips from the Go Blue crew.
+      </p>
+    </div>
+
+    <!-- INSTAGRAM row -->
+    <div class="mb-14">
+      <div class="flex items-center gap-2 mb-5">
+        <!-- IG gradient icon -->
+        <svg class="w-7 h-7" viewBox="0 0 24 24">
+          <defs>
+            <linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#F58529"/>
+              <stop offset="0.5" stop-color="#DD2A7B"/>
+              <stop offset="1" stop-color="#8134AF"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igGrad)"/>
+          <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="1.8"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/>
+        </svg>
+        <span class="font-body font-bold uppercase tracking-[0.14em] text-brand-ink text-sm">Instagram</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- IG card template × 3 (different images) -->
+        <!-- #1 -->
+        <div class="ig-card">
+          <div class="flex items-center justify-between px-3 py-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=80&q=80');"></div>
+              <div class="leading-tight">
+                <div class="text-xs font-semibold text-black">gobluet…</div>
+                <div class="text-[11px] text-gray-500">5,505 followers</div>
+              </div>
+            </div>
+            <a href="#" class="text-xs font-semibold text-white rounded-md px-3 py-1" style="background:#0095F6;">View profile</a>
+          </div>
+          <div class="aspect-square bg-cover bg-center relative" style="background-image:url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80');">
+            <button class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-gray-700" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="px-3 pt-2">
+            <a class="text-xs font-semibold" style="color:#0095F6;">View more on Instagram</a>
+          </div>
+          <div class="flex items-center justify-between px-3 py-2">
+            <div class="flex items-center gap-3 text-black">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </div>
+            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="px-3 pb-1 text-xs font-semibold text-black">13 likes</div>
+          <div class="px-3 pb-3 flex items-center justify-between">
+            <span class="text-xs text-gray-500">Add a comment…</span>
+            <svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </div>
+        </div>
+
+        <!-- #2 -->
+        <div class="ig-card">
+          <div class="flex items-center justify-between px-3 py-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=80&q=80');"></div>
+              <div class="leading-tight">
+                <div class="text-xs font-semibold text-black">gobluet…</div>
+                <div class="text-[11px] text-gray-500">Original audio</div>
+              </div>
+            </div>
+            <a href="#" class="text-xs font-semibold text-white rounded-md px-3 py-1" style="background:#0095F6;">View profile</a>
+          </div>
+          <div class="aspect-square bg-cover bg-center relative flex items-center justify-center" style="background-image:url('https://images.unsplash.com/photo-1571266028243-d220c6a2f2a4?w=800&q=80');">
+            <button class="w-14 h-14 rounded-full bg-white/85 flex items-center justify-center">
+              <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg>
+            </button>
+          </div>
+          <div class="px-3 pt-2">
+            <a class="text-xs font-semibold" style="color:#0095F6;">View more on Instagram</a>
+          </div>
+          <div class="flex items-center justify-between px-3 py-2">
+            <div class="flex items-center gap-3 text-black">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </div>
+            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="px-3 pb-1 text-xs font-semibold text-black">26 likes</div>
+          <div class="px-3 pb-3 flex items-center justify-between">
+            <span class="text-xs text-gray-500">Add a comment…</span>
+            <svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </div>
+        </div>
+
+        <!-- #3 -->
+        <div class="ig-card">
+          <div class="flex items-center justify-between px-3 py-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=80&q=80');"></div>
+              <div class="leading-tight">
+                <div class="text-xs font-semibold text-black">gobluet…</div>
+                <div class="text-[11px] text-gray-500">5,505 followers</div>
+              </div>
+            </div>
+            <a href="#" class="text-xs font-semibold text-white rounded-md px-3 py-1" style="background:#0095F6;">View profile</a>
+          </div>
+          <div class="aspect-square bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=800&q=80');"></div>
+          <div class="px-3 pt-2">
+            <a class="text-xs font-semibold" style="color:#0095F6;">View more on Instagram</a>
+          </div>
+          <div class="flex items-center justify-between px-3 py-2">
+            <div class="flex items-center gap-3 text-black">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </div>
+            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="px-3 pb-1 text-xs font-semibold text-black">15 likes</div>
+          <div class="px-3 pb-3 flex items-center justify-between">
+            <span class="text-xs text-gray-500">Add a comment…</span>
+            <svg class="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIKTOK row -->
+    <div>
+      <div class="flex items-center gap-2 mb-5">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="2" width="20" height="20" rx="5" fill="#000"/>
+          <path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V5h2v2z" fill="#fff"/>
+        </svg>
+        <span class="font-body font-bold uppercase tracking-[0.14em] text-brand-ink text-sm">TikTok</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- TikTok card × 3 -->
+        <div>
+          <div class="tt-card bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1571266028243-d220c6a2f2a4?w=800&q=80');">
+            <div class="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/60 flex items-center justify-center">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#fff"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V5h2v2z"/></svg>
+            </div>
+            <div class="absolute top-0 left-0 right-0 h-1 bg-white/20"><div class="h-1 bg-[#FE2C55] w-1/4"></div></div>
+            <div class="absolute bottom-3 right-3 flex flex-col items-center gap-2 text-white text-xs">
+              <div class="w-8 h-8 rounded-full bg-white/20 border border-white/50"></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 7c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>916</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg><span>5</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg><span>593</span></div>
+            </div>
+            <!-- bottom "Watch now" footer -->
+            <div class="absolute left-0 right-0 bottom-0 bg-white px-3 py-2 flex items-center justify-between">
+              <span class="text-xs text-black font-semibold">Watch on TikTok</span>
+              <a href="#" class="bg-[#FE2C55] text-white text-xs font-bold px-3 py-1 rounded-md">Watch now</a>
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="font-semibold text-brand-ink text-sm">@gobluetours</div>
+            <div class="text-brand-ink/70 text-sm">RIU white party 🕺 #cabosanlucas #mexico</div>
+            <a href="#" class="inline-flex items-center gap-1 mt-2 font-semibold text-sm" style="color:#0054A1;">View on TikTok →</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="tt-card bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=800&q=80');">
+            <div class="absolute inset-0 bg-black/70"></div>
+            <div class="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/60 flex items-center justify-center">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#fff"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V5h2v2z"/></svg>
+            </div>
+            <div class="absolute top-0 left-0 right-0 h-1 bg-white/20"><div class="h-1 bg-[#FE2C55] w-1/2"></div></div>
+            <div class="relative h-full flex items-center justify-center px-6">
+              <p class="text-white font-semibold text-center text-base">This is your sign to book the Spring Break trip</p>
+            </div>
+            <div class="absolute bottom-3 right-3 flex flex-col items-center gap-2 text-white text-xs">
+              <div class="w-8 h-8 rounded-full bg-white/20 border border-white/50"></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 7c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>238</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg><span>0</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg><span>16</span></div>
+            </div>
+            <div class="absolute left-0 right-0 bottom-0 bg-white px-3 py-2 flex items-center justify-between">
+              <span class="text-xs text-black font-semibold">Watch on TikTok</span>
+              <a href="#" class="bg-[#FE2C55] text-white text-xs font-bold px-3 py-1 rounded-md">Watch now</a>
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="font-semibold text-brand-ink text-sm">@gobluetours</div>
+            <div class="text-brand-ink/70 text-sm">A glimpse into Spring Break with Go Blue</div>
+            <a href="#" class="inline-flex items-center gap-1 mt-2 font-semibold text-sm" style="color:#0054A1;">View on TikTok →</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="tt-card bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80');">
+            <div class="absolute top-2 right-2 w-6 h-6 rounded-md bg-black/60 flex items-center justify-center">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="#fff"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V5h2v2z"/></svg>
+            </div>
+            <div class="absolute top-0 left-0 right-0 h-1 bg-white/20"><div class="h-1 bg-[#FE2C55] w-1/3"></div></div>
+            <div class="absolute bottom-3 right-3 flex flex-col items-center gap-2 text-white text-xs">
+              <div class="w-8 h-8 rounded-full bg-white/20 border border-white/50"></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 7c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>3856</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg><span>76</span></div>
+              <div class="flex flex-col items-center"><svg class="w-6 h-6" fill="#fff" viewBox="0 0 24 24"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg><span>5846</span></div>
+            </div>
+            <div class="absolute left-0 right-0 bottom-0 bg-white px-3 py-2 flex items-center justify-between">
+              <span class="text-xs text-black font-semibold">Watch on TikTok</span>
+              <a href="#" class="bg-[#FE2C55] text-white text-xs font-bold px-3 py-1 rounded-md">Watch now</a>
+            </div>
+          </div>
+          <div class="mt-3">
+            <div class="font-semibold text-brand-ink text-sm">@gobluetours</div>
+            <div class="text-brand-ink/70 text-sm">We LOVE Impressive Punta Cana! Would recommend</div>
+            <a href="#" class="inline-flex items-center gap-1 mt-2 font-semibold text-sm" style="color:#0054A1;">View on TikTok →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== ENHANCE YOUR TRIP =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <!-- Heading + intro -->
+    <h2 class="font-display italic uppercase leading-[1.02]" style="font-size: clamp(40px, 7vw, 96px);">
+      <span style="color:#0054A1;">Enhance Your </span><span style="color:#0A78E0;">Trip</span>
+    </h2>
+    <p class="mt-4 max-w-3xl text-brand-ink/80 text-normal">
+      Our destinations have something for everyone! Dance clubs, bars, parties, festivals, shows,
+      restaurants, DJs, live bands, and more to choose from. During the day, the booze cruise is
+      the most popular event of every spring break!
+    </p>
+
+    <!-- Draggable carousel: 3 cards (desktop grid 1.3:1:1, mobile horizontal drag) -->
+    <div id="enhanceScroll" class="enhance-scroll mt-10 lg:mt-14">
+
+      <!-- BOOZE CRUISE (featured: image left, blue panel right) -->
+      <div class="enhance-card rounded-3xl overflow-hidden flex">
+        <div class="w-2/5 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80');"></div>
+        <div class="w-3/5 p-6 lg:p-7 flex flex-col" style="background:#0054A1;">
+          <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs">01 / Experience</div>
+          <svg class="w-7 h-7 text-white mt-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18h18l-2 3H5zM12 3v12M12 3l7 12H5z"/>
+          </svg>
+          <h3 class="font-display italic uppercase text-white leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">
+            Booze<br/>Cruise
+          </h3>
+          <p class="text-white/80 text-sm mt-4">
+            The booze cruise offers a 3 and a half hour party at sea including a DJ on board, along with other spring breakers, all drinks while on board, round trip transportation, and of course, Go Blue staff
+          </p>
+          <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
+            Add to Trip
+            <span>+</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- FLIGHTS -->
+      <div class="enhance-card rounded-3xl bg-[#EEF1F5] p-6 lg:p-7 flex flex-col">
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-gray-500 text-xs">02 / Logistics</div>
+        <svg class="w-7 h-7 text-brand-ink mt-4" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+        <h3 class="font-display italic uppercase text-brand-ink leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">Flights</h3>
+        <p class="text-brand-ink/70 text-sm mt-4">
+          You have the choice in your package to purchase the airfare through us, or to purchase the airfare on your own, it's totally up to you!
+        </p>
+        <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
+          Add to Trip
+          <span>+</span>
+        </a>
+      </div>
+
+      <!-- TRANSPORTATION -->
+      <div class="enhance-card rounded-3xl bg-[#EEF1F5] p-6 lg:p-7 flex flex-col">
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-gray-500 text-xs">03 / Logistics</div>
+        <svg class="w-7 h-7 text-brand-ink mt-4" viewBox="0 0 24 24" fill="currentColor"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14v6H5zM7 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM6 17v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V17m8 0v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V17"/></svg>
+        <h3 class="font-display italic uppercase text-brand-ink leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">Transportation</h3>
+        <p class="text-brand-ink/70 text-sm mt-4">
+          We offer optional transfers to and from the airport/hotel for each of our destinations. These transfers pick you up from the airport when you land, and bring you back to the airport on the date you are set to leave.
+        </p>
+        <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
+          Add to Trip
+          <span>+</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =================== WE DELIVER FUN =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+
+    <h2 class="font-display italic uppercase leading-[1.02] relative z-10" style="font-size: clamp(44px, 9vw, 112px);">
+      <span style="color:#0054A1;">We Deliver</span><br/>
+      <span style="color:#0A78E0;">Fun</span>
+    </h2>
+
+    <!-- Video block pulled up so it overlaps with "FUN" line -->
+    <div class="relative w-full lg:w-[85%] lg:ml-auto mt-6 lg:-mt-24 xl:-mt-32">
+      <a href="#" class="hotel-card block aspect-[16/10] rounded-[28px] shadow-[0_30px_60px_-25px_rgba(0,0,0,0.35)]"
+         style="--bg:url('https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1600&q=80');">
+        <!-- centered play button -->
+        <span class="absolute inset-0 flex items-center justify-center" style="z-index:3;">
+          <span class="w-20 h-20 lg:w-24 lg:h-24 rounded-full border-2 border-white/80 bg-white/15 backdrop-blur-md flex items-center justify-center">
+            <svg class="w-8 h-8 lg:w-10 lg:h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="8,5 19,12 8,19"/>
+            </svg>
+          </span>
+        </span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== OUR TRAVEL PARTNERS =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-20">
+
+    <h2 class="font-display italic uppercase leading-[1.02] text-center" style="font-size: clamp(32px, 5vw, 56px);">
+      <span style="color:#0054A1;">Our Travel </span><span style="color:#0A78E0;">Partners</span>
+    </h2>
+
+    <div class="mt-10 lg:mt-14 grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 items-center justify-items-center">
+      <!-- Text-based placeholders styled to approximate logos -->
+      <div class="partner-logo text-center">
+        <div style="font-family: Georgia, serif; font-style: italic; color:#1E3A6A; font-size:28px; line-height:1;">Juniper</div>
+        <div class="font-body font-bold uppercase tracking-[0.24em] text-[10px] text-[#1E3A6A] mt-1">Tours</div>
+      </div>
+      <div class="partner-logo text-center">
+        <div style="font-family: Georgia, serif; color:#1F4954; font-size:28px; line-height:1;">EverBlue</div>
+        <div class="font-body font-bold uppercase tracking-[0.22em] text-[11px] text-[#1F4954] mt-1">Tours</div>
+      </div>
+      <div class="partner-logo text-center">
+        <div class="font-display uppercase" style="color:#C84D2A; font-size:24px; letter-spacing:0.06em; line-height:1;">Landmark</div>
+        <div class="font-body italic text-[11px] text-[#C84D2A] mt-1">Educational Tours</div>
+      </div>
+      <div class="partner-logo text-center flex items-center gap-2">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="#3AB54A"><path d="M12 2c-1 3-3 5-6 6 3 1 5 3 6 6 1-3 3-5 6-6-3-1-5-3-6-6zm0 12c-.5 3-2 5-5 7 3-.5 5 0 5 3 0-3 2-3.5 5-3-3-2-4.5-4-5-7z"/></svg>
+        <div>
+          <div class="font-body font-bold text-brand-ink leading-tight">Irish Life</div>
+          <div class="font-body text-[10px] uppercase tracking-[0.18em] text-[#3AB54A] mt-0.5">Experience</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/>
+      <span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel"
+             class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">
+        Text Me My Quote
+      </button>
+    </form>
+
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">
+      No spam, unsubscribe anytime. Msg &amp; data rates may apply.
+    </p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <!-- Brand column -->
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">
+          #1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.
+        </p>
+        <div class="mt-6 flex items-center gap-3">
+          <!-- Social icons -->
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg>
+          </a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Link columns -->
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="#" class="hover:text-white">Destinations</a></li>
+          <li><a href="#" class="hover:text-white">Deals</a></li>
+          <li><a href="#" class="hover:text-white">Spring Break Dates</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="#" class="hover:text-white">Why Go Blue</a></li>
+          <li><a href="#" class="hover:text-white">Testimonials</a></li>
+          <li><a href="#" class="hover:text-white">Campus Manager</a></li>
+          <li><a href="#" class="hover:text-white">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="#" class="hover:text-white">FAQ</a></li>
+          <li><a href="#" class="hover:text-white">Travel Protection</a></li>
+          <li><a href="#" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms and Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // =========== Mobile menu toggle ===========
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => {
+    setMenu(!mobileNav.classList.contains('open'));
+  });
+
+  // Close mobile nav on link click
+  mobileNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => setMenu(false));
+  });
+
+  // Close on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) setMenu(false);
+  });
+
+  // =========== Trip Selector ===========
+  const destinationImages = {
+    'Cancún, Mexico': 'https://images.unsplash.com/photo-1510097467424-192d713fd8b2?w=120&q=80',
+    'Cabo':          'https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=120&q=80',
+    'Punta Cana':    'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=120&q=80',
+    'Freeport':      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=120&q=80',
+    'Panama City':   'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=120&q=80',
+    'Nassau':        'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=120&q=80',
+  };
+  const destSelect = document.getElementById('destinationSelect');
+  const destIcon = document.getElementById('destIcon');
+  destSelect.addEventListener('change', (e) => {
+    const img = destinationImages[e.target.value];
+    if (img) destIcon.style.backgroundImage = `url('${img}')`;
+  });
+
+  // Date logic — return >= depart
+  const departDate = document.getElementById('departDate');
+  const returnDate = document.getElementById('returnDate');
+  function syncDates() {
+    if (!departDate.value) return;
+    returnDate.min = departDate.value;
+    if (returnDate.value && returnDate.value < departDate.value) {
+      const d = new Date(departDate.value);
+      d.setDate(d.getDate() + 1);
+      returnDate.value = d.toISOString().split('T')[0];
+    }
+  }
+  departDate.addEventListener('change', syncDates);
+  syncDates();
+
+  // Form submit
+  document.getElementById('tripForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = {
+      destination: destSelect.value,
+      depart: departDate.value,
+      return: returnDate.value,
+      groupSize: document.getElementById('groupSize').value,
+    };
+    alert(`Free Quote Requested\n\nDestination: ${data.destination}\nDepart: ${data.depart}\nReturn: ${data.return}\nGroup Size: ${data.groupSize || '—'}`);
+  });
+
+  // =========== Dropdown: tap-to-toggle on touch devices ===========
+  document.querySelectorAll('.nav-item > button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      // Only for touch/coarse pointer — hover handles the rest
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+
+  // =========== Testimonial mouse-drag (mobile uses native touch) ===========
+  const testiScroll = document.getElementById('testiScroll');
+  if (testiScroll) {
+    let isDown = false, startX = 0, scrollLeft = 0;
+    testiScroll.addEventListener('mousedown', (e) => {
+      isDown = true;
+      testiScroll.classList.add('dragging');
+      startX = e.pageX - testiScroll.offsetLeft;
+      scrollLeft = testiScroll.scrollLeft;
+    });
+    ['mouseleave', 'mouseup'].forEach(ev => testiScroll.addEventListener(ev, () => {
+      isDown = false;
+      testiScroll.classList.remove('dragging');
+    }));
+    testiScroll.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - testiScroll.offsetLeft;
+      testiScroll.scrollLeft = scrollLeft - (x - startX) * 1.4;
+    });
+  }
+
+  // =========== Enhance Your Trip mouse-drag carousel ===========
+  const enhanceScroll = document.getElementById('enhanceScroll');
+  if (enhanceScroll) {
+    let isDownE = false, startXE = 0, scrollLeftE = 0;
+    enhanceScroll.addEventListener('mousedown', (e) => {
+      // Don't hijack clicks on buttons / links
+      if (e.target.closest('button, a')) return;
+      isDownE = true;
+      enhanceScroll.classList.add('dragging');
+      startXE = e.pageX - enhanceScroll.offsetLeft;
+      scrollLeftE = enhanceScroll.scrollLeft;
+    });
+    ['mouseleave', 'mouseup'].forEach(ev => enhanceScroll.addEventListener(ev, () => {
+      isDownE = false;
+      enhanceScroll.classList.remove('dragging');
+    }));
+    enhanceScroll.addEventListener('mousemove', (e) => {
+      if (!isDownE) return;
+      e.preventDefault();
+      const x = e.pageX - enhanceScroll.offsetLeft;
+      enhanceScroll.scrollLeft = scrollLeftE - (x - startXE) * 1.4;
+    });
+  }
+</script>
 
 </body>
 </html>
