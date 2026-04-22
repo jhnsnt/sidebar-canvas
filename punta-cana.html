@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — Punta Cana Spring Break</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['Montserrat', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            orange: '#FF5C3A',
+            blue: '#0054A1',
+            blueAccent: '#0A78E0',
+            blueLight: '#00AAFF',
+            yellow: '#FFC02E',
+            ink: '#0E1116',
+          },
+        },
+        fontSize: {
+          'normal': ['1rem', { lineHeight: '1.6' }],
+          'md':     ['0.9375rem', { lineHeight: '1.55' }],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #0E1116;
+    background: #000;
+  }
+  .font-display {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  /* =========== HERO =========== */
+  .dest-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 560px;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.55) 100%),
+      url('https://images.unsplash.com/photo-1509233725247-49e657c54213?auto=format&fit=crop&w=2400&q=80')
+      center/cover no-repeat;
+  }
+  @media (min-width: 1024px) {
+    .dest-hero { min-height: 680px; }
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%);
+    transition: filter .2s ease, transform .15s ease;
+  }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-gradient:active { transform: translateY(1px); }
+
+  .btn-hero-outline {
+    background: #ffffff;
+    color: #0E1116;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .btn-hero-outline:hover { background: #F4F6F9; }
+  .btn-hero-outline:active { transform: translateY(1px); }
+
+  .pill-outline { border: 1px solid rgba(255,255,255,0.35); }
+  .dest-chip { box-shadow: 0 10px 30px -10px rgba(255, 92, 58, 0.65); }
+
+  /* =========== DROPDOWN =========== */
+  .nav-item { position: relative; }
+  .nav-item > .dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    min-width: 240px;
+    background: rgba(0, 0, 0, 0.75);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
+    z-index: 50;
+  }
+  /* Invisible hover bridge so moving the cursor from the parent link into
+     the dropdown doesn't cross a "dead zone" that drops the :hover state. */
+  .nav-item > .dropdown::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -18px;
+    height: 18px;
+    background: transparent;
+  }
+  /* Also extend the parent's hit area downward through the gap. */
+  .nav-item > button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 18px;
+  }
+  .nav-item > button { position: relative; }
+  .nav-item:hover > .dropdown,
+  .nav-item:focus-within > .dropdown,
+  .nav-item.open > .dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s;
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .dropdown a:hover { background: rgba(255,92,58,0.15); color: #FF5C3A; }
+  .nav-item:hover .caret, .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  /* =========== FIXED SITE HEADER =========== */
+  .mobile-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 60;
+    margin: 0;
+    padding: 14px 20px;
+    background: transparent;
+    transition: background 0.25s ease, padding 0.25s ease, box-shadow 0.25s ease;
+  }
+  .mobile-header.scrolled {
+    background: #0054A1;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+  }
+  @media (min-width: 1024px) {
+    .mobile-header { padding: 28px 48px; }
+    .mobile-header.scrolled { padding: 18px 48px; }
+  }
+  body.nav-open { overflow: hidden; }
+
+  .mobile-nav {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display: none; }
+  .mobile-accordion summary { list-style: none; cursor: pointer; }
+
+  /* =========== WHITE SECTION BG (grain specks) =========== */
+  .rated-bg { position: relative; background-color: #ffffff; }
+  .rated-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image: url('section-bg.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    mix-blend-mode: difference;
+  }
+  .rated-bg > * { position: relative; z-index: 1; }
+
+  /* =========== STATS BAR =========== */
+  .stats-bar {
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 30px 60px -30px rgba(0, 84, 161, 0.25),
+                0 10px 30px -10px rgba(14, 17, 22, 0.08);
+  }
+
+  /* =========== HOTEL CARD =========== */
+  .hotel-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    min-height: 340px;
+    isolation: isolate;
+    background: #0b1220;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .hotel-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: var(--bg);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1);
+    z-index: 0;
+    will-change: transform;
+  }
+  .hotel-card:hover::before { transform: scale(1.08); }
+  .hotel-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.80) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hotel-card > * { position: relative; z-index: 2; }
+  .hotel-card .arrow-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #FF5C3A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 10px 30px -10px rgba(255, 92, 58, 0.65);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .hotel-card .arrow-btn:hover { transform: translate(3px, -3px); }
+
+  /* =========== CURRENT DEALS (NEW: image + solid blue panel w/ Request Info) =========== */
+  .deal-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-radius: 32px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 30px 80px -30px rgba(0, 84, 161, 0.25),
+                0 10px 30px -10px rgba(14, 17, 22, 0.10);
+  }
+  @media (min-width: 1024px) {
+    .deal-row {
+      grid-template-columns: 1fr 1fr;
+      border-radius: 48px;
+    }
+  }
+  .deal-img {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    background-size: cover;
+    background-position: center;
+  }
+  @media (min-width: 1024px) {
+    .deal-img { min-height: 520px; }
+  }
+  .deal-panel {
+    background: #0054A1;
+    padding: 36px 28px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+  }
+  @media (min-width: 1024px) {
+    .deal-panel { padding: 56px 48px; }
+  }
+  .deal-req-btn {
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #0A78E0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 12px;
+    padding: 18px 24px;
+    transition: background 0.2s ease;
+  }
+  .deal-req-btn:hover { background: #F0F7FF; }
+
+  /* =========== WHAT IS IT LIKE (NEW: glass card overlapping party image) =========== */
+  .party-wrap {
+    position: relative;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .party-glass {
+    background: rgba(255,255,255,0.82);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 28px;
+    padding: 26px 24px;
+    box-shadow: 0 30px 60px -30px rgba(0, 84, 161, 0.20);
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media (min-width: 1024px) {
+    .party-glass {
+      border-radius: 40px;
+      padding: 36px 40px;
+      max-width: 600px;
+      margin-left: 40px;
+      margin-right: auto;
+    }
+  }
+  .party-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background-size: cover;
+    background-position: center;
+    border-radius: 28px;
+    margin-top: -40px;
+    z-index: 1;
+    box-shadow: 0 30px 80px -30px rgba(14, 17, 22, 0.4);
+  }
+  @media (min-width: 1024px) {
+    .party-media {
+      border-radius: 40px;
+      margin-top: -70px;
+      margin-left: auto;
+      margin-right: 40px;
+      max-width: 86%;
+      aspect-ratio: 16/9;
+    }
+  }
+  .party-play {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 76px; height: 76px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.25);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.55);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease, background 0.2s ease;
+    color: #ffffff;
+  }
+  .party-play:hover {
+    transform: translate(-50%, -50%) scale(1.06);
+    background: rgba(255,255,255,0.35);
+  }
+
+  /* =========== ENHANCE YOUR TRIP (NEW: sticky blue title + white sub-cards) =========== */
+  .enhance-sub {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 56px;
+  }
+  @media (min-width: 1024px) {
+    .enhance-sub {
+      grid-template-columns: 1fr 2fr;
+      gap: 48px;
+      margin-top: 96px;
+      align-items: start;
+    }
+  }
+  .enhance-sub-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: #0054A1;
+  }
+  @media (min-width: 1024px) {
+    .enhance-sub-title {
+      position: sticky;
+      top: 120px;
+      padding-top: 20px;
+    }
+  }
+  .enhance-sub-card {
+    background: #ffffff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -30px rgba(0, 84, 161, 0.18),
+                0 10px 30px -10px rgba(14, 17, 22, 0.08);
+  }
+  @media (min-width: 1024px) {
+    .enhance-sub-card { border-radius: 44px; }
+  }
+  .enhance-sub-img {
+    aspect-ratio: 16/7;
+    background-size: cover;
+    background-position: center;
+    margin: 14px;
+    border-radius: 20px;
+  }
+  @media (min-width: 1024px) {
+    .enhance-sub-img {
+      margin: 20px;
+      border-radius: 28px;
+      aspect-ratio: 16/6;
+    }
+  }
+  .enhance-sub-body { padding: 12px 22px 22px; }
+  @media (min-width: 1024px) {
+    .enhance-sub-body { padding: 16px 44px 36px; }
+  }
+  .enhance-venue-title {
+    color: #0054A1;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .enhance-learn-more {
+    display: block;
+    width: 100%;
+    margin-top: 28px;
+    padding: 16px;
+    text-align: center;
+    border: 1.5px solid #0A78E0;
+    color: #0A78E0;
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .enhance-learn-more:hover {
+    background: #0A78E0;
+    color: #ffffff;
+  }
+
+  /* Mobile sub-links: bigger tap targets, larger font */
+  .mobile-sublinks > a {
+    padding: 10px 6px;
+    border-radius: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .mobile-sublinks > a:hover,
+  .mobile-sublinks > a:focus {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+</style>
+</head>
+
+<body class="font-body text-brand-ink">
+
+<!-- =================== FIXED HEADER =================== -->
+<header class="mobile-header flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2 shrink-0">
+    <img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" />
+  </a>
+
+  <nav class="hidden lg:flex items-center gap-8 text-white">
+    <div class="nav-item">
+      <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="dropdown">
+        <a href="#">Hotel Packages</a>
+        <a href="#">Party Packages</a>
+        <a href="#">Trip Add-ons</a>
+        <a href="#">Spring Break Packages</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="dropdown">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </div>
+    <a href="#" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+    <div class="nav-item">
+      <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="dropdown">
+        <a href="#">Testimonials</a>
+        <a href="#">Campus Manager</a>
+        <a href="#">When is My Spring Break</a>
+        <a href="#">Travel Protection</a>
+        <a href="#">FAQs</a>
+        <a href="#">Blog</a>
+      </div>
+    </div>
+    <a href="#" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+  </nav>
+
+  <div class="hidden lg:flex items-center gap-3 shrink-0">
+    <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
+      Specials
+    </a>
+    <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </div>
+
+  <div id="mobileHeaderRight" class="lg:hidden flex items-center gap-2"><a href="#" id="mobileSignIn" aria-label="Sign in" class=" inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></a><button id="mobileToggle" aria-label="Open menu" class=" inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+    <svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+  </button></div>
+</header>
+
+<!-- =================== MOBILE NAV =================== -->
+<div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top: 76px; max-height: calc(100vh - 92px);">
+  <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:14px;">
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="#">Hotel Packages</a>
+        <a href="#">Party Packages</a>
+        <a href="#">Trip Add-ons</a>
+        <a href="#">Spring Break Packages</a>
+      </div>
+    </details>
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </details>
+    <a href="#" class="py-3 border-b border-white/10">Why Go Blue</a>
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="#">Testimonials</a>
+        <a href="#">Campus Manager</a>
+        <a href="#">When is My Spring Break</a>
+        <a href="#">Travel Protection</a>
+        <a href="#">FAQs</a>
+        <a href="#">Blog</a>
+      </div>
+    </details>
+    <a href="#" class="py-3 border-b border-white/10">Contact</a>
+    <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span> Specials</a>
+    <a href="#" class="py-3 flex items-center gap-2">
+      <span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </nav>
+</div>
+
+<!-- =================== HERO =================== -->
+<section class="dest-hero">
+  <div class="grain"></div>
+  <div class="relative z-10 w-full min-h-[560px] lg:min-h-[680px] flex items-center justify-center text-center p-5 lg:p-12">
+    <div class="max-w-3xl">
+      <div class="mb-3 inline-block" style="transform: rotate(-4deg);">
+        <span class="dest-chip font-display text-white inline-block px-4 py-1.5 rounded-md shadow-lg" style="background:#FF5C3A; font-size: clamp(12px, 1.4vw, 16px);">
+          #1 Spring Break Destination
+        </span>
+      </div>
+      <h1 class="font-display uppercase text-white leading-[0.95]" style="font-size: clamp(56px, 12vw, 144px);">
+        PUNTA CANA
+      </h1>
+      <p class="text-white/90 mt-5 max-w-2xl mx-auto text-normal">
+        This amazing destination has everything you need to have an unforgettable Spring Break trip. There is plenty to do, and everything you could want is at your fingertips. Here's our Top Punta Cana Spring Break Hotels.
+      </p>
+      <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#" class="btn-gradient font-display italic text-white uppercase inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 28px; letter-spacing:0.04em;">
+          Start Planning Today
+        </a>
+        <a href="#quote" class="btn-hero-outline font-display italic uppercase inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 28px; letter-spacing:0.04em;">
+          Get A Quote
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== STATS CARDS =================== -->
+<section class="rated-bg relative">
+  <div class="py-12 lg:py-24 px-5 lg:px-12">
+    <div class="max-w-6xl mx-auto grid grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
+
+      <!-- Travelers -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-ink mb-1 lg:mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 L3 6 V20 a2 2 0 0 0 2 2 h14 a2 2 0 0 0 2 -2 V6 L18 2 Z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10 a4 4 0 0 1 -8 0"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">100K+</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Travelers</div>
+      </div>
+
+      <!-- Partners -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05C16.19 13.99 17 15.12 17 16.5V19h7v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">102</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Partners</div>
+      </div>
+
+      <!-- Destinations -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13 8.6c-.4-2-2.1-3.6-4.3-3.6-1.1 0-2 .4-2.8 1 .6-.5 1.4-.8 2.3-.8 1.7 0 3.1 1.1 3.6 2.6l-3-1.2 1.1 2.9-2.7-.5 1.6 2.1-2.2.2L12 11.2l.1 10.8h2l.3-10.8 5.5-.9-2.4-.4 1.9-1.9-3 .3 1.4-2.4-2.8 1.3c.4-1.4 1.5-2.5 3-2.9-1.4-.2-2.8.4-3.7 1.4-.4-1.1-1.2-1.9-2.3-2.3V2h-1v.6c-1.1.4-1.9 1.2-2.3 2.3-.9-1-2.3-1.6-3.7-1.4 1.5.4 2.6 1.5 3 2.9L7.1 5.1l1.4 2.4-3-.3 1.9 1.9L5 9.5l5.5.9z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">10</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Destinations</div>
+      </div>
+
+      <!-- Schools -->
+      <div class="rounded-2xl lg:rounded-3xl bg-[#EEF1F5] flex flex-col items-center justify-center text-center p-3 sm:p-5 lg:p-8 aspect-square">
+        <svg class="w-5 h-5 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-brand-blue mb-1 lg:mb-3" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3 L1 9 l11 6 9-4.91 V17 h2 V9 L12 3 z M5 13.18 v4 L12 21 l7-3.82 v-4 L12 17 l-7-3.82 z"/>
+        </svg>
+        <div class="font-display italic text-brand-ink leading-none text-xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl">1598</div>
+        <div class="font-body font-bold uppercase text-gray-500 mt-1 lg:mt-3 tracking-wide text-[9px] sm:text-xs lg:text-sm">Schools</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =================== HOTELS =================== -->
+<section class="rated-bg relative px-5 lg:px-12 pt-20 lg:pt-28 pb-16 lg:pb-20">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="font-display uppercase leading-[0.95] mb-10 lg:mb-14" style="font-size: clamp(36px, 6vw, 64px);">
+      <span class="text-brand-ink">PUNTA CANA </span><span style="color:#0054A1;">HOTELS</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <a href="#" class="hotel-card" style="--bg: url('https://images.unsplash.com/photo-1519449556851-5720b33024e7?auto=format&fit=crop&w=1200&q=80');">
+        <div class="p-6 pb-20">
+          <h3 class="font-display uppercase text-white leading-tight" style="font-size: clamp(22px, 3vw, 28px);">Hard Rock Punta Cana</h3>
+          <p class="text-white/80 text-sm mt-2 max-w-xs">Rock-themed resort with 13 pools, a FlowRider wave pool, and a nightly music festival on the beach.</p>
+        </div>
+        <span class="arrow-btn" aria-label="View hotel">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </span>
+      </a>
+      <a href="#" class="hotel-card" style="--bg: url('https://images.unsplash.com/photo-1545579133-99bb5ab189bd?auto=format&fit=crop&w=1200&q=80');">
+        <div class="p-6 pb-20">
+          <h3 class="font-display uppercase text-white leading-tight" style="font-size: clamp(22px, 3vw, 28px);">Breathless Punta Cana</h3>
+          <p class="text-white/80 text-sm mt-2 max-w-xs">Adults-only party resort with beachfront cabanas and rooftop DJ sets every single night.</p>
+        </div>
+        <span class="arrow-btn" aria-label="View hotel">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </span>
+      </a>
+      <a href="#" class="hotel-card" style="--bg: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80');">
+        <div class="p-6 pb-20">
+          <h3 class="font-display uppercase text-white leading-tight" style="font-size: clamp(22px, 3vw, 28px);">RIU Palace Punta Cana</h3>
+          <p class="text-white/80 text-sm mt-2 max-w-xs">24-hour all-inclusive with direct beach access on Bavaro, swim-up suites, and unlimited liquor.</p>
+        </div>
+        <span class="arrow-btn" aria-label="View hotel">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </span>
+      </a>
+      <a href="#" class="hotel-card" style="--bg: url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80');">
+        <div class="p-6 pb-20">
+          <h3 class="font-display uppercase text-white leading-tight" style="font-size: clamp(22px, 3vw, 28px);">Barcelo Bavaro Palace</h3>
+          <p class="text-white/80 text-sm mt-2 max-w-xs">Massive beachfront complex with six pools, a casino, and its own on-property theme park.</p>
+        </div>
+        <span class="arrow-btn" aria-label="View hotel">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== CURRENT DEALS (NEW) =================== -->
+<section class="rated-bg relative px-5 lg:px-12 py-16 lg:py-20">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="font-display uppercase leading-[0.95] mb-10 lg:mb-14" style="font-size: clamp(36px, 6vw, 64px);">
+      <span class="text-brand-ink">PUNTA CANA </span><span style="color:#0054A1;">CURRENT DEALS</span>
+    </h2>
+
+    <div class="deal-row">
+      <div class="deal-img" style="background-image: url('https://images.unsplash.com/photo-1519449556851-5720b33024e7?auto=format&fit=crop&w=1200&q=80');"></div>
+      <div class="deal-panel">
+        <div class="text-xs font-bold uppercase tracking-[0.22em] text-white/50">PUNTA CANA</div>
+        <h3 class="font-display italic uppercase text-white mt-3 leading-[1.02]" style="font-size: clamp(30px, 4.5vw, 44px);">
+          Hard Rock Punta Cana
+        </h3>
+
+        <ul class="mt-7 space-y-3 text-white/90 text-md">
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 mt-2.5 rounded-full bg-white shrink-0"></span>
+            <span>All inclusive food and drink at the hotel</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 mt-2.5 rounded-full bg-white shrink-0"></span>
+            <span>Round trip transfers to and from the airport / hotel</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 mt-2.5 rounded-full bg-white shrink-0"></span>
+            <span>All US Government taxes and fees</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 mt-2.5 rounded-full bg-white shrink-0"></span>
+            <span>6 night stay</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 mt-2.5 rounded-full bg-white shrink-0"></span>
+            <span>Up to 4 people per room</span>
+          </li>
+        </ul>
+
+        <div class="mt-auto pt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <div class="shrink-0 flex flex-col">
+            <div class="text-[11px] font-bold uppercase tracking-[0.22em] text-white/50">From</div>
+            <div class="font-display italic text-white mt-1 leading-none" style="font-size: 42px;">$949</div>
+            <div class="text-[11px] font-bold uppercase tracking-[0.22em] text-white/50 mt-1">Per Person</div>
+          </div>
+          <a href="#" class="deal-req-btn">Request Info</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== WHAT IS IT LIKE (NEW: glassmorphism) =================== -->
+<section class="rated-bg relative px-5 lg:px-12 py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="font-display uppercase leading-[0.95] text-center" style="font-size: clamp(44px, 7vw, 88px);">
+      <span class="text-brand-ink">What is it like</span><br/>
+      <span style="color:#0054A1;">in PUNTA CANA?</span>
+    </h2>
+
+    <div class="party-wrap mt-12 lg:mt-16">
+      <div class="party-glass">
+        <p class="text-brand-ink/85 text-md">Punta Cana is 20 miles of Bavaro Beach — resort day clubs, nightly foam parties, and Coco Bongo going off until sunrise.</p>
+        <p class="text-brand-ink/85 text-md mt-4">Every resort has its own beach-level day club, and at night Coco Bongo Punta Cana delivers a Vegas-style acrobatic show that has to be seen to be believed. Expect pool parties starting at 10am and never really stopping until the sun comes back up. Gather your crew — we're ready, are you?</p>
+      </div>
+
+      <div class="party-media" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80');">
+        <button aria-label="Play video" class="party-play" onclick="return false;">
+          <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== ENHANCE YOUR TRIP (NEW: 3 sub-cards) =================== -->
+<section class="rated-bg relative px-5 lg:px-12 pb-16 lg:pb-24">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <h2 class="font-display uppercase leading-[0.95]" style="font-size: clamp(36px, 6vw, 64px);">
+        <span class="text-brand-ink">Enhance your </span><span style="color:#0054A1;">Trip</span>
+      </h2>
+      <p class="text-brand-ink/70 mt-4 text-md">Punta Cana has something for everyone with dance clubs, bars, parties, festivals, shows, restaurants, DJs, live bands, and more to choose from. During the day, the booze cruise is the most popular event of every spring break!</p>
+    </div>
+
+    <!-- Sub-card 1: PARTY PACKAGE -->
+    <div class="enhance-sub">
+      <h3 class="enhance-sub-title">
+        Party<br/>Package
+      </h3>
+      <article class="enhance-sub-card">
+        <div class="enhance-sub-img" style="background-image: url('https://images.unsplash.com/photo-1571266028243-d220c6a66df8?auto=format&fit=crop&w=1600&q=80');"></div>
+        <div class="enhance-sub-body">
+          <p class="text-brand-ink/75 text-md">What is a Party Package? It's your entrance to the best concerts and nightlife that Punta Cana has to offer! Punta Cana has something for everyone, and this is especially true after dark. With numerous nightclubs to choose from, you can't go wrong. It's the ultimate nightlife for your ultimate Spring Break.</p>
+          <div class="mt-6 space-y-5">
+            <div><div class="enhance-venue-title">Coco Bongo</div><p class="text-brand-ink/75 text-md mt-2">A full-blown Vegas-style show crossed with a nightclub. Acrobats, cover bands, confetti cannons — you'll leave wondering what you just watched.</p></div>
+            <div><div class="enhance-venue-title">Imagine Club</div><p class="text-brand-ink/75 text-md mt-2">Built inside a natural cave — low ceilings, reggaeton pumping, and the most unique club atmosphere on the island.</p></div>
+            <div><div class="enhance-venue-title">Oro Nightclub</div><p class="text-brand-ink/75 text-md mt-2">Hard Rock's in-house mega-club. Celebrity DJ residencies and enough LED to light up the whole resort.</p></div>
+            <div><div class="enhance-venue-title">Drink Point</div><p class="text-brand-ink/75 text-md mt-2">Downtown Punta Cana's late-night staple — salsa, bachata, and $2 Presidente all night.</p></div>
+            <div><div class="enhance-venue-title">Legacy Nightclub</div><p class="text-brand-ink/75 text-md mt-2">Two floors of EDM and Latin beats inside the Downtown Punta Cana plaza, open till sunrise.</p></div>
+            <div><div class="enhance-venue-title">Huracan Cafe</div><p class="text-brand-ink/75 text-md mt-2">Beachfront bar on Bavaro — live bands, bonfires on the sand, and the best spot to start or end the night.</p></div>
+          </div>
+          <a href="#" class="enhance-learn-more">Learn More</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Sub-card 2: BOOZE CRUISE & OTHER EXCURSIONS -->
+    <div class="enhance-sub">
+      <h3 class="enhance-sub-title">
+        Booze Cruise<br/>&amp; Other<br/>Excursions
+      </h3>
+      <article class="enhance-sub-card">
+        <div class="enhance-sub-img" style="background-image: url('https://images.unsplash.com/photo-1500835556837-99ac94a94552?auto=format&fit=crop&w=1400&q=80');"></div>
+        <div class="enhance-sub-body">
+          <p class="text-brand-ink/75 text-md">The Punta Cana party catamaran leaves Macao Beach daily — unlimited Presidente beer, rum cocktails, and mamajuana shots, plus a snorkel stop at the natural pool in the middle of the ocean.</p>
+          <div class="mt-6">
+            <div class="enhance-venue-title">Other Excursions &amp; Day Tours</div>
+            <p class="text-brand-ink/75 text-md mt-2">Need a break from the day parties, and want to explore other activities in Punta Cana? There are a wide range of excursions available so you can find exactly what you're looking for.</p>
+            <p class="text-brand-ink/75 text-md mt-3">Zip-line through the jungle, ride a buggy through the palm plantations, swim in a cenote at Hoyo Azul, or book a day trip to Saona Island's pink beaches — Punta Cana has excursions for every level of adventure.</p>
+          </div>
+          <a href="#" class="enhance-learn-more">Learn More</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Sub-card 3: FLIGHTS AND TRANSFERS -->
+    <div class="enhance-sub">
+      <h3 class="enhance-sub-title">
+        PUNTA CANA<br/>Flights and<br/>Transfers
+      </h3>
+      <article class="enhance-sub-card">
+        <div class="enhance-sub-img" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=80');"></div>
+        <div class="enhance-sub-body">
+          <p class="text-brand-ink/75 text-md">Choosing to purchase the flight and round-trip destination transfer is totally up to you and your group. We work with the major airlines and one of the most reputable transfer companies to ensure your trip is nothing but smooth sailing.</p>
+          <div class="mt-6">
+            <div class="enhance-venue-title">Flights</div>
+            <p class="text-brand-ink/75 text-md mt-2">We're not gonna lie to you and tell you that we can get you the best deals on flights. Sometimes we do, and sometimes it is actually cheaper to buy your own flights online — the option is totally up to you and we will give you all the information you need to make the right decision for your group.</p>
+            <p class="text-brand-ink/75 text-md mt-3">If you choose to have your flight included with us, the dates you select for travel are guaranteed. Your exact flight details will be available approximately 30 days prior to the start of your trip. Groups of 8 or more are not guaranteed on the same flight, although we try our best.</p>
+          </div>
+          <div class="mt-6">
+            <div class="enhance-venue-title">Transfers</div>
+            <p class="text-brand-ink/75 text-md mt-2">Our staff will pick you up and take you directly to your destination so you can start enjoying your Spring Break the minute you step foot outside of the airport!</p>
+            <p class="text-brand-ink/75 text-md mt-3">PUJ is literally thatched-roof huts and palm trees. Round-trip private transfers are included and you're at the beach within 30 minutes of landing — look for the Go Blue Tours sign at arrivals.</p>
+          </div>
+          <a href="#" class="enhance-learn-more">Learn More</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section id="quote" class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/>
+      <span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for Punta Cana, group size, and week.</p>
+
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel"
+             class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">
+        Text Me My Quote
+      </button>
+    </form>
+
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">
+      No spam, unsubscribe anytime. Msg &amp; data rates may apply.
+    </p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">
+          #1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.
+        </p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg>
+          </a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="destinations.html" class="hover:text-white">Destinations</a></li>
+          <li><a href="#" class="hover:text-white">Deals</a></li>
+          <li><a href="#" class="hover:text-white">Spring Break Dates</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="#" class="hover:text-white">Why Go Blue</a></li>
+          <li><a href="#" class="hover:text-white">Testimonials</a></li>
+          <li><a href="#" class="hover:text-white">Campus Manager</a></li>
+          <li><a href="#" class="hover:text-white">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="#" class="hover:text-white">FAQ</a></li>
+          <li><a href="#" class="hover:text-white">Travel Protection</a></li>
+          <li><a href="#" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms and Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const siteHeader = document.querySelector('.mobile-header');
+  function syncHeader() {
+    if (!siteHeader) return;
+    siteHeader.classList.toggle('scrolled', window.scrollY > 40);
+  }
+  syncHeader();
+  window.addEventListener('scroll', syncHeader, { passive: true });
+
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => setMenu(!mobileNav.classList.contains('open')));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMenu(false); });
+
+  document.querySelectorAll('.nav-item > button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('quotePhone').value;
+    alert(`Thanks! We'll text your quote to ${phone || '—'}`);
+  });
+</script>
+
+</body>
+</html>
