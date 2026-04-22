@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — Campus Manager Program</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { heading: ['Montserrat','sans-serif'], body: ['Inter','sans-serif'] },
+        colors: {
+          brand: {
+            orange: '#FF5C3A',
+            blue: '#0054A1',
+            blueAccent: '#0A78E0',
+            blueLight: '#00AAFF',
+            yellow: '#FFC02E',
+            ink: '#0E1116',
+            navy: '#0B1A33',
+          },
+        },
+        fontSize: {
+          'normal': ['1rem', { lineHeight: '1.6' }],
+          'md':     ['0.9375rem', { lineHeight: '1.55' }],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: #0E1116; background: #fff; }
+  .font-display { font-family: 'Montserrat', sans-serif; font-weight: 900; font-style: italic; }
+
+  .btn-gradient { background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%); transition: filter .2s, transform .15s; }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-gradient:active { transform: translateY(1px); }
+  .btn-outline-blue { background:#fff; color:#0A78E0; border:2px solid #0A78E0; transition: background .2s, transform .15s; }
+  .btn-outline-blue:hover { background:#EAF3FF; }
+  .btn-outline-blue:active { transform: translateY(1px); }
+
+  .pill-outline { border: 1px solid rgba(255,255,255,0.35); }
+  .nav-active-pill { background: transparent; border:1.5px solid rgba(255,255,255,0.85); border-radius:9999px; padding:6px 14px; }
+
+  .nav-item { position: relative; }
+  .nav-item > .dropdown {
+    position:absolute; top:calc(100% + 14px); left:50%;
+    transform:translateX(-50%) translateY(-6px);
+    min-width:240px; background:rgba(0,0,0,0.75);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
+    z-index:50;
+  }
+  .nav-item > .dropdown::before { content:''; position:absolute; left:0; right:0; top:-18px; height:18px; background:transparent; }
+  .nav-item > button::after, .nav-item > a::after { content:''; position:absolute; left:0; right:0; top:100%; height:18px; }
+  .nav-item > button, .nav-item > a { position:relative; }
+  .nav-item:hover > .dropdown, .nav-item:focus-within > .dropdown, .nav-item.open > .dropdown {
+    opacity:1; visibility:visible; pointer-events:auto;
+    transform:translateX(-50%) translateY(0);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s;
+  }
+  .dropdown a { display:block; padding:10px 14px; border-radius:8px; color:#fff; font-family:'Inter',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.02em; white-space:nowrap; }
+  .dropdown a:hover { background:rgba(255,92,58,0.15); color:#FF5C3A; }
+  .nav-item:hover .caret, .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  .mobile-header {
+    position: fixed; top:0; left:0; right:0; z-index:60;
+    margin:0; padding:14px 20px; background:#0054A1;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+    transition: padding 0.25s ease;
+  }
+  @media (min-width:1024px) { .mobile-header { padding:22px 48px; } }
+  body.nav-open { overflow: hidden; }
+
+  .mobile-nav { opacity:0; visibility:hidden; transform: translateY(-8px); transition: opacity .25s ease, transform .25s ease, visibility 0s .25s; }
+  .mobile-nav.open { opacity:1; visibility:visible; transform: translateY(0); transition: opacity .25s ease, transform .25s ease, visibility 0s; }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display:none; }
+  .mobile-accordion summary { list-style:none; cursor:pointer; }
+
+  main { padding-top: 78px; }
+  @media (min-width:1024px) { main { padding-top:96px; } }
+
+  .rated-bg { position: relative; background-color:#fff; }
+  .rated-bg::before {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image: url('section-bg.svg'); background-size:cover; background-position:center; background-repeat:no-repeat;
+    mix-blend-mode: difference;
+  }
+  .rated-bg > * { position:relative; z-index:1; }
+
+  .hero-faded {
+    position:absolute; left:-2%; bottom:-2%;
+    font-family:'Montserrat',sans-serif; font-weight:900; font-style:italic;
+    font-size: clamp(120px, 22vw, 320px);
+    color: rgba(14,17,22,0.055);
+    letter-spacing:-0.02em; line-height:0.85;
+    pointer-events:none; white-space:nowrap; z-index:0;
+  }
+  .orange-dash::before { content:''; display:inline-block; width:28px; height:2px; background:#FF5C3A; margin-right:10px; vertical-align:middle; }
+  .left-bar { border-left:3px solid #FF5C3A; padding-left:16px; }
+
+  .stat-blue { background:#0054A1; color:#fff; border-radius:20px; padding:20px 22px; display:flex; align-items:center; gap:16px; min-height:120px; }
+  .stat-blue .icon-sq { width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+
+  .form-input { background:#F2F5F9; border:1px solid transparent; border-radius:10px; padding:12px 14px; font-family:'Inter'; font-weight:500; color:#0E1116; width:100%; transition:border-color .15s, background .15s; }
+  .form-input:focus { outline:none; border-color:#0A78E0; background:#fff; }
+  .form-label { font-family:'Inter'; font-weight:700; text-transform:uppercase; letter-spacing:0.18em; font-size:10px; color:#5B6472; }
+
+  /* Page-specific */
+  .perk-card { transition: transform .25s ease, box-shadow .25s ease; }
+  .perk-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -30px rgba(0,84,161,0.35); }
+  .step-num { font-family:'Montserrat'; font-weight:900; font-style:italic; font-size: clamp(64px, 8vw, 120px); color:#DCE3EE; line-height:0.9; }
+  .cm-hero-img {
+    width:100%; aspect-ratio: 4/3.2; border-radius:22px; border:6px solid #fff;
+    background:#0b1220 center/cover no-repeat;
+    background-image: url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=80');
+    box-shadow: 0 25px 60px -25px rgba(0,84,161,0.3);
+  }
+  .cm-hero-overlay {
+    position:absolute; bottom:-22px; left:-12px; width:54%; aspect-ratio:5/3.4;
+    border-radius:18px; border:6px solid #fff;
+    background:#0b1220 center/cover no-repeat;
+    background-image:url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=900&q=80');
+    box-shadow: 0 15px 35px -10px rgba(0,0,0,0.18);
+  }
+</style>
+</head>
+
+<body class="font-body text-brand-ink">
+
+<!-- =================== HEADER / NAV =================== -->
+<header class="mobile-header flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2 shrink-0">
+    <img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" />
+  </a>
+
+  <nav class="hidden lg:flex items-center gap-8 text-white">
+    <div class="nav-item">
+      <a href="package-deal.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="dropdown">
+        <a href="hotel-package.html">Hotel Packages</a>
+        <a href="party-package.html">Party Packages</a>
+        <a href="party-adds-on.html">Trip Add-ons</a>
+        <a href="destination.html">Spring Break Packages</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="destination.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="dropdown">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </div>
+    <a href="why-go-blue.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+    <div class="nav-item">
+      <button class="nav-active-pill flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] transition" style="font-size:12px;">
+        Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="dropdown">
+        <a href="customer-testimonials.html">Testimonials</a>
+        <a href="campus-manager.html">Campus Manager</a>
+        <a href="when-is-my-spring-break.html">When is My Spring Break</a>
+        <a href="travel-protection.html">Travel Protection</a>
+        <a href="faqs.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+    <a href="contact.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+  </nav>
+
+  <div class="hidden lg:flex items-center gap-3 shrink-0">
+    <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+      Specials
+    </a>
+    <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </div>
+
+  <div id="mobileHeaderRight" class="lg:hidden flex items-center gap-2">
+    <a href="#" id="mobileSignIn" aria-label="Sign in" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+        <polyline points="10 17 15 12 10 7"/>
+        <line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+    </a>
+    <button id="mobileToggle" aria-label="Open menu" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+      <svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+</header>
+
+<div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top:76px; max-height: calc(100vh - 92px);">
+  <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:14px;">
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="hotel-package.html">Hotel Packages</a>
+        <a href="party-package.html">Party Packages</a>
+        <a href="party-adds-on.html">Trip Add-ons</a>
+        <a href="destination.html">Spring Break Packages</a>
+      </div>
+    </details>
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </details>
+    <a href="why-go-blue.html" class="py-3 border-b border-white/10">Why Go Blue</a>
+    <details class="mobile-accordion border-b border-white/10" open>
+      <summary class="py-3 flex items-center justify-between text-brand-blueLight">Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="customer-testimonials.html">Testimonials</a>
+        <a href="campus-manager.html">Campus Manager</a>
+        <a href="when-is-my-spring-break.html">When is My Spring Break</a>
+        <a href="travel-protection.html">Travel Protection</a>
+        <a href="faqs.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </details>
+    <a href="contact.html" class="py-3 border-b border-white/10">Contact</a>
+    <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span> Specials</a>
+    <a href="#" class="py-3 flex items-center gap-2">
+      <span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </nav>
+</div>
+
+<main>
+
+<!-- =================== HERO =================== -->
+<section class="rated-bg relative overflow-hidden">
+  <div class="hero-faded">CAMPUS</div>
+  <div class="relative max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-12 items-center">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">
+          Get Paid To Travel
+        </div>
+        <h1 class="font-display uppercase leading-[0.92] mt-6" style="font-size: clamp(48px, 8.5vw, 108px);">
+          <span class="text-brand-navy">Become A</span><br/>
+          <span style="color:#0054A1;">Campus Manager.</span>
+        </h1>
+        <div class="mt-7 left-bar italic text-gray-500 max-w-xl" style="font-size:15px;">
+          "Run the most-talked-about trip on campus, earn cash for every booking, and travel free."
+        </div>
+        <div class="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <a href="#apply" class="btn-gradient font-display italic text-white uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 32px; letter-spacing:0.04em;">Apply Now</a>
+          <a href="#perks" class="btn-outline-blue font-display italic uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:14px 32px; letter-spacing:0.04em;">See The Perks</a>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="cm-hero-img"></div>
+        <div class="cm-hero-overlay"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== STATS BAR =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 pb-4 lg:pb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 6v6c0 5 3.4 9.6 8 10 4.6-.4 8-5 8-10V6l-8-4z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">1,500+</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Active Campuses</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.77l-6.18 3.25L7 13.14 2 8.27l6.91-1.01L12 1z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">$2K+</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Avg. Earnings</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21 10h-1V8a4 4 0 0 0-8 0v2h-1a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V8z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">FREE</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Trip For You</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">24/7</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Account Exec Support</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== WHAT IS A CM =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">What It Is</div>
+        <h2 class="font-display uppercase leading-[0.95] mt-5" style="font-size: clamp(36px, 5.4vw, 64px);">
+          <span class="text-brand-navy">Your Campus.</span><br/>
+          <span style="color:#0054A1;">Your Crew. Your Trip.</span>
+        </h2>
+        <p class="mt-5 text-gray-600 text-normal max-w-lg">
+          As a Go Blue Campus Manager, you're our boots-on-the-ground rep at your school. You build the group, hype the destination, and we handle every flight, hotel room, party pass, and transfer. The bigger the squad, the bigger your paycheck — and the better your free trip.
+        </p>
+        <p class="mt-4 text-gray-600 text-normal max-w-lg">
+          You'll get a personal Account Executive, custom marketing assets, a referral link, and a payout dashboard from day one. No experience required — just a love for spring break and a phone full of friends.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-2xl bg-white p-6 shadow-[0_20px_50px_-25px_rgba(0,84,161,0.25)] border border-black/5">
+          <div class="w-10 h-10 rounded-lg bg-brand-blue flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0054A1;">Build A Squad</h3>
+          <p class="text-gray-500 text-md mt-2">Sign up your roommates, your team, your sorority — group rates kick in fast.</p>
+        </div>
+        <div class="rounded-2xl bg-[#EEF1F5] p-6 border border-black/5">
+          <div class="w-10 h-10 rounded-lg bg-brand-blue flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H6.32c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+          <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0054A1;">Cash Per Booking</h3>
+          <p class="text-gray-500 text-md mt-2">Earn a flat commission on every traveler who books with your link. Direct deposit, weekly.</p>
+        </div>
+        <div class="rounded-2xl bg-[#EEF1F5] p-6 border border-black/5">
+          <div class="w-10 h-10 rounded-lg bg-brand-blue flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M21 5l-9 7-9-7v14h18zm-9 5L3.5 4h17z"/></svg></div>
+          <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0054A1;">Done-For-You Marketing</h3>
+          <p class="text-gray-500 text-md mt-2">Flyers, story templates, group-chat scripts, swag drops — all in your portal.</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-[0_20px_50px_-25px_rgba(0,84,161,0.25)] border border-black/5">
+          <div class="w-10 h-10 rounded-lg bg-brand-blue flex items-center justify-center"><svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M21 10h-3V8h-2v2H8V8H6v2H3v11h18V10zM12 4l8 4H4l8-4z"/></svg></div>
+          <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0054A1;">VIP Trip Treatment</h3>
+          <p class="text-gray-500 text-md mt-2">Skip-the-line check-in, host welcome, and on-site gear when you arrive at your destination.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== PERKS =================== -->
+<section id="perks" style="background:#F5F8FC;" class="relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="text-center max-w-3xl mx-auto">
+      <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash inline-block">The Payout</div>
+      <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(36px, 5.6vw, 70px);">
+        <span class="text-brand-navy">Real Perks.</span> <span style="color:#0054A1;">No Catch.</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-orange/15 flex items-center justify-center"><svg class="w-6 h-6 text-brand-orange" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.79 2 8 3.79 8 6c0 1.5.83 2.79 2.05 3.46C8.84 10.5 8 12.05 8 13.81V21h8v-7.19c0-1.76-.84-3.31-2.05-4.35C15.17 8.79 16 7.5 16 6c0-2.21-1.79-4-4-4z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Up To $5,000+</h3>
+        <p class="text-gray-500 text-md mt-2">Top managers earn five figures over a single spring season. Tiered commission unlocks at 10, 25, and 50 bookings.</p>
+      </div>
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-6 h-6 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Free Spring Break Trip</h3>
+        <p class="text-gray-500 text-md mt-2">Hit our group milestone and your hotel, party passes, transfers, and even airfare are 100% on us.</p>
+      </div>
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-blueLight/15 flex items-center justify-center"><svg class="w-6 h-6 text-brand-blueAccent" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Resume Boost</h3>
+        <p class="text-gray-500 text-md mt-2">Real sales, marketing, and event-ops experience. We'll write you a reference and a LinkedIn endorsement.</p>
+      </div>
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-orange/15 flex items-center justify-center"><svg class="w-6 h-6 text-brand-orange" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l8 4-8 4-8-4 8-4zm0 7l8-4v6l-8 4-8-4V7l8 4z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Exclusive Swag Drop</h3>
+        <p class="text-gray-500 text-md mt-2">Free Go Blue gear, custom hats, and limited-edition tees that ship to your dorm before launch week.</p>
+      </div>
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-6 h-6 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Direct Account Exec</h3>
+        <p class="text-gray-500 text-md mt-2">A real person on speed dial. Text, call, or DM — your AE handles every booking question for you and your group.</p>
+      </div>
+      <div class="perk-card rounded-2xl bg-white p-7 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-12 h-12 rounded-xl bg-brand-yellow/25 flex items-center justify-center"><svg class="w-6 h-6 text-brand-yellow" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2zm0 6l6.5 12h-13L12 8z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-5" style="font-size:20px; color:#0B1A33;">Top Manager Bonuses</h3>
+        <p class="text-gray-500 text-md mt-2">Quarterly bonuses, leaderboard prizes, and an end-of-season Bahamas retreat for our top 25 reps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== HOW IT WORKS =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">How It Works</div>
+    <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(34px, 5.4vw, 64px);">
+      <span class="text-brand-navy">Three Steps</span> <span style="color:#0054A1;">To Paid.</span>
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+      <div>
+        <div class="step-num">01</div>
+        <h3 class="font-display italic uppercase mt-2" style="font-size:22px; color:#0054A1;">Apply</h3>
+        <p class="text-gray-500 text-md mt-2">Fill out the 90-second application below. We review every app within 48 hours and set up a quick onboarding call.</p>
+      </div>
+      <div>
+        <div class="step-num">02</div>
+        <h3 class="font-display italic uppercase mt-2" style="font-size:22px; color:#0054A1;">Promote</h3>
+        <p class="text-gray-500 text-md mt-2">Get your custom referral link, marketing pack, and group-chat scripts. Drop the link, share the flyers, fill the trip.</p>
+      </div>
+      <div>
+        <div class="step-num">03</div>
+        <h3 class="font-display italic uppercase mt-2" style="font-size:22px; color:#0054A1;">Get Paid + Travel</h3>
+        <p class="text-gray-500 text-md mt-2">Watch your dashboard fill up. Cash hits weekly, and your free trip activates the moment your group hits the milestone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== WHO'S A FIT =================== -->
+<section style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/70 text-[11px] lg:text-xs">Is It You?</div>
+        <h2 class="font-display italic uppercase leading-[1.02] mt-3" style="font-size: clamp(34px, 5.2vw, 60px);">
+          You're Probably<br/><span style="color:#FFC02E;">A Fit If…</span>
+        </h2>
+      </div>
+      <ul class="space-y-4 text-white/90 text-normal">
+        <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>You're a current college student (any year, any major).</li>
+        <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>You have a network — Greek life, sports team, club, dorm, group chat — that wants to spring break.</li>
+        <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>You're hyped to actually post, share, and talk about your trip on social.</li>
+        <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>You can commit a few hours a week from late summer through early spring.</li>
+        <li class="flex gap-3"><span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>You'd describe yourself as the "trip planner" of your friend group.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =================== APPLY FORM =================== -->
+<section id="apply" class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 items-start">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">Apply Now</div>
+        <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(34px, 5.2vw, 60px);">
+          <span class="text-brand-navy">Drop Your</span><br/><span style="color:#0054A1;">Info Below.</span>
+        </h2>
+        <p class="text-gray-500 text-normal mt-5 max-w-md">Takes about 90 seconds. We'll text you within 48 hours to set up your onboarding call. No pressure, no spam — just real opportunity.</p>
+        <div class="mt-8 rounded-2xl bg-[#EEF1F5] p-6 border border-black/5">
+          <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-blue text-[11px]">Or Email Us Directly</div>
+          <a href="mailto:campus@gobluetours.com" class="font-display italic uppercase block mt-2" style="font-size:22px; color:#0B1A33;">campus@gobluetours.com</a>
+        </div>
+      </div>
+
+      <form id="cmForm" class="rounded-2xl bg-white p-6 lg:p-9 border border-black/5 shadow-[0_25px_60px_-25px_rgba(0,84,161,0.2)]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <div class="form-label mb-2">First Name</div>
+            <input type="text" required class="form-input" placeholder="Casey" />
+          </div>
+          <div>
+            <div class="form-label mb-2">Last Name</div>
+            <input type="text" required class="form-input" placeholder="Reyes" />
+          </div>
+          <div>
+            <div class="form-label mb-2">Email</div>
+            <input type="email" required class="form-input" placeholder="you@school.edu" />
+          </div>
+          <div>
+            <div class="form-label mb-2">Phone</div>
+            <input type="tel" required class="form-input" placeholder="(555) 000-0000" />
+          </div>
+          <div class="sm:col-span-2">
+            <div class="form-label mb-2">School / University</div>
+            <input type="text" required class="form-input" placeholder="University of…" />
+          </div>
+          <div class="sm:col-span-2">
+            <div class="form-label mb-2">How big is your network?</div>
+            <select class="form-input">
+              <option>Just me + 5 close friends</option>
+              <option>10–25 (a tight crew)</option>
+              <option>25–50 (whole team / chapter)</option>
+              <option>50+ (campus-wide reach)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <div class="form-label mb-2">Tell us why you'd be a great Campus Manager</div>
+            <textarea rows="4" class="form-input" placeholder="Greek life, sports team, big group chat, content creator, etc."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn-gradient w-full sm:w-auto mt-6 font-display italic text-white uppercase inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 32px; letter-spacing:0.04em;">Submit Application</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section id="quote" class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/>
+      <span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel" class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">Text Me My Quote</button>
+    </form>
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">No spam, unsubscribe anytime. Msg &amp; data rates may apply.</p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">
+          #1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.
+        </p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg></a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg></a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="destination.html" class="hover:text-white">Destinations</a></li>
+          <li><a href="package-deal.html" class="hover:text-white">Deals</a></li>
+          <li><a href="when-is-my-spring-break.html" class="hover:text-white">Spring Break Dates</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="why-go-blue.html" class="hover:text-white">Why Go Blue</a></li>
+          <li><a href="customer-testimonials.html" class="hover:text-white">Testimonials</a></li>
+          <li><a href="campus-manager.html" class="hover:text-white">Campus Manager</a></li>
+          <li><a href="blog.html" class="hover:text-white">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="faqs.html" class="hover:text-white">FAQ</a></li>
+          <li><a href="travel-protection.html" class="hover:text-white">Travel Protection</a></li>
+          <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms and Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => setMenu(!mobileNav.classList.contains('open')));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMenu(false); });
+
+  document.querySelectorAll('.nav-item > button, .nav-item > a').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('quotePhone').value;
+    alert(`Thanks! We'll text your quote to ${phone || '—'}`);
+  });
+  document.getElementById('cmForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Application received! We\'ll text you within 48 hours.');
+  });
+</script>
+
+</body>
+</html>

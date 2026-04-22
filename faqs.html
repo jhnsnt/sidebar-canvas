@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — FAQs</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { heading: ['Montserrat','sans-serif'], body: ['Inter','sans-serif'] },
+        colors: { brand: { orange:'#FF5C3A', blue:'#0054A1', blueAccent:'#0A78E0', blueLight:'#00AAFF', yellow:'#FFC02E', ink:'#0E1116', navy:'#0B1A33' } },
+        fontSize: { 'normal': ['1rem',{lineHeight:'1.6'}], 'md':['0.9375rem',{lineHeight:'1.55'}] },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family:'Inter',sans-serif; color:#0E1116; background:#fff; }
+  .font-display { font-family:'Montserrat',sans-serif; font-weight:900; font-style:italic; }
+
+  .btn-gradient { background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%); transition: filter .2s, transform .15s; }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-outline-blue { background:#fff; color:#0A78E0; border:2px solid #0A78E0; transition: background .2s; }
+  .btn-outline-blue:hover { background:#EAF3FF; }
+  .pill-outline { border:1px solid rgba(255,255,255,0.35); }
+  .nav-active-pill { background:transparent; border:1.5px solid rgba(255,255,255,0.85); border-radius:9999px; padding:6px 14px; }
+
+  .nav-item { position:relative; }
+  .nav-item > .dropdown { position:absolute; top:calc(100% + 14px); left:50%; transform:translateX(-50%) translateY(-6px); min-width:240px; background:rgba(0,0,0,0.75); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px; opacity:0; visibility:hidden; pointer-events:none; transition: opacity .18s, transform .18s, visibility 0s .18s; z-index:50; }
+  .nav-item > .dropdown::before { content:''; position:absolute; left:0; right:0; top:-18px; height:18px; background:transparent; }
+  .nav-item > button::after, .nav-item > a::after { content:''; position:absolute; left:0; right:0; top:100%; height:18px; }
+  .nav-item > button, .nav-item > a { position:relative; }
+  .nav-item:hover > .dropdown, .nav-item:focus-within > .dropdown, .nav-item.open > .dropdown { opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0); transition: opacity .18s, transform .18s, visibility 0s; }
+  .dropdown a { display:block; padding:10px 14px; border-radius:8px; color:#fff; font-family:'Inter'; font-size:13px; font-weight:600; letter-spacing:0.02em; white-space:nowrap; }
+  .dropdown a:hover { background:rgba(255,92,58,0.15); color:#FF5C3A; }
+  .nav-item:hover .caret, .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  .mobile-header { position:fixed; top:0; left:0; right:0; z-index:60; margin:0; padding:14px 20px; background:#0054A1; box-shadow:0 2px 20px rgba(0,0,0,0.12); transition:padding .25s; }
+  @media (min-width:1024px) { .mobile-header { padding:22px 48px; } }
+  body.nav-open { overflow:hidden; }
+  .mobile-nav { opacity:0; visibility:hidden; transform:translateY(-8px); transition: opacity .25s, transform .25s, visibility 0s .25s; }
+  .mobile-nav.open { opacity:1; visibility:visible; transform:translateY(0); transition: opacity .25s, transform .25s, visibility 0s; }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display:none; }
+  .mobile-accordion summary { list-style:none; cursor:pointer; }
+  main { padding-top:78px; }
+  @media (min-width:1024px) { main { padding-top:96px; } }
+
+  .rated-bg { position:relative; background-color:#fff; }
+  .rated-bg::before { content:''; position:absolute; inset:0; pointer-events:none; background-image:url('section-bg.svg'); background-size:cover; background-position:center; background-repeat:no-repeat; mix-blend-mode:difference; }
+  .rated-bg > * { position:relative; z-index:1; }
+
+  .hero-faded { position:absolute; left:-2%; bottom:-2%; font-family:'Montserrat'; font-weight:900; font-style:italic; font-size:clamp(120px,22vw,320px); color:rgba(14,17,22,0.055); letter-spacing:-0.02em; line-height:0.85; pointer-events:none; white-space:nowrap; z-index:0; }
+  .orange-dash::before { content:''; display:inline-block; width:28px; height:2px; background:#FF5C3A; margin-right:10px; vertical-align:middle; }
+  .left-bar { border-left:3px solid #FF5C3A; padding-left:16px; }
+
+  /* FAQ */
+  .cat-pill { padding:8px 16px; border-radius:9999px; font-family:'Inter'; font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:0.14em; cursor:pointer; transition: all .15s ease; border:1px solid transparent; }
+  .cat-pill.active { background:#0054A1; color:#fff; }
+  .cat-pill:not(.active) { background:#fff; color:#0054A1; border-color:rgba(0,0,0,0.08); }
+  .cat-pill:not(.active):hover { background:#EEF1F5; }
+  .faq-row { background:#fff; border:1px solid rgba(0,0,0,0.06); border-radius:14px; padding:18px 22px; transition: box-shadow .15s, border-color .15s; }
+  .faq-row[open] { box-shadow: 0 20px 40px -25px rgba(0,84,161,0.25); border-color: rgba(0,84,161,0.2); }
+  .faq-row summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .faq-row summary::-webkit-details-marker { display:none; }
+  .faq-row[open] .caret-acc { transform: rotate(180deg); }
+  .caret-acc { transition: transform .2s ease; flex-shrink:0; }
+  #faqSearch { width:100%; background:#F2F5F9; border:1px solid transparent; border-radius:14px; padding:14px 18px 14px 46px; font-family:'Inter'; font-weight:500; }
+  #faqSearch:focus { outline:none; border-color:#0A78E0; background:#fff; }
+  .faq-search-wrap { position:relative; }
+  .faq-search-wrap svg { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#5B6472; }
+</style>
+</head>
+
+<body class="font-body text-brand-ink">
+
+<!-- =================== HEADER / NAV =================== -->
+<header class="mobile-header flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2 shrink-0"><img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" /></a>
+  <nav class="hidden lg:flex items-center gap-8 text-white">
+    <div class="nav-item"><a href="package-deal.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Deals<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></a><div class="dropdown"><a href="hotel-package.html">Hotel Packages</a><a href="party-package.html">Party Packages</a><a href="party-adds-on.html">Trip Add-ons</a><a href="destination.html">Spring Break Packages</a></div></div>
+    <div class="nav-item"><a href="destination.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Destinations<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></a><div class="dropdown"><a href="cancun.html">Cancún</a><a href="cabo.html">Cabo</a><a href="punta-cana.html">Punta Cana</a><a href="freeport.html">Freeport</a><a href="panama-city.html">Panama City</a><a href="nassau.html">Nassau</a></div></div>
+    <a href="why-go-blue.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+    <div class="nav-item"><button class="nav-active-pill flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] transition" style="font-size:12px;">Resources<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="dropdown"><a href="customer-testimonials.html">Testimonials</a><a href="campus-manager.html">Campus Manager</a><a href="when-is-my-spring-break.html">When is My Spring Break</a><a href="travel-protection.html">Travel Protection</a><a href="faqs.html">FAQs</a><a href="blog.html">Blog</a></div></div>
+    <a href="contact.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+  </nav>
+  <div class="hidden lg:flex items-center gap-3 shrink-0">
+    <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;"><span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>Specials</a>
+    <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;"><span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>My Account</a>
+  </div>
+  <div class="lg:hidden flex items-center gap-2">
+    <a href="#" aria-label="Sign in" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></a>
+    <button id="mobileToggle" aria-label="Open menu" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20"><svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg><svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  </div>
+</header>
+
+<div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top:76px; max-height: calc(100vh - 92px);">
+  <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:14px;">
+    <details class="mobile-accordion border-b border-white/10"><summary class="py-3 flex items-center justify-between">Deals<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="hotel-package.html">Hotel Packages</a><a href="party-package.html">Party Packages</a><a href="party-adds-on.html">Trip Add-ons</a><a href="destination.html">Spring Break Packages</a></div></details>
+    <details class="mobile-accordion border-b border-white/10"><summary class="py-3 flex items-center justify-between">Destinations<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="cancun.html">Cancún</a><a href="cabo.html">Cabo</a><a href="punta-cana.html">Punta Cana</a><a href="freeport.html">Freeport</a><a href="panama-city.html">Panama City</a><a href="nassau.html">Nassau</a></div></details>
+    <a href="why-go-blue.html" class="py-3 border-b border-white/10">Why Go Blue</a>
+    <details class="mobile-accordion border-b border-white/10" open><summary class="py-3 flex items-center justify-between text-brand-blueLight">Resources<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="customer-testimonials.html">Testimonials</a><a href="campus-manager.html">Campus Manager</a><a href="when-is-my-spring-break.html">When is My Spring Break</a><a href="travel-protection.html">Travel Protection</a><a href="faqs.html">FAQs</a><a href="blog.html">Blog</a></div></details>
+    <a href="contact.html" class="py-3 border-b border-white/10">Contact</a>
+    <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>Specials</a>
+    <a href="#" class="py-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>My Account</a>
+  </nav>
+</div>
+
+<main>
+
+<!-- =================== HERO =================== -->
+<section class="rated-bg relative overflow-hidden">
+  <div class="hero-faded">ANSWERS</div>
+  <div class="relative max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-24">
+    <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">Help Center</div>
+    <h1 class="font-display uppercase leading-[0.92] mt-6" style="font-size: clamp(48px, 9vw, 116px);">
+      <span class="text-brand-navy">Frequently</span><br/>
+      <span style="color:#0054A1;">Asked Questions.</span>
+    </h1>
+    <div class="mt-7 left-bar italic text-gray-500 max-w-xl" style="font-size:15px;">
+      "Everything you've ever wondered about booking spring break with us — answered."
+    </div>
+
+    <div class="faq-search-wrap mt-9 max-w-xl">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="faqSearch" type="text" placeholder="Search the FAQs…" />
+    </div>
+  </div>
+</section>
+
+<!-- =================== CATEGORY PILLS =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 pb-2">
+    <div class="flex flex-wrap gap-2">
+      <button class="cat-pill active" data-cat="all">All</button>
+      <button class="cat-pill" data-cat="booking">Booking</button>
+      <button class="cat-pill" data-cat="payments">Payments</button>
+      <button class="cat-pill" data-cat="docs">Travel Docs</button>
+      <button class="cat-pill" data-cat="trip">On The Trip</button>
+      <button class="cat-pill" data-cat="cancel">Cancellations &amp; Changes</button>
+      <button class="cat-pill" data-cat="groups">Groups</button>
+    </div>
+  </div>
+</section>
+
+<!-- =================== FAQ LIST =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-4xl mx-auto px-5 lg:px-12 py-10 lg:py-16">
+    <div id="faqList" class="space-y-3">
+
+      <details class="faq-row" data-cat="booking">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">How do I book a Go Blue Tours trip?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Pick a destination, get a quote, and your Account Executive walks you through everything. We handle the booking, sign waivers digitally in your portal, and ship your trip ID before you fly.</p>
+      </details>
+      <details class="faq-row" data-cat="booking">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">When should I book?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">As early as possible. Top hotels for peak weeks (Mar 7–20) sell out by November. Booking before October typically saves 15–25% per person.</p>
+      </details>
+      <details class="faq-row" data-cat="booking">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Can I book just for myself?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Yes. Solo travelers can join an existing group, room with same-gender travelers, or request a private room (additional supplement applies).</p>
+      </details>
+
+      <details class="faq-row" data-cat="payments">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">How much is the deposit?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">$99 per person to lock in your spot. The rest can be paid in interest-free monthly installments through our financing partner — pay off the trip before you fly.</p>
+      </details>
+      <details class="faq-row" data-cat="payments">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">What payment methods do you accept?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">All major credit and debit cards, Apple Pay, Google Pay, ACH bank transfer, and the Go Blue installment plan.</p>
+      </details>
+      <details class="faq-row" data-cat="payments">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Are there hidden fees?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">No. Your quote includes hotel, transfers, party passes, taxes, and Go Blue concierge support. The only out-of-pocket items are airfare (unless added) and personal spending.</p>
+      </details>
+
+      <details class="faq-row" data-cat="docs">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Do I need a passport?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Yes for any international destination (Cancún, Cabo, Punta Cana, Nassau, Freeport). Your passport must be valid for at least 6 months past your return date. Domestic Panama City Beach trips only need a valid US ID.</p>
+      </details>
+      <details class="faq-row" data-cat="docs">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">What if my passport is delayed?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">We have a partnership with an expedited passport service that can deliver in as little as 5 business days. Talk to your Account Executive ASAP if you're in this situation.</p>
+      </details>
+      <details class="faq-row" data-cat="docs">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Do I need a visa?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">US citizens do not need a visa for Mexico, Dominican Republic, or the Bahamas for short tourist stays. Other passport holders should check requirements with their embassy.</p>
+      </details>
+
+      <details class="faq-row" data-cat="trip">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">What's included in my package?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Hotel stay (typically 5 or 7 nights), all-inclusive food and drinks (most resorts), airport transfers, party pass to our partner clubs, on-site Go Blue host, and 24/7 trip support.</p>
+      </details>
+      <details class="faq-row" data-cat="trip">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Will I have a Go Blue staff member at my destination?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Always. Spring Break Hosts greet you at the airport, run the welcome party, and stay on-site at your hotel for the entire week.</p>
+      </details>
+      <details class="faq-row" data-cat="trip">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">What's the drinking age?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">18 in Mexico, Dominican Republic, and the Bahamas. 21 in the United States. Always carry your passport or ID.</p>
+      </details>
+
+      <details class="faq-row" data-cat="cancel">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">What if I need to cancel?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Refunds depend on how close you are to departure. With Travel Protection, you may be reimbursed up to 100% for covered reasons (or 75% for any reason on the Premium plan). Without Travel Protection, the deposit is non-refundable, and the cancellation schedule applies.</p>
+      </details>
+      <details class="faq-row" data-cat="cancel">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Can I transfer my booking to a friend?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Yes — up to 14 days before departure, for a small admin fee. Your AE handles the swap.</p>
+      </details>
+      <details class="faq-row" data-cat="cancel">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Can I change my dates or destination?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Date and destination changes are free up to 60 days before departure, subject to availability. After that, a change fee may apply.</p>
+      </details>
+
+      <details class="faq-row" data-cat="groups">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Do you offer group discounts?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Yes. Group rates kick in at 8 travelers and improve at 16, 32, and 50+. Group organizers also unlock free or discounted spots — see our Campus Manager program.</p>
+      </details>
+      <details class="faq-row" data-cat="groups">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">Do roommates have to book at the same time?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">No, but they should book within the same week to lock the rate. Your AE keeps the room held while everyone confirms.</p>
+      </details>
+      <details class="faq-row" data-cat="groups">
+        <summary><span class="font-display italic uppercase" style="font-size:15px; color:#0B1A33;">How big can my group get?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">No limit — we've moved entire chapters of 200+. Larger groups get a dedicated planner, private welcome party, and a free room block strategy session.</p>
+      </details>
+
+    </div>
+    <div id="faqEmpty" class="hidden text-center text-gray-500 py-12">No questions match your search. Try other keywords or <a href="contact.html" class="text-brand-blue underline">ask us directly</a>.</div>
+  </div>
+</section>
+
+<!-- =================== STILL HAVE QUESTIONS =================== -->
+<section style="background:#F5F8FC;" class="relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-20">
+    <div class="rounded-3xl bg-brand-blue text-white p-8 lg:p-14 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/70 text-[11px]">Still Have Questions?</div>
+        <h2 class="font-display italic uppercase leading-[1.02] mt-3" style="font-size: clamp(28px, 4.5vw, 48px);">
+          Talk To A Real Human.<br/><span style="color:#FFC02E;">Today.</span>
+        </h2>
+        <p class="text-white/85 mt-3 max-w-md text-md">Our Account Executives respond within minutes. Text, call, or email — pick your poison.</p>
+      </div>
+      <div class="flex flex-col sm:flex-row lg:flex-col gap-3 lg:items-end">
+        <a href="tel:18552246258" class="inline-flex items-center justify-center gap-2 bg-white text-brand-blue font-display italic uppercase rounded-xl px-6 py-3" style="font-size:14px;"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 15.5l-2.5-.4a1 1 0 0 0-.9.3L15 17l-3-3 1.6-1.6a1 1 0 0 0 .3-.9L13.5 9a1 1 0 0 0-1-.8H8a1 1 0 0 0-1 1.1A14 14 0 0 0 14.7 17a1 1 0 0 0 1.1-1H20a1 1 0 0 0-.5-1.5z"/></svg>855-224-6258</a>
+        <a href="contact.html" class="inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl px-6 py-3" style="font-size:14px;">Send A Message</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section id="quote" class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/><span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel" class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">Text Me My Quote</button>
+    </form>
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">No spam, unsubscribe anytime. Msg &amp; data rates may apply.</p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">#1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.</p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg></a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg></a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg></a>
+        </div>
+      </div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div><ul class="space-y-3 text-white/90"><li><a href="destination.html" class="hover:text-white">Destinations</a></li><li><a href="package-deal.html" class="hover:text-white">Deals</a></li><li><a href="when-is-my-spring-break.html" class="hover:text-white">Spring Break Dates</a></li></ul></div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div><ul class="space-y-3 text-white/90"><li><a href="why-go-blue.html" class="hover:text-white">Why Go Blue</a></li><li><a href="customer-testimonials.html" class="hover:text-white">Testimonials</a></li><li><a href="campus-manager.html" class="hover:text-white">Campus Manager</a></li><li><a href="blog.html" class="hover:text-white">Blog</a></li></ul></div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div><ul class="space-y-3 text-white/90"><li><a href="faqs.html" class="hover:text-white">FAQ</a></li><li><a href="travel-protection.html" class="hover:text-white">Travel Protection</a></li><li><a href="contact.html" class="hover:text-white">Contact</a></li></ul></div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80"><a href="#" class="hover:text-white">Privacy Policy</a><a href="#" class="hover:text-white">Terms and Conditions</a></div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => setMenu(!mobileNav.classList.contains('open')));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMenu(false); });
+  document.querySelectorAll('.nav-item > button, .nav-item > a').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('quotePhone').value;
+    alert(`Thanks! We'll text your quote to ${phone || '—'}`);
+  });
+
+  // FAQ filtering
+  let activeCat = 'all';
+  const search = document.getElementById('faqSearch');
+  const rows = document.querySelectorAll('.faq-row');
+  const empty = document.getElementById('faqEmpty');
+  const pills = document.querySelectorAll('.cat-pill');
+
+  function applyFilters() {
+    const q = search.value.trim().toLowerCase();
+    let anyVisible = false;
+    rows.forEach(r => {
+      const cat = r.dataset.cat;
+      const text = r.textContent.toLowerCase();
+      const catMatch = activeCat === 'all' || cat === activeCat;
+      const textMatch = !q || text.includes(q);
+      const show = catMatch && textMatch;
+      r.style.display = show ? '' : 'none';
+      if (show) anyVisible = true;
+    });
+    empty.classList.toggle('hidden', anyVisible);
+  }
+  search.addEventListener('input', applyFilters);
+  pills.forEach(p => p.addEventListener('click', () => {
+    pills.forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    activeCat = p.dataset.cat;
+    applyFilters();
+  }));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — Travel Protection</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { heading: ['Montserrat','sans-serif'], body: ['Inter','sans-serif'] },
+        colors: {
+          brand: { orange:'#FF5C3A', blue:'#0054A1', blueAccent:'#0A78E0', blueLight:'#00AAFF', yellow:'#FFC02E', ink:'#0E1116', navy:'#0B1A33' },
+        },
+        fontSize: {
+          'normal': ['1rem', { lineHeight: '1.6' }],
+          'md':     ['0.9375rem', { lineHeight: '1.55' }],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family:'Inter',sans-serif; color:#0E1116; background:#fff; }
+  .font-display { font-family:'Montserrat',sans-serif; font-weight:900; font-style:italic; }
+
+  .btn-gradient { background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%); transition: filter .2s, transform .15s; }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-outline-blue { background:#fff; color:#0A78E0; border:2px solid #0A78E0; transition: background .2s; }
+  .btn-outline-blue:hover { background:#EAF3FF; }
+
+  .pill-outline { border:1px solid rgba(255,255,255,0.35); }
+  .nav-active-pill { background:transparent; border:1.5px solid rgba(255,255,255,0.85); border-radius:9999px; padding:6px 14px; }
+
+  .nav-item { position:relative; }
+  .nav-item > .dropdown { position:absolute; top:calc(100% + 14px); left:50%; transform:translateX(-50%) translateY(-6px); min-width:240px; background:rgba(0,0,0,0.75); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px; opacity:0; visibility:hidden; pointer-events:none; transition: opacity .18s, transform .18s, visibility 0s .18s; z-index:50; }
+  .nav-item > .dropdown::before { content:''; position:absolute; left:0; right:0; top:-18px; height:18px; background:transparent; }
+  .nav-item > button::after, .nav-item > a::after { content:''; position:absolute; left:0; right:0; top:100%; height:18px; }
+  .nav-item > button, .nav-item > a { position:relative; }
+  .nav-item:hover > .dropdown, .nav-item:focus-within > .dropdown, .nav-item.open > .dropdown { opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0); transition: opacity .18s, transform .18s, visibility 0s; }
+  .dropdown a { display:block; padding:10px 14px; border-radius:8px; color:#fff; font-family:'Inter'; font-size:13px; font-weight:600; letter-spacing:0.02em; white-space:nowrap; }
+  .dropdown a:hover { background:rgba(255,92,58,0.15); color:#FF5C3A; }
+  .nav-item:hover .caret, .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  .mobile-header { position:fixed; top:0; left:0; right:0; z-index:60; margin:0; padding:14px 20px; background:#0054A1; box-shadow:0 2px 20px rgba(0,0,0,0.12); transition:padding .25s; }
+  @media (min-width:1024px) { .mobile-header { padding:22px 48px; } }
+  body.nav-open { overflow:hidden; }
+  .mobile-nav { opacity:0; visibility:hidden; transform:translateY(-8px); transition: opacity .25s, transform .25s, visibility 0s .25s; }
+  .mobile-nav.open { opacity:1; visibility:visible; transform:translateY(0); transition: opacity .25s, transform .25s, visibility 0s; }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display:none; }
+  .mobile-accordion summary { list-style:none; cursor:pointer; }
+  main { padding-top:78px; }
+  @media (min-width:1024px) { main { padding-top:96px; } }
+
+  .rated-bg { position:relative; background-color:#fff; }
+  .rated-bg::before { content:''; position:absolute; inset:0; pointer-events:none; background-image:url('section-bg.svg'); background-size:cover; background-position:center; background-repeat:no-repeat; mix-blend-mode:difference; }
+  .rated-bg > * { position:relative; z-index:1; }
+
+  .hero-faded { position:absolute; left:-2%; bottom:-2%; font-family:'Montserrat'; font-weight:900; font-style:italic; font-size:clamp(120px,22vw,320px); color:rgba(14,17,22,0.055); letter-spacing:-0.02em; line-height:0.85; pointer-events:none; white-space:nowrap; z-index:0; }
+  .orange-dash::before { content:''; display:inline-block; width:28px; height:2px; background:#FF5C3A; margin-right:10px; vertical-align:middle; }
+  .left-bar { border-left:3px solid #FF5C3A; padding-left:16px; }
+
+  .stat-blue { background:#0054A1; color:#fff; border-radius:20px; padding:20px 22px; display:flex; align-items:center; gap:16px; min-height:120px; }
+  .stat-blue .icon-sq { width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+
+  .plan-card { display:flex; flex-direction:column; border-radius:22px; padding:30px 28px; border:1.5px solid rgba(0,0,0,0.06); }
+  .plan-card.featured { background:#0054A1; color:#fff; border-color:transparent; box-shadow: 0 35px 70px -25px rgba(0,84,161,0.4); transform: translateY(-6px); }
+  .plan-card.featured ul li { color: rgba(255,255,255,0.9); }
+  .plan-tag { display:inline-block; padding:5px 12px; border-radius:9999px; font-family:'Inter'; font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:0.16em; }
+  .check { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+  .accordion summary { list-style:none; cursor:pointer; }
+  .accordion summary::-webkit-details-marker { display:none; }
+  .accordion[open] .caret-acc { transform: rotate(180deg); }
+  .caret-acc { transition: transform .2s ease; }
+</style>
+</head>
+
+<body class="font-body text-brand-ink">
+
+<!-- =================== HEADER / NAV =================== -->
+<header class="mobile-header flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2 shrink-0"><img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" /></a>
+  <nav class="hidden lg:flex items-center gap-8 text-white">
+    <div class="nav-item">
+      <a href="package-deal.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Deals<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></a>
+      <div class="dropdown"><a href="hotel-package.html">Hotel Packages</a><a href="party-package.html">Party Packages</a><a href="party-adds-on.html">Trip Add-ons</a><a href="destination.html">Spring Break Packages</a></div>
+    </div>
+    <div class="nav-item">
+      <a href="destination.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Destinations<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></a>
+      <div class="dropdown"><a href="cancun.html">Cancún</a><a href="cabo.html">Cabo</a><a href="punta-cana.html">Punta Cana</a><a href="freeport.html">Freeport</a><a href="panama-city.html">Panama City</a><a href="nassau.html">Nassau</a></div>
+    </div>
+    <a href="why-go-blue.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+    <div class="nav-item">
+      <button class="nav-active-pill flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] transition" style="font-size:12px;">Resources<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+      <div class="dropdown"><a href="customer-testimonials.html">Testimonials</a><a href="campus-manager.html">Campus Manager</a><a href="when-is-my-spring-break.html">When is My Spring Break</a><a href="travel-protection.html">Travel Protection</a><a href="faqs.html">FAQs</a><a href="blog.html">Blog</a></div>
+    </div>
+    <a href="contact.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+  </nav>
+  <div class="hidden lg:flex items-center gap-3 shrink-0">
+    <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;"><span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>Specials</a>
+    <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;"><span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>My Account</a>
+  </div>
+  <div class="lg:hidden flex items-center gap-2">
+    <a href="#" aria-label="Sign in" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></a>
+    <button id="mobileToggle" aria-label="Open menu" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20"><svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg><svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  </div>
+</header>
+
+<div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top:76px; max-height: calc(100vh - 92px);">
+  <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:14px;">
+    <details class="mobile-accordion border-b border-white/10"><summary class="py-3 flex items-center justify-between">Deals<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="hotel-package.html">Hotel Packages</a><a href="party-package.html">Party Packages</a><a href="party-adds-on.html">Trip Add-ons</a><a href="destination.html">Spring Break Packages</a></div></details>
+    <details class="mobile-accordion border-b border-white/10"><summary class="py-3 flex items-center justify-between">Destinations<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="cancun.html">Cancún</a><a href="cabo.html">Cabo</a><a href="punta-cana.html">Punta Cana</a><a href="freeport.html">Freeport</a><a href="panama-city.html">Panama City</a><a href="nassau.html">Nassau</a></div></details>
+    <a href="why-go-blue.html" class="py-3 border-b border-white/10">Why Go Blue</a>
+    <details class="mobile-accordion border-b border-white/10" open><summary class="py-3 flex items-center justify-between text-brand-blueLight">Resources<svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary><div class="pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;"><a href="customer-testimonials.html">Testimonials</a><a href="campus-manager.html">Campus Manager</a><a href="when-is-my-spring-break.html">When is My Spring Break</a><a href="travel-protection.html">Travel Protection</a><a href="faqs.html">FAQs</a><a href="blog.html">Blog</a></div></details>
+    <a href="contact.html" class="py-3 border-b border-white/10">Contact</a>
+    <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>Specials</a>
+    <a href="#" class="py-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>My Account</a>
+  </nav>
+</div>
+
+<main>
+
+<!-- =================== HERO =================== -->
+<section class="rated-bg relative overflow-hidden">
+  <div class="hero-faded">PROTECTED</div>
+  <div class="relative max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-24">
+    <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">Travel Protection</div>
+    <h1 class="font-display uppercase leading-[0.92] mt-6" style="font-size: clamp(48px, 9vw, 116px);">
+      <span class="text-brand-navy">Travel</span> <span style="color:#0054A1;">Smart.</span><br/>
+      <span class="text-brand-navy">Travel</span> <span style="color:#0054A1;">Protected.</span>
+    </h1>
+    <div class="mt-7 left-bar italic text-gray-500 max-w-xl" style="font-size:15px;">
+      "Stuff happens. Flights cancel, bags vanish, plans change. Protect your trip for less than the cost of a beach day."
+    </div>
+    <div class="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <a href="#plans" class="btn-gradient font-display italic text-white uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 32px; letter-spacing:0.04em;">See The Plans</a>
+      <a href="#claim" class="btn-outline-blue font-display italic uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:14px 32px; letter-spacing:0.04em;">File A Claim</a>
+    </div>
+  </div>
+</section>
+
+<!-- =================== STATS BAR =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 pb-4 lg:pb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">$0</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Deductible</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8v4l3 3 1-1-3-3V8h-1zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">24hr</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Claim Response</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21 6h-3.17L16 4h-6v2h5.12l1.83 2H21v12H5v-9H3v9c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM8 14c0 2.76 2.24 5 5 5s5-2.24 5-5-2.24-5-5-5-5 2.24-5 5zm5-3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM5 6h3V4H5V1H3v3H0v2h3v3h2V6z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">$25K</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Medical Coverage</div></div>
+      </div>
+      <div class="stat-blue">
+        <div class="icon-sq"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 4l8.5 14H3.5L12 6zm-1 5v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg></div>
+        <div><div class="font-display italic leading-none" style="font-size:clamp(28px,3.6vw,40px);">100%</div><div class="font-body font-bold uppercase text-white/70 tracking-wide text-[11px] mt-1">Trip Cost Refund</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== WHAT'S COVERED =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">What's Covered</div>
+    <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(34px, 5.4vw, 64px);">
+      <span class="text-brand-navy">If It Goes Wrong,</span><br/><span style="color:#0054A1;">We've Got You.</span>
+    </h2>
+    <p class="text-gray-500 text-normal mt-5 max-w-2xl">Travel Protection bundles the essentials so a single missed flight or lost bag doesn't blow up your spring break. All plans are administered by a licensed third-party insurer.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">Trip Cancellation</h3>
+        <p class="text-gray-500 text-md mt-2">Get a 100% refund on your non-refundable trip cost if a covered reason forces you to cancel — illness, jury duty, school finals reschedules, and more.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l7.89 5.26L18.78 8 12 3 3 8zm9 7.5L3 9.5V18h18V9.5l-9 6z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">Trip Interruption</h3>
+        <p class="text-gray-500 text-md mt-2">If you have to cut your trip short, we'll reimburse the unused portion plus the cost of getting you home.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5c-1.1 0-2 .9-2 2v11h18V9c0-1.1-.9-2-2-2zM10 6a2 2 0 0 1 4 0v1h-4V6z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">Lost Baggage</h3>
+        <p class="text-gray-500 text-md mt-2">Up to $1,500 to replace clothes, swimsuits, electronics, and essentials if your bag goes missing or is delayed more than 12 hours.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8l-4-4H5C3.9 4 3 4.9 3 6v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-8h-2zM12 18a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">Emergency Medical</h3>
+        <p class="text-gray-500 text-md mt-2">Up to $25,000 in emergency medical and dental coverage abroad, plus medical evacuation back home if needed.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 1L1 7v10l10.5 6L22 17V7L11.5 1zm-1 19v-7L3 9v7l7.5 4zm1-9l7.5-4v7l-7.5 4v-7zM4 7.5l7.5-4 7.5 4-7.5 4-7.5-4z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">Travel Delay</h3>
+        <p class="text-gray-500 text-md mt-2">Reimbursement for hotels, meals, and rideshares when your flight is delayed more than 6 hours.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-6 border border-black/5 shadow-[0_20px_50px_-30px_rgba(0,84,161,0.25)]">
+        <div class="w-11 h-11 rounded-xl bg-brand-blue/10 flex items-center justify-center"><svg class="w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="currentColor"><path d="M20 17.17L18.83 16H4V4h16v13.17zM4 2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4z"/></svg></div>
+        <h3 class="font-display italic uppercase mt-4" style="font-size:18px; color:#0B1A33;">24/7 Support</h3>
+        <p class="text-gray-500 text-md mt-2">Live human help via call, text, or app — anywhere in the world, day or night.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== PLANS =================== -->
+<section id="plans" style="background:#F5F8FC;" class="relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="text-center max-w-3xl mx-auto">
+      <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash inline-block">Pick Your Plan</div>
+      <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(34px, 5.4vw, 64px);">
+        <span class="text-brand-navy">Three Plans.</span> <span style="color:#0054A1;">All Bases Covered.</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-12 items-start">
+      <!-- BASIC -->
+      <div class="plan-card bg-white">
+        <span class="plan-tag" style="background:#EEF1F5; color:#0054A1;">Basic</span>
+        <div class="font-display italic uppercase mt-4" style="font-size:48px; color:#0B1A33; line-height:0.9;">$29</div>
+        <div class="font-body uppercase tracking-wide text-gray-500 text-[11px] mt-1">Per Person Per Trip</div>
+        <ul class="space-y-3 mt-6 text-md text-gray-700">
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Trip Cancellation (75%)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lost Baggage (up to $500)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>24/7 Support Line</li>
+          <li class="flex gap-2 text-gray-400 line-through">Emergency Medical</li>
+          <li class="flex gap-2 text-gray-400 line-through">Trip Interruption</li>
+        </ul>
+        <a href="#quote" class="btn-outline-blue mt-7 font-display italic uppercase inline-flex items-center justify-center" style="font-size:13px; border-radius:12px; padding:12px 24px; letter-spacing:0.04em;">Choose Basic</a>
+      </div>
+      <!-- PLUS (FEATURED) -->
+      <div class="plan-card featured">
+        <span class="plan-tag" style="background:#FFC02E; color:#0B1A33;">Most Popular</span>
+        <div class="font-display italic uppercase mt-4" style="font-size:48px; line-height:0.9;">$59</div>
+        <div class="font-body uppercase tracking-wide text-white/70 text-[11px] mt-1">Per Person Per Trip</div>
+        <ul class="space-y-3 mt-6 text-md">
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-white text-brand-blue"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Trip Cancellation (100%)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-white text-brand-blue"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Lost Baggage (up to $1,500)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-white text-brand-blue"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Emergency Medical ($25K)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-white text-brand-blue"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Trip Interruption</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-white text-brand-blue"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Travel Delay Reimbursement</li>
+        </ul>
+        <a href="#quote" class="mt-7 font-display italic text-brand-blue uppercase inline-flex items-center justify-center bg-white" style="font-size:13px; border-radius:12px; padding:12px 24px; letter-spacing:0.04em;">Choose Plus</a>
+      </div>
+      <!-- PREMIUM -->
+      <div class="plan-card bg-white">
+        <span class="plan-tag" style="background:#EEF1F5; color:#0054A1;">Premium</span>
+        <div class="font-display italic uppercase mt-4" style="font-size:48px; color:#0B1A33; line-height:0.9;">$89</div>
+        <div class="font-body uppercase tracking-wide text-gray-500 text-[11px] mt-1">Per Person Per Trip</div>
+        <ul class="space-y-3 mt-6 text-md text-gray-700">
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Everything in Plus</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Cancel For Any Reason (75%)</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Medical Evacuation</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Adventure Sports Coverage</li>
+          <li class="flex gap-2"><span class="check w-5 h-5 rounded-full bg-brand-blue text-white"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Concierge Rebooking Service</li>
+        </ul>
+        <a href="#quote" class="btn-outline-blue mt-7 font-display italic uppercase inline-flex items-center justify-center" style="font-size:13px; border-radius:12px; padding:12px 24px; letter-spacing:0.04em;">Choose Premium</a>
+      </div>
+    </div>
+    <p class="text-gray-500 text-md mt-8 text-center">Pricing reflects standard 7-night trip costs. A specific plan summary and policy document will be sent before checkout.</p>
+  </div>
+</section>
+
+<!-- =================== HOW TO CLAIM =================== -->
+<section id="claim" class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">Filing A Claim</div>
+        <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(32px, 5vw, 56px);">
+          <span class="text-brand-navy">It Should Be</span> <span style="color:#0054A1;">Easy.</span><br/>It Is.
+        </h2>
+        <p class="text-gray-500 text-normal mt-5 max-w-md">No paperwork mountain, no phone trees, no waiting weeks for an answer. Most claims are decided in 24 hours, and refunds hit your card within 5 business days.</p>
+      </div>
+      <ol class="space-y-5">
+        <li class="flex gap-4">
+          <div class="font-display italic flex-shrink-0 w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center" style="font-size:20px;">1</div>
+          <div>
+            <h3 class="font-display italic uppercase" style="font-size:18px; color:#0B1A33;">Tell Us What Happened</h3>
+            <p class="text-gray-500 text-md mt-1">Open the Go Blue app or text our claims line. A real human responds within 30 minutes.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <div class="font-display italic flex-shrink-0 w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center" style="font-size:20px;">2</div>
+          <div>
+            <h3 class="font-display italic uppercase" style="font-size:18px; color:#0B1A33;">Upload Your Receipts</h3>
+            <p class="text-gray-500 text-md mt-1">Snap photos right in the app — flight bills, doctor notes, lost-bag reports. We do the rest.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <div class="font-display italic flex-shrink-0 w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center" style="font-size:20px;">3</div>
+          <div>
+            <h3 class="font-display italic uppercase" style="font-size:18px; color:#0B1A33;">Get Paid</h3>
+            <p class="text-gray-500 text-md mt-1">Decision in 24 hours. Money back to your card or Venmo within 5 business days.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- =================== FAQ =================== -->
+<section style="background:#F5F8FC;" class="relative">
+  <div class="max-w-4xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+    <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-ink text-[11px] lg:text-xs orange-dash">FAQ</div>
+    <h2 class="font-display italic uppercase leading-[1.02] mt-4" style="font-size: clamp(34px, 5vw, 56px);">
+      <span class="text-brand-navy">Questions</span> <span style="color:#0054A1;">We Hear A Lot.</span>
+    </h2>
+    <div class="mt-10 space-y-3">
+      <details class="accordion bg-white rounded-xl border border-black/5 p-5">
+        <summary class="flex items-center justify-between"><span class="font-display italic uppercase" style="font-size:16px; color:#0B1A33;">Do I really need travel protection?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Technically no — but a single missed flight, lost bag, or stomach bug can cost you more than the plan itself. For about $30–$90, you protect a $1,000+ trip. Most travelers add it.</p>
+      </details>
+      <details class="accordion bg-white rounded-xl border border-black/5 p-5">
+        <summary class="flex items-center justify-between"><span class="font-display italic uppercase" style="font-size:16px; color:#0B1A33;">When do I have to add it?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">You can add Travel Protection up to 14 days before departure. Some perks (like Cancel For Any Reason) are only available within 7 days of your initial booking.</p>
+      </details>
+      <details class="accordion bg-white rounded-xl border border-black/5 p-5">
+        <summary class="flex items-center justify-between"><span class="font-display italic uppercase" style="font-size:16px; color:#0B1A33;">What's a "covered reason" for cancellation?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Illness or injury (yours or an immediate family member), jury duty, school exam reschedules, severe weather, and a few more. The full list ships with your policy. The Premium plan adds Cancel For Any Reason at 75% reimbursement.</p>
+      </details>
+      <details class="accordion bg-white rounded-xl border border-black/5 p-5">
+        <summary class="flex items-center justify-between"><span class="font-display italic uppercase" style="font-size:16px; color:#0B1A33;">Is medical care abroad really covered?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">Yes. Plus and Premium plans include up to $25K in medical and dental coverage in your destination country, plus medical evacuation home if it's required.</p>
+      </details>
+      <details class="accordion bg-white rounded-xl border border-black/5 p-5">
+        <summary class="flex items-center justify-between"><span class="font-display italic uppercase" style="font-size:16px; color:#0B1A33;">What if I just change my mind?</span><svg class="caret-acc w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></summary>
+        <p class="text-gray-600 text-md mt-3">That's where Cancel For Any Reason comes in (Premium plan). Reimburses 75% of your prepaid trip cost as long as you cancel 48+ hours before departure.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section id="quote" class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/><span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel" class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">Text Me My Quote</button>
+    </form>
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">No spam, unsubscribe anytime. Msg &amp; data rates may apply.</p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">#1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.</p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg></a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg></a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg></a>
+        </div>
+      </div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div><ul class="space-y-3 text-white/90"><li><a href="destination.html" class="hover:text-white">Destinations</a></li><li><a href="package-deal.html" class="hover:text-white">Deals</a></li><li><a href="when-is-my-spring-break.html" class="hover:text-white">Spring Break Dates</a></li></ul></div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div><ul class="space-y-3 text-white/90"><li><a href="why-go-blue.html" class="hover:text-white">Why Go Blue</a></li><li><a href="customer-testimonials.html" class="hover:text-white">Testimonials</a></li><li><a href="campus-manager.html" class="hover:text-white">Campus Manager</a></li><li><a href="blog.html" class="hover:text-white">Blog</a></li></ul></div>
+      <div><div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div><ul class="space-y-3 text-white/90"><li><a href="faqs.html" class="hover:text-white">FAQ</a></li><li><a href="travel-protection.html" class="hover:text-white">Travel Protection</a></li><li><a href="contact.html" class="hover:text-white">Contact</a></li></ul></div>
+    </div>
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80"><a href="#" class="hover:text-white">Privacy Policy</a><a href="#" class="hover:text-white">Terms and Conditions</a></div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => setMenu(!mobileNav.classList.contains('open')));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMenu(false); });
+  document.querySelectorAll('.nav-item > button, .nav-item > a').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('quotePhone').value;
+    alert(`Thanks! We'll text your quote to ${phone || '—'}`);
+  });
+</script>
+
+</body>
+</html>
