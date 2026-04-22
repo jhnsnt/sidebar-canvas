@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Go Blue Tours — Customer Testimonials</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts: Montserrat + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['Montserrat', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            orange: '#FF5C3A',
+            blue: '#0054A1',
+            blueAccent: '#0A78E0',
+            blueLight: '#00AAFF',
+            yellow: '#FFC02E',
+            ink: '#0E1116',
+            navy: '#0B1A33',
+          },
+        },
+        fontSize: {
+          'normal': ['1rem', { lineHeight: '1.6' }],
+          'md':     ['0.9375rem', { lineHeight: '1.55' }],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #0E1116;
+    background: #fff;
+  }
+  .font-display {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  /* =========== GRADIENT BUTTON =========== */
+  .btn-gradient {
+    background: linear-gradient(90deg, #0057FF 0%, #00AAFF 100%);
+    transition: filter .2s ease, transform .15s ease;
+  }
+  .btn-gradient:hover { filter: brightness(1.1); }
+  .btn-gradient:active { transform: translateY(1px); }
+
+  /* =========== PILL =========== */
+  .pill-outline { border: 1px solid rgba(255,255,255,0.35); }
+
+  /* =========== DROPDOWN =========== */
+  .nav-item { position: relative; }
+  .nav-item > .dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    min-width: 240px;
+    background: rgba(0, 0, 0, 0.75);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility 0s .18s;
+    z-index: 50;
+  }
+  .nav-item > .dropdown::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: -18px;
+    height: 18px;
+    background: transparent;
+  }
+  .nav-item > button::after,
+  .nav-item > a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    height: 18px;
+  }
+  .nav-item > button,
+  .nav-item > a { position: relative; }
+  .nav-item:hover > .dropdown,
+  .nav-item:focus-within > .dropdown,
+  .nav-item.open > .dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s;
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    white-space: nowrap;
+  }
+  .dropdown a:hover { background: rgba(255,92,58,0.15); color: #FF5C3A; }
+  .nav-item:hover .caret,
+  .nav-item.open .caret { transform: rotate(180deg); }
+  .caret { transition: transform .2s ease; }
+
+  /* =========== FIXED SITE HEADER (ALWAYS BLUE on this page) =========== */
+  .mobile-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 60;
+    margin: 0;
+    padding: 14px 20px;
+    background: #0054A1;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.12);
+  }
+  @media (min-width: 1024px) {
+    .mobile-header { padding: 22px 48px; }
+  }
+  body.nav-open { overflow: hidden; }
+
+  .nav-active-pill {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.85);
+    border-radius: 9999px;
+    padding: 6px 14px;
+  }
+
+  .mobile-nav {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  }
+  .mobile-accordion[open] summary .caret { transform: rotate(180deg); }
+  .mobile-accordion summary::-webkit-details-marker { display: none; }
+  .mobile-accordion summary { list-style: none; cursor: pointer; }
+
+  /* Push hero below the fixed header */
+  main { padding-top: 78px; }
+  @media (min-width: 1024px) { main { padding-top: 96px; } }
+
+  /* =========== SECTION BG (white with grain specks) =========== */
+  .rated-bg {
+    position: relative;
+    background-color: #ffffff;
+  }
+  .rated-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url('section-bg.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    mix-blend-mode: difference;
+  }
+  .rated-bg > * { position: relative; z-index: 1; }
+
+  /* =========== HERO (no image; big faded word) =========== */
+  .hero-faded {
+    position: absolute;
+    left: 2%;
+    bottom: 8%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: clamp(100px, 18vw, 280px);
+    color: rgba(14,17,22,0.06);
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
+  /* Mobile sub-links */
+  .mobile-sublinks > a {
+    padding: 10px 6px;
+    border-radius: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .mobile-sublinks > a:hover,
+  .mobile-sublinks > a:focus {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  /* =========== TESTIMONIAL SLIDER (same pattern as index) =========== */
+  .testi-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 20px;
+    padding: 36px 20px 36px;
+    cursor: grab;
+    scrollbar-width: none;
+  }
+  .testi-scroll::-webkit-scrollbar { display: none; }
+  .testi-scroll.dragging { cursor: grabbing; scroll-snap-type: none; }
+  .testi-scroll > .testi-card {
+    flex: 0 0 85%;
+    max-width: 360px;
+    scroll-snap-align: center;
+  }
+  @media (min-width: 768px) {
+    .testi-scroll > .testi-card {
+      flex: 0 0 calc((100% - 40px) / 3);
+      max-width: none;
+    }
+  }
+  .testi-card {
+    position: relative;
+    background: #F3F4F8;
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+  }
+  .testi-card .quote-bubble {
+    position: absolute;
+    top: -18px;
+    left: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: #0054A1;
+    color: #fff;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  /* Slider control arrows */
+  .slider-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #0054A1;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .15s ease, background .15s ease;
+    cursor: pointer;
+    border: none;
+  }
+  .slider-arrow:hover { background: #0A78E0; }
+  .slider-arrow:active { transform: translateY(1px); }
+  .slider-arrow[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+  .slider-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #D4D9E3;
+    transition: background .2s ease, width .2s ease;
+    cursor: pointer;
+    border: none;
+  }
+  .slider-dot.active {
+    background: #0054A1;
+    width: 26px;
+  }
+
+</style>
+</head>
+
+<body class="font-body text-brand-ink">
+
+<!-- =================== HEADER / NAV =================== -->
+<header class="mobile-header flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2 shrink-0">
+    <img src="logo.svg" alt="Go Blue Tours" class="h-10 lg:h-12 w-auto" />
+  </a>
+
+  <!-- Desktop nav -->
+  <nav class="hidden lg:flex items-center gap-8 text-white">
+    <div class="nav-item">
+      <a href="package-deal.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="dropdown">
+        <a href="hotel-package.html">Hotel Packages</a>
+        <a href="party-package.html">Party Packages</a>
+        <a href="party-adds-on.html">Trip Add-ons</a>
+        <a href="destination.html">Spring Break Packages</a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <a href="destination.html" class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="dropdown">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </div>
+    <a href="why-go-blue.html" class="font-body font-bold uppercase tracking-[0.14em] text-white hover:text-brand-orange transition" style="font-size:12px;">Why Go Blue</a>
+    <div class="nav-item">
+      <button class="flex items-center gap-1.5 font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">
+        Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div class="dropdown">
+        <a href="customer-testimonials.html">Testimonials</a>
+        <a href="campus-manager.html">Campus Manager</a>
+        <a href="when-is-my-spring-break.html">When is My Spring Break</a>
+        <a href="travel-protection.html">Travel Protection</a>
+        <a href="faqs.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+    <a href="contact.html" class="font-body font-bold uppercase tracking-[0.14em] hover:text-brand-orange transition" style="font-size:12px;">Contact</a>
+  </nav>
+
+  <div class="hidden lg:flex items-center gap-3 shrink-0">
+    <a href="#" class="pill-outline inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+      Specials
+    </a>
+    <a href="#" class="inline-flex items-center gap-2 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:12px;">
+      <span class="w-7 h-7 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </div>
+
+  <div id="mobileHeaderRight" class="lg:hidden flex items-center gap-2">
+    <a href="#" id="mobileSignIn" aria-label="Sign in" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+        <polyline points="10 17 15 12 10 7"/>
+        <line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+    </a>
+    <button id="mobileToggle" aria-label="Open menu" class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 backdrop-blur text-white border border-white/20">
+      <svg id="iconOpen" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<div id="mobileNav" class="mobile-nav lg:hidden fixed left-5 right-5 bg-black/90 backdrop-blur-lg border border-white/15 rounded-2xl z-40 overflow-y-auto" style="top: 76px; max-height: calc(100vh - 92px);">
+  <nav class="p-4 flex flex-col gap-1 text-white font-body font-bold uppercase tracking-[0.14em]" style="font-size:14px;">
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Deals
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="hotel-package.html">Hotel Packages</a>
+        <a href="party-package.html">Party Packages</a>
+        <a href="party-adds-on.html">Trip Add-ons</a>
+        <a href="destination.html">Spring Break Packages</a>
+      </div>
+    </details>
+    <details class="mobile-accordion border-b border-white/10">
+      <summary class="py-3 flex items-center justify-between">Destinations
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="cancun.html">Cancún</a>
+        <a href="cabo.html">Cabo</a>
+        <a href="punta-cana.html">Punta Cana</a>
+        <a href="freeport.html">Freeport</a>
+        <a href="panama-city.html">Panama City</a>
+        <a href="nassau.html">Nassau</a>
+      </div>
+    </details>
+    <a href="why-go-blue.html" class="py-3 border-b border-white/10">Why Go Blue</a>
+    <details class="mobile-accordion border-b border-white/10" open>
+      <summary class="py-3 flex items-center justify-between">Resources
+        <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
+        <a href="customer-testimonials.html" class="text-brand-blueLight">Testimonials</a>
+        <a href="campus-manager.html">Campus Manager</a>
+        <a href="when-is-my-spring-break.html">When is My Spring Break</a>
+        <a href="travel-protection.html">Travel Protection</a>
+        <a href="faqs.html">FAQs</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </details>
+    <a href="contact.html" class="py-3 border-b border-white/10">Contact</a>
+    <a href="#" class="py-3 border-b border-white/10 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span> Specials</a>
+    <a href="#" class="py-3 flex items-center gap-2">
+      <span class="w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </span>
+      My Account
+    </a>
+  </nav>
+</div>
+
+<main>
+
+<!-- =================== HERO =================== -->
+<section class="rated-bg relative overflow-hidden">
+  <div class="hero-faded">TESTIMONIALS</div>
+
+  <div class="relative max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-28">
+    <h1 class="font-display uppercase leading-[0.9]" style="font-size: clamp(54px, 10vw, 132px);">
+      <span class="text-brand-navy">Customer</span><br/>
+      <span style="color:#0054A1;">Testimonials</span>
+    </h1>
+
+    <p class="mt-6 text-gray-600 max-w-2xl text-normal">
+      Real stories from the thousands of students who trusted Go Blue with their spring break. Read what they had to say — all sourced straight from Google reviews.
+    </p>
+  </div>
+</section>
+
+<!-- =================== TESTIMONIALS SLIDER =================== -->
+<section class="rated-bg relative">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-10 lg:py-16">
+
+    <div class="flex items-end justify-between gap-4 mb-4">
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-brand-orange text-[11px] lg:text-xs">
+          Hear It From Our Travelers
+        </div>
+        <h2 class="font-display italic uppercase leading-[1.02] text-brand-navy mt-2" style="font-size: clamp(32px, 5vw, 56px);">
+          What Our<br class="hidden sm:block"/> Travelers Say
+        </h2>
+      </div>
+      <div class="hidden md:flex items-center gap-2">
+        <button id="testiPrev" class="slider-arrow" aria-label="Previous testimonial">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button id="testiNext" class="slider-arrow" aria-label="Next testimonial">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Draggable horizontal carousel (same pattern as index.html) -->
+    <div id="testiScroll" class="testi-scroll -mx-5 lg:-mx-12">
+      <!-- 1 Luke D -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Staff was incredible. Extremely nice and helpful. Very much exceeded my expectations.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Luke D</span>
+        </div>
+      </div>
+      <!-- 2 Sierrak K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Very good hospitality, food, events, and a very welcoming atmosphere environment. I always felt included and safe, definitely one of my best vacations I have ever had!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Sierrak K</span>
+        </div>
+      </div>
+      <!-- 3 Ocianna M -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“This was such a fun experience! You get assistance at all times for all your needs like flights, excursions, and hotel info. Highly recommend if you're looking for a fun”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ocianna M</span>
+        </div>
+      </div>
+      <!-- 4 Suha K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Hosts were always available on sight and helped with every question we had.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Suha K</span>
+        </div>
+      </div>
+      <!-- 5 Destiny S -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Amazing company, Veronica and Alex made our experience at Krystal Cancun unforgettable!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Destiny S</span>
+        </div>
+      </div>
+      <!-- 6 Ezra H -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Everything was exactly as advertised. The party package is a great deal!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ezra H</span>
+        </div>
+      </div>
+      <!-- 7 Tessa P -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go blue tours really made sure we had a fun and safe time on our trip!! Super nice and cooperative.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Tessa P</span>
+        </div>
+      </div>
+      <!-- 8 Brooke M -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue was amazing and truly there for us the whole trip. We would book through them everytime! Thank you guys for such an awesome trip!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Brooke M</span>
+        </div>
+      </div>
+      <!-- 9 Chloe T -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“The best time! Goblue helped us with everything and Veronica and Alex answered our texts and calls as fast as possible. Would definitely book with them again!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Chloe T</span>
+        </div>
+      </div>
+      <!-- 10 Paige K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Such a great experience! The support staff was so helpful! And we all had so much fun.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Paige K</span>
+        </div>
+      </div>
+      <!-- 11 McKenna V -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“They were so helpful and reliable, made everything go smooth on our trip! Was very communicative as well.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">McKenna V</span>
+        </div>
+      </div>
+      <!-- 12 Fiori L -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“They were very helpful throughout the whole process from booking, traveling, and during our stay at the Occidental Carribe! Very nice staff and there is always someone to help out.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Fiori L</span>
+        </div>
+      </div>
+      <!-- 13 Caleb J -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Went to Cabo for spring break. Amazing experience, best price we could find. Meghan was very communicative and efficient in helping plan the trip and once we were on it.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Caleb J</span>
+        </div>
+      </div>
+      <!-- 14 Jackie S -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go blue was very well organized and accommodating. The prices were great and they were very helpful throughout the week.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Jackie S</span>
+        </div>
+      </div>
+      <!-- 15 Patrick Q -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“My fraternity and I used GoBlue for spring break at Grand Oasis Cancun for our group of 30. Erin was super helpful in answering all our questions and helping us.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Patrick Q</span>
+        </div>
+      </div>
+      <!-- 16 Ana H -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“My friends and I recently went to Cancun for spring break with Go Blue and we had such a great experience. We were guided through the check in process.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ana H</span>
+        </div>
+      </div>
+      <!-- 17 Kaitlin R -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Literally the best week of my life! Came here for college spring break with my best friends and had endless fun. All inclusive food and drinks, completed with a beautiful.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Kaitlin R</span>
+        </div>
+      </div>
+      <!-- 18 Juliana B -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue Tours was amazing and so helpful! They helped with all transportation, hotel information, off-site activities, and just everything! Ruben was the best!!”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Juliana B</span>
+        </div>
+      </div>
+      <!-- 19 Mya Y -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue was a great experience and I am so glad that we booked through them! They made everything easy, safe, and fun! All the people working for them were.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Mya Y</span>
+        </div>
+      </div>
+      <!-- 20 Abigail W -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue was fantastic! They were with us from landing in Mexico until takeoff at the end. Anything we needed there was always a representative around to guide us and.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Abigail W</span>
+        </div>
+      </div>
+      <!-- 21 Ryan W -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“All staff was very sweet and took care of us really well. From the moment we arrived at the resort, staff member from Go Blue Tour immediately came up to.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ryan W</span>
+        </div>
+      </div>
+      <!-- 22 Kay L -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“We just returned from a high school senior + moms spring break trip to Punta Cana through Go Blue Tours! Partnering with GBT made our trip so much easier than.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Kay L</span>
+        </div>
+      </div>
+      <!-- 23 Isabella E -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Romy was the best host we could have gotten! She was attentive, organized, and proactively answered any questions within seconds of asking. If we did GoBlue again, we would love.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Isabella E</span>
+        </div>
+      </div>
+      <!-- 24 Maya S -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue did an amazing job of organizing the trip! Romy was a great leader for us and she was very kind. Would definitely use the company again.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Maya S</span>
+        </div>
+      </div>
+      <!-- 25 Gavin Z -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Sandra took wonderful care of us! Even when things got complicated and our group faced issues with our stay, she managed to help us get out of any sticky situations.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Gavin Z</span>
+        </div>
+      </div>
+      <!-- 26 Mallory K -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Go Blue was so helpful and kind on our trip. They made me feel very welcomed and safe on our trip. Veronica was amazing and we had a great time.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Mallory K</span>
+        </div>
+      </div>
+      <!-- 27 Erin A -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Traveling with Go Blue tours was absolutely amazing for me and my girls! Without them, our trip wouldn't have gone as smoothly and SAFELY as it did. ARIEL, specifically was.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Erin A</span>
+        </div>
+      </div>
+      <!-- 28 Sam J -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“The Go blue is very friendly we had a great week, the airport transportation was very smooth. And the booze cruise was the highlight of the trip.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Sam J</span>
+        </div>
+      </div>
+      <!-- 29 Ashley Z -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“Traveling with Go Blue Tours was easy and fun. I would recommend their services to anyone I know. From the start (before the trip), the company always made sure they.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ashley Z</span>
+        </div>
+      </div>
+      <!-- 30 Ariana A -->
+      <div class="testi-card">
+        <div class="quote-bubble">“</div>
+        <div class="flex gap-1 text-[#FFC02E] mb-3"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="text-brand-ink font-bold text-md">“We had the best experience with Go Blue! Veronica helped make our trip feel so fun and safe! Thank you to Meghan for the seamless booking experience! Everything was smooth.”</p>
+        <a href="#" class="inline-block mt-4 italic font-bold text-sm" style="color:#0054A1;">Read on Google</a>
+        <hr class="my-4 border-black/10"/>
+        <div class="flex items-center gap-3">
+          <img src="https://www.google.com/favicon.ico" alt="Google" class="w-6 h-6 rounded-full"/>
+          <span class="font-body font-bold uppercase tracking-wider text-brand-ink">Ariana A</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div id="testiDots" class="slider-dots mt-2"></div>
+
+    <!-- Mobile arrow row -->
+    <div class="md:hidden flex items-center justify-center gap-3 mt-6">
+      <button id="testiPrevMob" class="slider-arrow" aria-label="Previous testimonial">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="testiNextMob" class="slider-arrow" aria-label="Next testimonial">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== GET YOUR QUOTE CTA =================== -->
+<section id="quote" class="relative" style="background: linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);">
+  <div class="max-w-3xl mx-auto px-5 lg:px-12 py-16 lg:py-24 text-center">
+    <h2 class="font-display italic uppercase text-white leading-[1.02]" style="font-size: clamp(40px, 7vw, 88px);">
+      <span>Get Your Quote In</span><br/>
+      <span style="color:#8CAEFF;">60 Seconds.</span>
+    </h2>
+    <p class="text-white/85 mt-4 text-normal">Drop your number and we'll text you pricing for your destination, group size, and week.</p>
+
+    <form id="quoteForm" class="mt-8 flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-xl p-2 max-w-xl mx-auto">
+      <input id="quotePhone" type="tel" placeholder="(555) 000-0000" inputmode="tel"
+             class="flex-1 bg-transparent text-brand-ink placeholder-gray-400 font-body font-semibold px-4 py-3 focus:outline-none" />
+      <button type="submit" class="bg-brand-orange text-white font-display italic uppercase rounded-lg px-6 py-4 whitespace-nowrap" style="font-size:14px; letter-spacing:0.04em;">
+        Text Me My Quote
+      </button>
+    </form>
+
+    <p class="text-white/60 font-body font-bold uppercase tracking-[0.18em] mt-5 text-[10px]">
+      No spam, unsubscribe anytime. Msg &amp; data rates may apply.
+    </p>
+  </div>
+</section>
+
+<!-- =================== FOOTER =================== -->
+<footer style="background:#0054A1;" class="text-white">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-14 lg:py-16">
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+      <div>
+        <img src="logo.svg" alt="Go Blue Tours" class="h-10 w-auto" />
+        <p class="mt-5 text-white/80 text-sm max-w-sm">
+          #1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.
+        </p>
+        <div class="mt-6 flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15 7a3.5 3.5 0 0 0 3 3v2a5.5 5.5 0 0 1-3-1v4.5a4 4 0 1 1-4-4c.3 0 .6 0 .9.1v2.1a1.9 1.9 0 1 0 1.1 1.8V3h2v4z"/></svg>
+          </a>
+          <a href="#" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 0-2.9l1.3-5.4s-.3-.7-.3-1.7c0-1.6.9-2.8 2.1-2.8 1 0 1.5.7 1.5 1.6 0 1-.6 2.5-.9 3.8-.3 1.2.6 2.1 1.7 2.1 2.1 0 3.7-2.2 3.7-5.3 0-2.8-2-4.7-4.8-4.7-3.3 0-5.2 2.4-5.2 5 0 1 .4 2 .9 2.6 0 .1.1.2.1.3l-.3 1.2c-.1.2-.2.3-.4.2-1.3-.6-2.1-2.6-2.1-4.2 0-3.4 2.5-6.5 7.1-6.5 3.7 0 6.7 2.7 6.7 6.2 0 3.7-2.4 6.7-5.6 6.7-1.1 0-2.1-.6-2.5-1.3l-.7 2.6c-.2 1-.9 2.2-1.4 2.9A10 10 0 1 0 12 2z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white/10 transition">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2-2.1C19 5 12 5 12 5s-7 0-9 .4a3 3 0 0 0-2 2.1A31 31 0 0 0 .5 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2 2.1C5 19 12 19 12 19s7 0 9-.4a3 3 0 0 0 2-2.1A31 31 0 0 0 23.5 12 31 31 0 0 0 23 7.5zM10 15V9l5 3z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Trip</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="destination.html" class="hover:text-white">Destinations</a></li>
+          <li><a href="package-deal.html" class="hover:text-white">Deals</a></li>
+          <li><a href="when-is-my-spring-break.html" class="hover:text-white">Spring Break Dates</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">The Vibe</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="why-go-blue.html" class="hover:text-white">Why Go Blue</a></li>
+          <li><a href="customer-testimonials.html" class="hover:text-white">Testimonials</a></li>
+          <li><a href="campus-manager.html" class="hover:text-white">Campus Manager</a></li>
+          <li><a href="blog.html" class="hover:text-white">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs mb-4">Support</div>
+        <ul class="space-y-3 text-white/90">
+          <li><a href="faqs.html" class="hover:text-white">FAQ</a></li>
+          <li><a href="travel-protection.html" class="hover:text-white">Travel Protection</a></li>
+          <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 pt-6 border-t border-white/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="text-white/70 text-sm">© 2025 Go Blue Tours. All rights reserved.</div>
+      <div class="flex gap-8 font-body font-bold uppercase tracking-[0.18em] text-[11px] text-white/80">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms and Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  // =========== Mobile menu toggle ===========
+  const toggle = document.getElementById('mobileToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  const iconOpen = document.getElementById('iconOpen');
+  const iconClose = document.getElementById('iconClose');
+  function setMenu(open) {
+    mobileNav.classList.toggle('open', open);
+    iconOpen.classList.toggle('hidden', open);
+    iconClose.classList.toggle('hidden', !open);
+    document.body.classList.toggle('nav-open', open);
+  }
+  toggle.addEventListener('click', () => {
+    setMenu(!mobileNav.classList.contains('open'));
+  });
+  mobileNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => setMenu(false));
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) setMenu(false);
+  });
+
+  // =========== Dropdown tap-to-toggle on touch ===========
+  document.querySelectorAll('.nav-item > button, .nav-item > a').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const parent = btn.parentElement;
+      if (window.matchMedia('(hover: none)').matches) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item.open').forEach(n => { if (n !== parent) n.classList.remove('open'); });
+        parent.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(n => n.classList.remove('open'));
+    }
+  });
+
+  // =========== Quote form ===========
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('quotePhone').value;
+    alert(`Thanks! We'll text your quote to ${phone || '—'}`);
+  });
+
+  // =========== Testimonial slider: mouse-drag + arrows + dots ===========
+  (function () {
+    const scroller = document.getElementById('testiScroll');
+    if (!scroller) return;
+    const cards = scroller.querySelectorAll('.testi-card');
+
+    // Mouse drag
+    let isDown = false, startX = 0, startLeft = 0;
+    scroller.addEventListener('mousedown', (e) => {
+      isDown = true;
+      scroller.classList.add('dragging');
+      startX = e.pageX;
+      startLeft = scroller.scrollLeft;
+    });
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+      scroller.classList.remove('dragging');
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      scroller.scrollLeft = startLeft - (e.pageX - startX);
+    });
+
+    // Arrow helpers
+    function step() {
+      const card = cards[0];
+      if (!card) return 320;
+      const style = window.getComputedStyle(scroller);
+      const gap = parseFloat(style.columnGap || style.gap || '16');
+      return card.getBoundingClientRect().width + gap;
+    }
+    function goPrev() { scroller.scrollBy({ left: -step(), behavior: 'smooth' }); }
+    function goNext() { scroller.scrollBy({ left: step(), behavior: 'smooth' }); }
+
+    ['testiPrev', 'testiPrevMob'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.addEventListener('click', goPrev);
+    });
+    ['testiNext', 'testiNextMob'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.addEventListener('click', goNext);
+    });
+
+    // Dots
+    const dotsHost = document.getElementById('testiDots');
+    const DOTS = 8;
+    const chunk = Math.max(1, Math.ceil(cards.length / DOTS));
+    const dotEls = [];
+    for (let i = 0; i < Math.min(DOTS, cards.length); i++) {
+      const b = document.createElement('button');
+      b.className = 'slider-dot' + (i === 0 ? ' active' : '');
+      b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      b.addEventListener('click', () => {
+        const target = cards[Math.min(cards.length - 1, i * chunk)];
+        scroller.scrollTo({ left: target.offsetLeft - scroller.offsetLeft - 20, behavior: 'smooth' });
+      });
+      dotsHost.appendChild(b);
+      dotEls.push(b);
+    }
+    scroller.addEventListener('scroll', () => {
+      const idx = Math.round(scroller.scrollLeft / step());
+      const dIdx = Math.min(dotEls.length - 1, Math.floor(idx / chunk));
+      dotEls.forEach((d, i) => d.classList.toggle('active', i === dIdx));
+    });
+  })();
+</script>
+
+</body>
+</html>

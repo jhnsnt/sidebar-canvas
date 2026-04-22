@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Go Blue Tours — Package Deals</title>
+<title>Go Blue Tours — Check Out Our Party Add-Ons</title>
 
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -53,18 +53,18 @@
     font-style: italic;
   }
 
-  /* =========== HERO (party vibe) =========== */
+  /* =========== HERO (catamaran / beach) =========== */
   .hero-banner {
     position: relative;
     overflow: hidden;
-    min-height: 560px;
+    min-height: 600px;
     background:
-      linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.55) 100%),
-      url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=2400&q=80')
+      linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.10) 35%, rgba(0,0,0,0.45) 100%),
+      url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=2400&q=80')
       center/cover no-repeat;
   }
   @media (min-width: 1024px) {
-    .hero-banner { min-height: 680px; }
+    .hero-banner { min-height: 720px; }
   }
 
   /* Grain overlay */
@@ -85,6 +85,15 @@
   }
   .btn-gradient:hover { filter: brightness(1.1); }
   .btn-gradient:active { transform: translateY(1px); }
+
+  /* Outline white button in hero */
+  .btn-hero-outline {
+    background: #ffffff;
+    color: #0E1116;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .btn-hero-outline:hover { background: #F4F6F9; }
+  .btn-hero-outline:active { transform: translateY(1px); }
 
   /* =========== PILL =========== */
   .pill-outline { border: 1px solid rgba(255,255,255,0.35); }
@@ -207,104 +216,42 @@
   }
   .rated-bg > * { position: relative; z-index: 1; }
 
-  /* =========== HOTEL CARD (shared w/ index) =========== */
-  .hotel-card {
-    position: relative;
+  /* =========== ADD-ON ROW CARD (image left, blue panel right) =========== */
+  .hotel-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 28px;
     overflow: hidden;
-    border-radius: 24px;
+    box-shadow: 0 30px 60px -25px rgba(0,84,161,0.18),
+                0 8px 24px -8px rgba(14,17,22,0.08);
+  }
+  .hotel-row + .hotel-row { margin-top: 24px; }
+  @media (min-width: 1024px) {
+    .hotel-row {
+      grid-template-columns: 45% 55%;
+      min-height: 380px;
+    }
+    .hotel-row + .hotel-row { margin-top: 32px; }
+  }
+  .hotel-row-image {
+    position: relative;
     min-height: 260px;
-    isolation: isolate;
-    background: #0b1220;
+    background: #0b1220 center/cover no-repeat;
+    background-image: var(--bg);
+  }
+  @media (min-width: 1024px) {
+    .hotel-row-image { min-height: 380px; }
+  }
+  .hotel-row-panel {
+    background: #0054A1;
+    color: #ffffff;
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
   }
-  .hotel-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: var(--bg);
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1);
-    z-index: 0;
-    will-change: transform;
-  }
-  .hotel-card:hover::before,
-  .hotel-card:focus-visible::before {
-    transform: scale(1.08);
-  }
-  .hotel-card::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.75) 100%);
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hotel-card > * { position: relative; z-index: 2; }
-
-  /* =========== HERO TAG PILLS =========== */
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.25);
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 11px;
-  }
   @media (min-width: 1024px) {
-    .hero-tag { font-size: 12px; padding: 11px 20px; }
+    .hotel-row-panel { padding: 40px 40px; }
   }
-
-  /* =========== DEALS OVERLAP CARD (Spring Break Deals) =========== */
-  .deals-overlap-wrap {
-    position: relative;
-  }
-  .deals-overlap-card {
-    position: relative;
-    z-index: 3;
-    background: rgba(255,255,255,0.92);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-radius: 24px;
-    box-shadow: 0 30px 60px -25px rgba(0,84,161,0.25),
-                0 8px 20px -6px rgba(14,17,22,0.08);
-    padding: 28px 24px;
-    max-width: 560px;
-    margin: 0 auto;
-  }
-  @media (min-width: 1024px) {
-    .deals-overlap-card { padding: 36px 36px; }
-  }
-  .deals-overlap-image {
-    position: relative;
-    z-index: 1;
-    border-radius: 28px;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    background: #0b1220 center/cover no-repeat;
-    background-image: var(--bg);
-    margin-top: -56px;
-  }
-  @media (min-width: 1024px) {
-    .deals-overlap-image { aspect-ratio: 16 / 7; margin-top: -90px; }
-  }
-
-  /* =========== SOLID WHITE BUTTON (secondary) =========== */
-  .btn-solid-blue-outline {
-    background: #ffffff;
-    color: #0A78E0;
-    border: 1.5px solid #0A78E0;
-    transition: background .2s ease, color .2s ease;
-  }
-  .btn-solid-blue-outline:hover { background: #F0F7FF; }
 
   /* Mobile sub-links */
   .mobile-sublinks > a {
@@ -318,44 +265,6 @@
     color: #fff;
   }
 
-  /* =========== ENHANCE YOUR TRIP (draggable carousel) =========== */
-  .enhance-scroll {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    cursor: grab;
-    padding-bottom: 12px;
-    margin: 0 -20px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .enhance-scroll::-webkit-scrollbar { display: none; }
-  .enhance-scroll.dragging { cursor: grabbing; scroll-snap-type: none; }
-  .enhance-scroll > .enhance-card {
-    flex: 0 0 88%;
-    max-width: 420px;
-    scroll-snap-align: center;
-  }
-  @media (min-width: 1024px) {
-    .enhance-scroll {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr 1fr;
-      gap: 24px;
-      overflow: visible;
-      cursor: default;
-      margin: 0;
-      padding: 0;
-    }
-    .enhance-scroll > .enhance-card {
-      flex: none;
-      max-width: none;
-      width: 100%;
-    }
-  }
-
 </style>
 </head>
 
@@ -365,7 +274,7 @@
 <section class="hero-banner">
   <div class="grain"></div>
 
-  <div class="relative z-10 w-full min-h-[560px] lg:min-h-[680px] flex flex-col p-5 lg:p-12">
+  <div class="relative z-10 w-full min-h-[600px] lg:min-h-[720px] flex flex-col p-5 lg:p-12">
 
     <!-- ============== HEADER / NAV ============== -->
     <header class="mobile-header flex items-center justify-between">
@@ -381,7 +290,7 @@
             <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </a>
           <div class="dropdown">
-            <a href="package-deal.html">Hotel Packages</a>
+            <a href="hotel-package.html">Hotel Packages</a>
             <a href="party-package.html">Party Packages</a>
             <a href="party-adds-on.html">Trip Add-ons</a>
             <a href="destination.html">Spring Break Packages</a>
@@ -455,7 +364,7 @@
             <svg class="caret w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
           </summary>
           <div class="mobile-sublinks pb-3 pl-2 flex flex-col gap-1 normal-case tracking-normal font-semibold text-white/80" style="font-size:15px;">
-            <a href="package-deal.html">Hotel Packages</a>
+            <a href="hotel-package.html">Hotel Packages</a>
             <a href="party-package.html">Party Packages</a>
             <a href="party-adds-on.html">Trip Add-ons</a>
             <a href="destination.html">Spring Break Packages</a>
@@ -501,23 +410,24 @@
 
     <!-- ============== HERO CONTENT ============== -->
     <div class="flex-grow flex flex-col items-center justify-center text-center py-10 lg:py-14">
-      <!-- Headline: PACKAGE (white) / DEALS (white on orange block) -->
-      <h1 class="font-display uppercase text-white leading-[0.95]" style="font-size: clamp(44px, 10vw, 112px);">
-        <span class="block">Package</span>
-        <span class="inline-block px-6 py-1 mt-2" style="background:#FF5C3A; box-shadow: 0 14px 32px -12px rgba(255,92,58,0.65);">Deals</span>
+      <!-- Headline: CHECK OUT OUR / PARTY ADD-ONS (on orange block) -->
+      <h1 class="font-display uppercase text-white leading-[0.95]" style="font-size: clamp(36px, 8vw, 96px);">
+        <span class="block">Check Out Our</span>
+        <span class="inline-block px-6 py-1 mt-3" style="background:#FF5C3A; box-shadow: 0 14px 32px -12px rgba(255,92,58,0.65);">Party Add-ons</span>
       </h1>
 
-      <!-- Tag pills -->
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-2 lg:gap-3">
-        <span class="hero-tag">Spring Break</span>
-        <span class="hero-tag">High School Graduation</span>
-        <span class="hero-tag">Bachelor &amp; Bachelorette</span>
-      </div>
+      <!-- Subtitle paragraph -->
+      <p class="mt-7 max-w-xl text-white/90 text-base lg:text-lg">
+        We offer add-ons to any package including a booze cruise, flights to and from your destination, and transportation to and from the hotel/airport. All of these add-ons are completely optional!
+      </p>
 
-      <!-- CTA -->
-      <div class="mt-8 lg:mt-10">
-        <a href="#quote" class="btn-gradient font-display italic text-white uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:18px 36px; letter-spacing:0.04em;">
+      <!-- CTA buttons -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center gap-3">
+        <a href="#quote" class="btn-gradient font-display italic text-white uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 28px; letter-spacing:0.04em;">
           Start Planning Today
+        </a>
+        <a href="#quote" class="btn-hero-outline font-display italic uppercase whitespace-nowrap inline-flex items-center justify-center" style="font-size:14px; border-radius:14px; padding:16px 28px; letter-spacing:0.04em;">
+          Get A Quote
         </a>
       </div>
     </div>
@@ -571,209 +481,73 @@
   </div>
 </section>
 
-<!-- =================== SPRING BREAK DEALS (overlap card on image) =================== -->
+<!-- =================== ADD-ON LIST =================== -->
 <section class="rated-bg relative">
-  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
+  <div class="max-w-6xl mx-auto px-5 lg:px-12 pb-16 lg:pb-24">
 
-    <!-- Heading centered -->
-    <h2 class="font-display italic uppercase leading-[1.02] text-center" style="font-size: clamp(40px, 7vw, 96px);">
-      <span class="block" style="color:#0054A1;">Spring Break</span>
-      <span class="block" style="color:#0A78E0;">Deals</span>
-    </h2>
-
-    <!-- Overlap: card floats above image -->
-    <div class="deals-overlap-wrap mt-10 lg:mt-14">
-      <!-- Card on top -->
-      <div class="deals-overlap-card">
-        <h3 class="font-body font-bold text-brand-ink text-lg lg:text-xl">
-          We will hook you up with the top Spring Break resorts and destinations!
+    <!-- Add-on 1: Booze Cruise -->
+    <article class="hotel-row">
+      <div class="hotel-row-image" style="--bg: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1400&q=80');"></div>
+      <div class="hotel-row-panel">
+        <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(28px, 3.2vw, 44px);">
+          Booze<br/>Cruise
         </h3>
-        <p class="mt-3 text-brand-ink/70 text-sm lg:text-base">
-          From all-inclusive hotels, flights, party packages, and booze cruises, we have everything you need for the ultimate Spring Break experience.
+
+        <p class="mt-5 text-white/85 text-sm lg:text-[15px] leading-relaxed max-w-md">
+          The booze cruise offers a 3 and a half hour party at sea including a DJ on board, along with other spring breakers, all drinks while on board, round trip transportation, and of course, Go Blue staff.
         </p>
-        <div class="mt-5 flex flex-col sm:flex-row gap-2.5">
-          <a href="#" class="btn-gradient font-display italic text-white uppercase inline-flex items-center justify-center" style="font-size:13px; border-radius:12px; padding:14px 28px; letter-spacing:0.04em;">View All</a>
-          <a href="#" class="btn-solid-blue-outline font-display italic uppercase inline-flex items-center justify-center" style="font-size:13px; border-radius:12px; padding:14px 28px; letter-spacing:0.04em;">Chat With Us</a>
-        </div>
-      </div>
 
-      <!-- Image pulled up behind the card -->
-      <div class="deals-overlap-image" style="--bg: url('https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=2000&q=80');"></div>
-    </div>
-  </div>
-</section>
-
-<!-- =================== TOP HOTEL PACKAGES (bento from main page) =================== -->
-<section class="rated-bg relative">
-  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
-
-    <!-- Heading row -->
-    <div class="flex items-start justify-between gap-4 mb-8 lg:mb-12">
-      <h2 class="font-display italic uppercase leading-[1.02]" style="font-size: clamp(36px, 6vw, 72px);">
-        <span style="color:#0054A1;">Top Hotel </span><span style="color:#0A78E0;">Packages</span>
-      </h2>
-      <a href="#" class="shrink-0 inline-flex items-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl px-4 py-2.5 lg:px-6 lg:py-3" style="font-size: clamp(12px, 1vw, 14px); letter-spacing: 0.04em;">
-        View All
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"/>
-          <polyline points="7 7 17 7 17 17"/>
-        </svg>
-      </a>
-    </div>
-
-    <!-- Bento: left tall card (row-span-2), right column has 2 stacked cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-4">
-
-      <!-- BIG LEFT — Occidental Punta Cana -->
-      <a href="#" class="hotel-card lg:row-span-2 p-5 lg:p-7 min-h-[320px] lg:min-h-[640px]"
-         style="--bg:url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1400&q=80');">
-        <span class="absolute top-5 right-5 lg:top-6 lg:right-6 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
-          <span class="font-display italic" style="color:#0054A1; font-size:22px;">$699</span>
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
-        </span>
-        <div class="mt-auto">
-          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Punta Cana</div>
-          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(26px, 3vw, 40px);">Occidental Punta Cana</h3>
-          <div class="flex flex-wrap gap-2 mt-4">
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">4-Person Room</span>
-          </div>
-        </div>
-        <span class="absolute bottom-5 right-5 lg:bottom-6 lg:right-6 w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
-          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="7" y1="17" x2="17" y2="7"/>
-            <polyline points="7 7 17 7 17 17"/>
-          </svg>
-        </span>
-      </a>
-
-      <!-- TOP RIGHT — Riu Santa Fe, Cabo -->
-      <a href="#" class="hotel-card p-5 lg:p-6 min-h-[280px] lg:min-h-[312px]"
-         style="--bg:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&q=80');">
-        <span class="absolute top-5 right-5 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
-          <span class="font-display italic" style="color:#0054A1; font-size:20px;">$1154</span>
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
-        </span>
-        <div class="mt-auto">
-          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Cabo</div>
-          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 32px);">Riu Santa Fe</h3>
-          <div class="flex flex-wrap gap-2 mt-3">
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">3-Person Room</span>
-          </div>
-        </div>
-        <span class="absolute bottom-5 right-5 w-10 h-10 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
-          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="7" y1="17" x2="17" y2="7"/>
-            <polyline points="7 7 17 7 17 17"/>
-          </svg>
-        </span>
-      </a>
-
-      <!-- BOTTOM RIGHT — Occidental Caribe, Punta Cana -->
-      <a href="#" class="hotel-card p-5 lg:p-6 min-h-[280px] lg:min-h-[312px]"
-         style="--bg:url('https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1200&q=80');">
-        <span class="absolute top-5 right-5 inline-flex items-baseline gap-1 bg-white rounded-full px-4 py-2 shadow-lg" style="z-index:3;">
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">From</span>
-          <span class="font-display italic" style="color:#0054A1; font-size:20px;">$859</span>
-          <span class="font-body font-bold uppercase text-[10px] tracking-widest text-gray-500">/ person</span>
-        </span>
-        <div class="mt-auto">
-          <div class="text-white/70 font-body font-bold uppercase tracking-widest text-xs mb-1">Punta Cana</div>
-          <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(22px, 2vw, 32px);">Occidental Caribe</h3>
-          <div class="flex flex-wrap gap-2 mt-3">
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All-in Dining</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">Total Transfers</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">All Taxes Paid</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">5-Night Access</span>
-            <span class="pill-outline text-white px-3 py-1.5 rounded-full font-body font-bold uppercase tracking-widest text-[10px]">4-Person Room</span>
-          </div>
-        </div>
-        <span class="absolute bottom-5 right-5 w-10 h-10 rounded-full bg-brand-orange flex items-center justify-center" style="z-index:3; box-shadow: 0 14px 30px -10px rgba(255,92,58,0.55);">
-          <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="7" y1="17" x2="17" y2="7"/>
-            <polyline points="7 7 17 7 17 17"/>
-          </svg>
-        </span>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<!-- =================== ENHANCE YOUR TRIP =================== -->
-<section class="rated-bg relative">
-  <div class="max-w-6xl mx-auto px-5 lg:px-12 py-16 lg:py-24">
-
-    <h2 class="font-display italic uppercase leading-[1.02]" style="font-size: clamp(40px, 7vw, 96px);">
-      <span style="color:#0054A1;">Enhance Your </span><span style="color:#0A78E0;">Trip</span>
-    </h2>
-    <p class="mt-4 max-w-3xl text-brand-ink/80 text-normal">
-      Our destinations have something for everyone! Dance clubs, bars, parties, festivals, shows,
-      restaurants, DJs, live bands, and more to choose from. During the day, the booze cruise is
-      the most popular event of every spring break!
-    </p>
-
-    <div id="enhanceScroll" class="enhance-scroll mt-10 lg:mt-14">
-
-      <!-- BOOZE CRUISE -->
-      <div class="enhance-card rounded-3xl overflow-hidden flex">
-        <div class="w-2/5 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80');"></div>
-        <div class="w-3/5 p-6 lg:p-7 flex flex-col" style="background:#0054A1;">
-          <div class="font-body font-bold uppercase tracking-[0.18em] text-white/60 text-xs">01 / Experience</div>
-          <svg class="w-7 h-7 text-white mt-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 18h18l-2 3H5zM12 3v12M12 3l7 12H5z"/>
-          </svg>
-          <h3 class="font-display italic uppercase text-white leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">
-            Booze<br/>Cruise
-          </h3>
-          <p class="text-white/80 text-sm mt-4">
-            The booze cruise offers a 3 and a half hour party at sea including a DJ on board, along with other spring breakers, all drinks while on board, round trip transportation, and of course, Go Blue staff
-          </p>
-          <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
-            Add to Trip
-            <span>+</span>
+        <div class="mt-auto pt-7">
+          <a href="#" class="inline-flex items-center justify-center bg-white text-brand-blue font-body font-bold uppercase rounded-full px-6 py-3 tracking-widest text-[11px] hover:bg-[#F0F7FF] transition">
+            Request Info
           </a>
         </div>
       </div>
+    </article>
 
-      <!-- FLIGHTS -->
-      <div class="enhance-card rounded-3xl bg-[#EEF1F5] p-6 lg:p-7 flex flex-col">
-        <div class="font-body font-bold uppercase tracking-[0.18em] text-gray-500 text-xs">02 / Logistics</div>
-        <svg class="w-7 h-7 text-brand-ink mt-4" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
-        <h3 class="font-display italic uppercase text-brand-ink leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">Flights</h3>
-        <p class="text-brand-ink/70 text-sm mt-4">
-          You have the choice in your package to purchase the airfare through us, or to purchase the airfare on your own, it's totally up to you!
-        </p>
-        <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
-          Add to Trip
-          <span>+</span>
-        </a>
+    <!-- Add-on 2: Flights -->
+    <article class="hotel-row">
+      <div class="hotel-row-image" style="--bg: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=80');"></div>
+      <div class="hotel-row-panel">
+        <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(28px, 3.2vw, 44px);">
+          Flights
+        </h3>
+
+        <div class="mt-5 space-y-4 text-white/85 text-sm lg:text-[15px] leading-relaxed max-w-md">
+          <p>You have the choice in your package to purchase the airfare through us, or to purchase the airfare on your own, it's totally up to you!</p>
+          <p>If you chose to have your flight done through us, the dates you select for travel are guaranteed. Your exact flight details will be available approximately 30 days prior to the start of your trip.</p>
+          <p>Go Blue Tours does not guarantee specific arrival or departure times, non-stop flights, a specific number of stops, or specific airlines. Groups of 8 or more are not guaranteed on the same flights, although we will try our best to do so.</p>
+        </div>
+
+        <div class="mt-auto pt-7">
+          <a href="#" class="inline-flex items-center justify-center bg-white text-brand-blue font-body font-bold uppercase rounded-full px-6 py-3 tracking-widest text-[11px] hover:bg-[#F0F7FF] transition">
+            Request Info
+          </a>
+        </div>
       </div>
+    </article>
 
-      <!-- TRANSPORTATION -->
-      <div class="enhance-card rounded-3xl bg-[#EEF1F5] p-6 lg:p-7 flex flex-col">
-        <div class="font-body font-bold uppercase tracking-[0.18em] text-gray-500 text-xs">03 / Logistics</div>
-        <svg class="w-7 h-7 text-brand-ink mt-4" viewBox="0 0 24 24" fill="currentColor"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11M5 11h14v6H5zM7 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM6 17v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V17m8 0v1.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V17"/></svg>
-        <h3 class="font-display italic uppercase text-brand-ink leading-[1] mt-4" style="font-size: clamp(24px, 2.4vw, 36px);">Transportation</h3>
-        <p class="text-brand-ink/70 text-sm mt-4">
-          We offer optional transfers to and from the airport/hotel for each of our destinations. These transfers pick you up from the airport when you land, and bring you back to the airport on the date you are set to leave.
-        </p>
-        <a href="#" class="mt-auto inline-flex items-center justify-center gap-2 bg-brand-orange text-white font-display italic uppercase rounded-xl py-3 mt-6" style="font-size:14px; letter-spacing:0.04em;">
-          Add to Trip
-          <span>+</span>
-        </a>
+    <!-- Add-on 3: Transportation -->
+    <article class="hotel-row">
+      <div class="hotel-row-image" style="--bg: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1400&q=80');"></div>
+      <div class="hotel-row-panel">
+        <h3 class="font-display italic uppercase text-white leading-[0.95]" style="font-size: clamp(28px, 3.2vw, 44px);">
+          Transportation
+        </h3>
+
+        <div class="mt-5 space-y-4 text-white/85 text-sm lg:text-[15px] leading-relaxed max-w-md">
+          <p>We offer optional transfers to and from the airport/hotel for each of our destinations. These transfers pick you up from the airport when you land, and bring you back to the airport on the date you are set to leave.</p>
+          <p>Round trip transfers to and from the airport/hotel are recommended for smooth operations while traveling, as it's all done by us!</p>
+        </div>
+
+        <div class="mt-auto pt-7">
+          <a href="#" class="inline-flex items-center justify-center bg-white text-brand-blue font-body font-bold uppercase rounded-full px-6 py-3 tracking-widest text-[11px] hover:bg-[#F0F7FF] transition">
+            Request Info
+          </a>
+        </div>
       </div>
+    </article>
 
-    </div>
   </div>
 </section>
 
@@ -920,29 +694,6 @@
     const phone = document.getElementById('quotePhone').value;
     alert(`Thanks! We'll text your quote to ${phone || '—'}`);
   });
-
-  // =========== Enhance Your Trip mouse-drag carousel ===========
-  const enhanceScroll = document.getElementById('enhanceScroll');
-  if (enhanceScroll) {
-    let isDownE = false, startXE = 0, scrollLeftE = 0;
-    enhanceScroll.addEventListener('mousedown', (e) => {
-      if (e.target.closest('button, a')) return;
-      isDownE = true;
-      enhanceScroll.classList.add('dragging');
-      startXE = e.pageX - enhanceScroll.offsetLeft;
-      scrollLeftE = enhanceScroll.scrollLeft;
-    });
-    ['mouseleave', 'mouseup'].forEach(ev => enhanceScroll.addEventListener(ev, () => {
-      isDownE = false;
-      enhanceScroll.classList.remove('dragging');
-    }));
-    enhanceScroll.addEventListener('mousemove', (e) => {
-      if (!isDownE) return;
-      e.preventDefault();
-      const x = e.pageX - enhanceScroll.offsetLeft;
-      enhanceScroll.scrollLeft = scrollLeftE - (x - startXE) * 1.4;
-    });
-  }
 </script>
 
 </body>
