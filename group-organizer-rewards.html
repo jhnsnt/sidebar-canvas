@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Group Organizer Rewards — Go Blue Tours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,900;1,700;1,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================
+     GO BLUE DESIGN SYSTEM
+     Scraped from sidebar-canvas.vercel.app
+  ========================= */
+  :root {
+    --brand-blue: #0054A1;        /* navy — header + h2 span 1 */
+    --brand-blue-bright: #0A78E0; /* h2 span 2 */
+    --brand-orange: #FF5C3A;      /* buttons, CTAs */
+    --brand-yellow: #FFC02E;      /* prices */
+    --brand-ink: #0E1116;         /* dark card bg companion */
+    --card-dark: #0B1220;         /* .dest-card / .hotel-card */
+    --paper: #FFFFFF;
+    --ink-80: rgba(14, 17, 22, 0.80);
+    --ink-70: rgba(14, 17, 22, 0.70);
+    --ink-60: rgba(14, 17, 22, 0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    color: var(--brand-ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .font-display {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1.02;
+    letter-spacing: -0.005em;
+  }
+  .font-body { font-family: 'Inter', sans-serif; }
+
+  /* ========== NAVIGATION ========== */
+  .mobile-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--brand-blue);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,.15);
+  }
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: #fff;
+  }
+  .logo-wrap small {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    font-style: normal;
+    display: block;
+    margin-top: 2px;
+    opacity: 0.9;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .nav-links a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .nav-links a.has-dropdown::after {
+    content: "›";
+    display: inline-block;
+    transform: rotate(90deg);
+    margin-left: 4px;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .specials-btn {
+    border: 1.1px solid rgba(255,255,255,0.35);
+    background: transparent;
+    color: #fff;
+    border-radius: 9999px;
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .specials-btn::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+  }
+  .account-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .account-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+
+  /* ========== SECTION WITH SPECKLE BG ========== */
+  .rated-bg {
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+  }
+  .rated-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://sidebar-canvas.vercel.app/section-bg.svg");
+    background-repeat: repeat;
+    background-size: auto;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 1;
+  }
+  .rated-bg > .container {
+    position: relative;
+    z-index: 1;
+  }
+  .container {
+    max-width: 1152px;
+    margin: 0 auto;
+    padding: 64px 48px 96px;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    padding-top: 96px;                  /* offset fixed nav */
+    padding-bottom: 80px;
+    position: relative;
+  }
+  .hero .container { padding-top: 40px; padding-bottom: 40px; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--brand-ink);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    box-shadow: 0 0 0 4px rgba(255,92,58,0.22);
+  }
+  h1.hero-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: clamp(56px, 8.5vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--brand-ink);
+  }
+  h1.hero-title .b1 { color: var(--brand-blue); }
+  h1.hero-title .b2 { color: var(--brand-blue-bright); }
+  h1.hero-title .orange { color: var(--brand-orange); }
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 18px;
+    line-height: 1.55;
+    max-width: 620px;
+    color: var(--ink-70);
+    font-weight: 500;
+  }
+  .stats-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    padding-left: 16px;
+    border-left: 3px solid var(--brand-orange);
+  }
+  .stat .num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--brand-ink);
+  }
+  .stat .lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+    margin-top: 6px;
+  }
+
+  /* ========== SECTION HEADERS ========== */
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  h2.section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: clamp(48px, 7.5vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--brand-ink); /* fallback */
+  }
+  h2.section-title .b1 { color: var(--brand-blue); }
+  h2.section-title .b2 { color: var(--brand-blue-bright); }
+  .section-note {
+    font-size: 15px;
+    color: var(--ink-70);
+    max-width: 380px;
+    font-weight: 500;
+    line-height: 1.6;
+    padding-bottom: 8px;
+  }
+  .eyebrow-lbl {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+    margin-bottom: 16px;
+  }
+
+  /* ========== DEST CARDS (Choose Your Vibe style) ========== */
+  /* Used here for the cash-tier grid */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: minmax(0, auto);
+    gap: 16px;
+  }
+  .dest-card {
+    position: relative;
+    background: var(--card-dark);
+    color: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+  }
+  .dest-card:hover { transform: translateY(-3px); }
+  .dest-tag {
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    backdrop-filter: blur(4px);
+  }
+  .dest-card .body {
+    margin-top: auto;
+  }
+  .dest-card .h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 52px;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin: 0;
+    color: #fff;
+  }
+  .dest-card .h3.smaller { font-size: 40px; }
+  .dest-card .desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.75);
+    margin-top: 10px;
+    max-width: 280px;
+  }
+  .dest-card .price-line {
+    margin-top: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    color: #fff;
+    font-size: 20px;
+  }
+  .dest-card .price-line .from {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .dest-card .price-line .price {
+    color: var(--brand-orange);
+    font-size: 30px;
+  }
+  .dest-card .price-line .unit {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: normal;
+    color: rgba(255,255,255,0.85);
+    margin-left: 4px;
+  }
+
+  /* Cash tier variant — accented with yellow price */
+  .tier-cash .cash-amt {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 56px;
+    color: var(--brand-orange);
+    line-height: 0.9;
+    margin-top: 8px;
+  }
+  .tier-cash .cash-unit {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.7);
+    margin-top: 6px;
+  }
+
+  /* Hero milestone tier (15 people) — spans 2 columns */
+  .tier-free {
+    grid-column: span 2;
+    min-height: 360px;
+    background:
+      radial-gradient(circle at 85% 20%, rgba(10,120,224,0.45), transparent 55%),
+      linear-gradient(135deg, #062d5c 0%, #0054A1 100%);
+  }
+  .tier-free .h3 { font-size: 128px; line-height: 0.85; }
+  .tier-free .h3 small {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    opacity: 0.9;
+    margin-top: 6px;
+  }
+  .tier-free .reward-stack {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .tier-free .reward-chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 16px 18px;
+    backdrop-filter: blur(6px);
+  }
+  .tier-free .reward-chip .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .tier-free .reward-chip .value {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 28px;
+    line-height: 1;
+    margin-top: 6px;
+  }
+  .tier-free .reward-chip .value.gold { color: var(--brand-orange); }
+
+  /* 20 people tier - single col */
+  .tier-twenty .h3 { font-size: 96px; line-height: 0.88; }
+
+  /* 30 people mega — spans 2 cols, orange */
+  .tier-mega {
+    grid-column: span 2;
+    background:
+      radial-gradient(circle at 90% 30%, rgba(255,255,255,0.18), transparent 55%),
+      linear-gradient(135deg, #FF5C3A 0%, #FF7F3A 100%);
+    min-height: 340px;
+  }
+  .tier-mega .dest-tag { background: rgba(0,0,0,0.8); }
+  .tier-mega .h3 { font-size: 140px; line-height: 0.85; }
+  .tier-mega .reward-row {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tier-mega .reward-item {
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 9999px;
+    padding: 10px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    backdrop-filter: blur(4px);
+  }
+
+  /* 30+ Elite card - single col dark ink */
+  .tier-elite {
+    background: #fff;
+    color: var(--brand-ink);
+    border: 2px solid var(--brand-ink);
+  }
+  .tier-elite .dest-tag {
+    background: var(--brand-ink);
+    color: #fff;
+  }
+  .tier-elite .h3 { color: var(--brand-ink); font-size: 72px; line-height: 0.92; }
+  .tier-elite .elite-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tier-elite .elite-list li {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-80);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tier-elite .elite-list li::before {
+    content: "✓";
+    width: 20px; height: 20px;
+    flex: 0 0 20px;
+    background: var(--brand-orange);
+    color: #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .tier-elite .elite-list strong { color: var(--brand-ink); font-weight: 800; }
+  .tier-elite .ribbon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--brand-orange);
+    color: var(--brand-ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 9999px;
+  }
+
+  /* ========== EARLY BOOKING STRIP ========== */
+  .booking-strip {
+    background: var(--card-dark);
+    border-radius: 24px;
+    padding: 48px 48px;
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .booking-strip::before {
+    content: "";
+    position: absolute;
+    right: -120px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10,120,224,0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .booking-strip > * { position: relative; z-index: 1; }
+  .booking-strip .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+    margin-bottom: 14px;
+  }
+  .booking-strip h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 44px;
+    line-height: 1;
+    margin: 0;
+    color: #fff;
+  }
+  .booking-strip h3 .b1 { color: var(--brand-blue-bright); }
+  .booking-strip h3 .orange { color: var(--brand-orange); }
+  .booking-strip .note {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    margin-top: 14px;
+    max-width: 340px;
+  }
+  .date-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 24px;
+  }
+  .date-card .date {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 26px;
+    letter-spacing: -0.005em;
+    line-height: 1;
+  }
+  .date-card .bonus-pill {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brand-orange);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 9999px;
+  }
+  .date-card .bonus-pill .plus {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .date-card .bonus-pill .txt {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .date-card .sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    margin-top: 14px;
+  }
+
+  /* ========== HOW IT WORKS STEPS ========== */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .step-card {
+    background: var(--card-dark);
+    color: #fff;
+    border-radius: 24px;
+    padding: 32px;
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+  }
+  .step-card:hover { transform: translateY(-3px); }
+  .step-card .step-num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 140px;
+    line-height: 0.8;
+    color: rgba(10, 120, 224, 0.22);
+    position: absolute;
+    top: 12px;
+    right: 24px;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+  }
+  .step-card .step-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand-orange);
+  }
+  .step-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 30px;
+    line-height: 0.95;
+    margin: 8px 0 0;
+    position: relative;
+    z-index: 1;
+  }
+  .step-card p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.72);
+    margin: 14px 0 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ========== FINE PRINT ========== */
+  .fine-print {
+    background: #F5F6F8;
+    border-left: 4px solid var(--brand-orange);
+    border-radius: 12px;
+    padding: 24px 32px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-70);
+  }
+  .fine-print strong { color: var(--brand-ink); font-weight: 700; }
+
+  /* ========== FINAL CTA ========== */
+  .final-cta {
+    background:
+      linear-gradient(135deg, #083768 0%, #0054A1 55%, #0A78E0 100%);
+    color: #fff;
+    padding: 96px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://sidebar-canvas.vercel.app/section-bg.svg");
+    opacity: 0.4;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+  .final-cta .container {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .final-cta h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: clamp(40px, 6vw, 84px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    max-width: 700px;
+  }
+  .final-cta h2 .yellow { color: var(--brand-orange); }
+  .final-cta p {
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.85);
+    max-width: 540px;
+    margin: 0;
+    font-weight: 500;
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 28px;
+    border-radius: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary {
+    background: var(--brand-orange);
+    color: #fff;
+    box-shadow: 0 10px 30px -8px rgba(255,92,58,0.55);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px -8px rgba(255,92,58,0.72);
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+  }
+  .btn .arrow {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #fff;
+    color: var(--brand-orange);
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 900;
+    font-style: normal;
+  }
+  .btn-secondary .arrow { color: var(--brand-blue); }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--brand-ink);
+    color: rgba(255,255,255,0.7);
+    padding: 48px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+  footer .container {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    max-width: 1152px;
+  }
+  footer .logo-wrap { color: #fff; margin-bottom: 14px; }
+  footer .tagline { max-width: 320px; line-height: 1.6; }
+  footer .copyright { width: 100%; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 32px; padding-top: 20px; font-size: 12px; opacity: 0.6; }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 1024px) {
+    .tiers-grid { grid-template-columns: 1fr 1fr; }
+    .tier-free, .tier-mega { grid-column: span 2; }
+    .booking-strip { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .mobile-header { padding: 14px 20px; }
+    .nav-links, .specials-btn { display: none; }
+    .container { padding: 48px 20px 64px; }
+    .hero { padding-top: 72px; }
+    .tiers-grid { grid-template-columns: 1fr; }
+    .tier-free, .tier-mega { grid-column: span 1; }
+    .tier-free .h3, .tier-mega .h3 { font-size: 96px; }
+    .dest-card .h3 { font-size: 44px; }
+    .booking-strip { padding: 32px 24px; }
+    .final-cta { padding: 64px 24px; }
+    footer { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="mobile-header">
+  <a href="#" class="logo-wrap">
+    Go Blue
+    <small>TOURS</small>
+  </a>
+  <nav class="nav-links">
+    <a href="#" class="has-dropdown">Deals</a>
+    <a href="#" class="has-dropdown">Destinations</a>
+    <a href="#">Why Go Blue</a>
+    <a href="#" class="has-dropdown">Resources</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="nav-right">
+    <a href="#" class="specials-btn">Specials</a>
+    <a href="#" class="account-btn">
+      <span class="account-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" fill="#fff"/>
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="#fff"/>
+        </svg>
+      </span>
+      My Account
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="rated-bg hero">
+  <div class="container">
+    <span class="eyebrow"><span class="dot"></span>Group Organizer Rewards · Spring Break 2027</span>
+    <h1 class="hero-title">
+      Build the <span class="b1">Group</span>.<br>
+      <span class="b2">Go Free</span><span class="orange">.</span>
+    </h1>
+    <p class="hero-sub">Bring the squad. We handle the rest. The bigger the group, the bigger your reward — cash, free trips, party packages, and more. Clean. Easy. Sellable.</p>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="num">6–14</div>
+        <div class="lbl">Cash per traveler</div>
+      </div>
+      <div class="stat">
+        <div class="num">15+</div>
+        <div class="lbl">You go free</div>
+      </div>
+      <div class="stat">
+        <div class="num">30+</div>
+        <div class="lbl">Free + party + cash</div>
+      </div>
+      <div class="stat">
+        <div class="num">$200</div>
+        <div class="lbl">Early booking bonus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASH TIERS -->
+<section class="rated-bg">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title"><span class="b1">Cash</span> <span class="b2">Rewards.</span></h2>
+      <p class="section-note">For groups of <strong>6 to 14 paid passengers</strong>. You earn real cash — not trip credit. Keep it whether you travel or not.</p>
+    </div>
+
+    <div class="tiers-grid">
+      <!-- 6 -->
+      <a href="#" class="dest-card tier-cash">
+        <span class="dest-tag">🎯 Starter</span>
+        <div class="body">
+          <div class="h3 smaller">6<br><span style="font-size:18px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.8;">PEOPLE</span></div>
+          <div class="cash-amt">$50</div>
+          <div class="cash-unit">per person · $10 flat</div>
+        </div>
+      </a>
+
+      <!-- 8 -->
+      <a href="#" class="dest-card tier-cash">
+        <span class="dest-tag">🔥 Warming Up</span>
+        <div class="body">
+          <div class="h3 smaller">8<br><span style="font-size:18px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.8;">PEOPLE</span></div>
+          <div class="cash-amt">$75</div>
+          <div class="cash-unit">per person · $10 flat</div>
+        </div>
+      </a>
+
+      <!-- 10 -->
+      <a href="#" class="dest-card tier-cash">
+        <span class="dest-tag">⚡ Rolling</span>
+        <div class="body">
+          <div class="h3 smaller">10<br><span style="font-size:18px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.8;">PEOPLE</span></div>
+          <div class="cash-amt">$125</div>
+          <div class="cash-unit">per person · $12 flat</div>
+        </div>
+      </a>
+
+      <!-- 12 -->
+      <a href="#" class="dest-card tier-cash">
+        <span class="dest-tag">🚀 Stacking</span>
+        <div class="body">
+          <div class="h3 smaller">12<br><span style="font-size:18px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.8;">PEOPLE</span></div>
+          <div class="cash-amt">$175</div>
+          <div class="cash-unit">per person · $15 flat</div>
+        </div>
+      </a>
+
+      <!-- 14 -->
+      <a href="#" class="dest-card tier-cash">
+        <span class="dest-tag">💥 Almost Free</span>
+        <div class="body">
+          <div class="h3 smaller">14<br><span style="font-size:18px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.8;">PEOPLE</span></div>
+          <div class="cash-amt">$275</div>
+          <div class="cash-unit">per person · $20 flat</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FREE TRIP TIERS -->
+<section class="rated-bg">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title"><span class="b1">Free</span> <span class="b2">Trips.</span></h2>
+      <p class="section-note">Hit <strong>15 paid passengers</strong> and the trip is on us. Same destination, same hotel, zero trip cost.</p>
+    </div>
+
+    <div class="tiers-grid">
+      <!-- 15 - Featured span 2 -->
+      <a href="#" class="dest-card tier-free">
+        <span class="dest-tag">🔥 First Free Tier</span>
+        <div class="body">
+          <div class="h3">15
+            <small>PAID PASSENGERS</small>
+          </div>
+          <div class="reward-stack">
+            <div class="reward-chip">
+              <div class="label">Your Reward</div>
+              <div class="value gold">1 Free Trip</div>
+            </div>
+            <div class="reward-chip">
+              <div class="label">Fine Print</div>
+              <div class="value" style="font-size:18px;">Minus $100 Taxes</div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 20 -->
+      <a href="#" class="dest-card tier-twenty">
+        <span class="dest-tag">⭐ Level Up</span>
+        <div class="body">
+          <div class="h3">20<br><span style="font-size:16px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.85;">PAID PASSENGERS</span></div>
+          <div class="price-line" style="color:var(--brand-orange); font-size:26px; margin-top:20px;">1 FREE TRIP</div>
+          <div style="font-family:'Inter',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-top:8px;">Minus Taxes · $100/trip</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ELITE TIERS -->
+<section class="rated-bg">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title"><span class="b1">Elite</span> <span class="b2">Tier.</span></h2>
+      <p class="section-note"><strong>30 or more paid passengers</strong> unlocks two free trips, the full party package, and cash on top for the biggest groups.</p>
+    </div>
+
+    <div class="tiers-grid">
+      <!-- 30 Mega - span 2 -->
+      <a href="#" class="dest-card tier-mega">
+        <span class="dest-tag">⭐ Elite Organizer</span>
+        <div class="body">
+          <div class="h3">30
+            <small style="display:block; font-family:'Inter',sans-serif; font-style:normal; font-size:16px; font-weight:700; letter-spacing:0.12em; opacity:0.95; margin-top:6px;">PAID PASSENGERS</small>
+          </div>
+          <div class="reward-row">
+            <span class="reward-item">✦ 2 Free Trips</span>
+            <span class="reward-item">🎉 Party Package</span>
+            <span class="reward-item">3 Nights</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 30+ Elite -->
+      <a href="#" class="dest-card tier-elite">
+        <span class="ribbon">👑 Top Tier</span>
+        <span class="dest-tag">Campus Legend</span>
+        <div class="body">
+          <div class="h3">30+<br><span style="font-size:14px; font-family:'Inter',sans-serif; font-style:normal; font-weight:700; letter-spacing:0.12em; opacity:0.7;">PAID PASSENGERS</span></div>
+          <ul class="elite-list">
+            <li><strong>2 Free Trips</strong>&nbsp;(minus taxes)</li>
+            <li><strong>3-Night</strong> Party Package</li>
+            <li><strong>$200 Cash</strong> on top</li>
+          </ul>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EARLY BOOKING STRIP -->
+<section class="rated-bg">
+  <div class="container">
+    <div class="booking-strip">
+      <div>
+        <div class="label">⚡ Limited Early Booking Bonus</div>
+        <h3>Book <span class="orange">Early</span>,<br>Earn <span class="b1">More</span>.</h3>
+        <p class="note">Stacks on top of every reward tier. Lock it in before the deadline, keep the bonus.</p>
+      </div>
+      <div class="date-card">
+        <div class="date">Book by May 1<sup style="font-size:14px;opacity:0.7;">st</sup></div>
+        <div class="bonus-pill"><span class="plus">+</span><span class="txt">$200 Extra Cash</span></div>
+        <div class="sub">Paid on top of your tier reward.</div>
+      </div>
+      <div class="date-card">
+        <div class="date">Book by May 15<sup style="font-size:14px;opacity:0.7;">th</sup></div>
+        <div class="bonus-pill"><span class="plus">+</span><span class="txt">$150 Extra Cash</span></div>
+        <div class="sub">Still time — don't sleep on it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="rated-bg">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title"><span class="b1">How It</span> <span class="b2">Works.</span></h2>
+      <p class="section-note">Three moves. That's it. No fine-print gymnastics, no chasing, no weird forms. Just results.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-label">Pick Your Destination</div>
+        <h3>Cancún, Cabo,<br>Punta Cana,<br>Nassau.</h3>
+        <p>Pick the vibe, we lock in the hotel, flights, and transfers so you don't have to think about logistics.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-label">Recruit Your Squad</div>
+        <h3>Share Your<br>Booking Link.</h3>
+        <p>Every paid passenger counts toward your reward tier. Track progress from your personal organizer dashboard.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-label">Cash In</div>
+        <h3>Get Paid.<br>Go Free.</h3>
+        <p>Cash sent per paid passenger — not credit. Hit 15 and the trip is free. Hit 30 and the party is on us too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINE PRINT -->
+<section class="rated-bg">
+  <div class="container" style="padding-top: 16px; padding-bottom: 40px;">
+    <div class="fine-print">
+      <strong>The real talk.</strong> All rewards based on <strong>paid passengers only</strong> — deposits don't count until the trip is paid in full. Cash rewards are paid per person (you keep it — it's not a credit applied to your trip). Free trips cover lodging and package inclusions; travelers are responsible for taxes of approximately $100/trip. The $200 cash bonus at the 30+ tier is a top-up on the 2 free trips and party package — not a replacement. Party Package includes 3 nights of curated events; programming varies by destination. Early booking bonuses require full group deposits by the stated date. Final group count is locked 45 days prior to departure.
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <div>
+      <h2>Ready to<br><span class="yellow">Run It</span>?</h2>
+      <p>Apply to be a Go Blue Campus Manager and get a dedicated rep, a custom booking link, and the playbook that's sent 5,000+ students to spring break.</p>
+    </div>
+    <div class="cta-buttons">
+      <a href="#" class="btn btn-primary">
+        Become an Organizer
+        <span class="arrow">→</span>
+      </a>
+      <a href="#" class="btn btn-secondary">
+        Talk to a Rep
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div style="max-width:320px;">
+      <div class="logo-wrap">Go Blue <small>TOURS</small></div>
+      <div class="tagline">#1 Rated international student travel company. All-inclusive trips to Cancún, Cabo, Punta Cana, Nassau &amp; more.</div>
+    </div>
+    <div style="display:flex; gap:48px; flex-wrap:wrap;">
+      <div>
+        <div style="color:#fff; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:11px; margin-bottom:12px;">The Trip</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Destinations</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Deals</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Spring Break Dates</a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:11px; margin-bottom:12px;">The Vibe</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Why Go Blue</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Testimonials</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Campus Manager</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Blog</a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; font-size:11px; margin-bottom:12px;">Support</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">FAQ</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Travel Protection</a>
+          <a href="#" style="color:rgba(255,255,255,0.7); text-decoration:none;">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">© 2025 Go Blue Tours. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
