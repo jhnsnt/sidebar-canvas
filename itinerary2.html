@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours</title>
+<link rel="icon" href="https://secureportal.landmarkeducationaltours.com/assets/media/logos/favicon.ico?v=1786814054">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241a14;
+    --paper:#fbf7f1;
+    --rust:#ac3d20;
+    --rust-deep:#7c2c17;
+    --rust-light:#d97250;
+    --sand:#ecdfce;
+    --sand-line:#ddc7ab;
+    --slate:#6d6153;
+    --gold:#c9973f;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-display{ font-family:'Poppins',sans-serif; }
+  .font-mono{ font-family:'Space Mono',monospace; }
+
+  .cornice{
+    height:14px;
+    background-image: repeating-linear-gradient(90deg, var(--sand-line) 0 2px, transparent 2px 22px);
+    background-position: center;
+  }
+  html{ scroll-behavior:smooth; }
+  .day-tab{ transition: all .25s ease; }
+  .day-tab.active{
+    background:var(--rust); color:var(--paper); border-color:var(--rust);
+  }
+  .day-tab.active .day-tab-date{ color:var(--sand); }
+  .day-panel{ scroll-margin-top:100px; }
+  @media (min-width:768px){ .day-panel{ scroll-margin-top:24px; } }
+  .day-panel + .day-panel{ margin-top:3rem; padding-top:3rem; border-top:1px dashed var(--sand-line); }
+
+  .timeline-item{ position:relative; }
+  .timeline-item::before{
+    content:''; position:absolute; left:0; top:0; bottom:-1px; width:1px; background:var(--sand-line);
+  }
+  .timeline-item:last-child::before{ bottom:50%; }
+  .timeline-dot{
+    width:11px; height:11px; border-radius:9999px; background:var(--paper);
+    border:2px solid var(--rust); position:absolute; left:-5px; top:6px;
+  }
+
+  @media print{
+    .no-print{ display:none !important; }
+    .day-panel{ display:block !important; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ================= HERO ================= -->
+<header class="relative overflow-hidden text-[var(--paper)]" style="background:linear-gradient(135deg, var(--rust-deep) 0%, var(--rust) 62%, var(--rust) 100%);">
+
+  <div class="max-w-6xl mx-auto px-6 md:px-10 pt-10 pb-8 relative">
+    <div class="flex items-start justify-between gap-6 flex-wrap">
+      <div>
+        <img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-8 md:h-12 w-auto" style="filter:brightness(0) invert(1); opacity:0.88;">
+        <h1 class="font-display font-semibold text-3xl md:text-[2.6rem] leading-tight mt-3">Dave Consultancy Inc.</h1>
+        <p class="text-[var(--sand)] mt-1 text-sm md:text-base">A three-day education tour of Washington, D.C.</p>
+      </div>
+      <div class="border border-white/25 bg-black/10 rounded-lg px-4 py-3 text-right font-mono">
+        <p class="text-[10px] uppercase tracking-[0.2em] text-[var(--sand)]">Tour Code</p>
+        <p class="text-[var(--gold)] text-lg tracking-wide">HMCV6PXR2I</p>
+      </div>
+    </div>
+
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 mt-9 text-sm border-t border-white/20 pt-6">
+      <div class="min-w-0">
+        <dt class="text-[10px] uppercase tracking-[0.2em] text-[var(--sand)]/70">Destination</dt>
+        <dd class="mt-1 text-[var(--paper)]">Washington, D.C.</dd>
+      </div>
+      <div class="min-w-0">
+        <dt class="text-[10px] uppercase tracking-[0.2em] text-[var(--sand)]/70">Trip Dates</dt>
+        <dd class="mt-1 text-[var(--paper)]">Aug 24 – Aug 26, 2026</dd>
+      </div>
+      <div class="min-w-0">
+        <dt class="text-[10px] uppercase tracking-[0.2em] text-[var(--sand)]/70">Travel Consultant</dt>
+        <dd class="mt-1 text-[var(--paper)]">Maya Slavkin</dd>
+        <dd class="text-[var(--sand)]/70 text-xs break-words">maya@landmarkeducationaltours.com</dd>
+      </div>
+      <div class="min-w-0">
+        <dt class="text-[10px] uppercase tracking-[0.2em] text-[var(--sand)]/70">Support</dt>
+        <dd class="mt-1 text-[var(--paper)] break-words">Hello@LandmarkEducationalTours.com</dd>
+        <dd class="text-[var(--sand)]/70 text-xs break-words">888-886-2781</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="cornice opacity-30"></div>
+</header>
+
+<!-- ================= ACTION BAR ================= -->
+<div class="no-print bg-[var(--sand)] border-b border-[var(--sand-line)]">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <div class="flex gap-6">
+      <button onclick="window.print()" class="text-sm font-medium text-[var(--rust-deep)] hover:text-[var(--rust)] flex items-center gap-2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        Download PDF
+      </button>
+      <button class="text-sm font-medium text-[var(--rust-deep)] hover:text-[var(--rust)] flex items-center gap-2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        See Visual Version
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= POLICY NOTICE ================= -->
+<div class="max-w-6xl mx-auto px-6 md:px-10 mt-6">
+  <div class="bg-white border border-[var(--sand-line)] rounded-lg px-5 py-3.5 text-sm text-[var(--slate)] leading-relaxed">
+    <span class="font-semibold text-[var(--ink)]">Itinerary lock:</span> no changes are permitted after 30 days prior to departure, or once the final itinerary is approved — whichever comes first. All changes must be submitted to and approved by Landmark Educational Tours before that window closes, to keep the experience seamless for every participant.
+  </div>
+</div>
+
+<!-- ================= MAIN LAYOUT ================= -->
+<div class="max-w-6xl mx-auto px-6 md:px-10 py-8 grid md:grid-cols-[220px_1fr] gap-8">
+
+  <!-- Day selector -->
+  <aside class="no-print sticky top-0 md:top-6 z-20 h-max -mx-6 px-6 md:mx-0 md:px-0 pb-3 md:pb-0 bg-[var(--paper)]/95 backdrop-blur-sm md:bg-transparent border-b border-[var(--sand-line)] md:border-none shadow-sm md:shadow-none">
+    <p class="hidden md:block font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--slate)] mb-3 pt-6 md:pt-0">Itinerary</p>
+    <nav class="flex md:flex-col gap-2 pt-3 md:pt-0">
+      <a href="#panel-1" data-day="1" class="day-tab active w-full text-left rounded-lg px-4 py-3 bg-white border border-[var(--sand-line)] block">
+        <span class="block text-sm font-semibold">Day 1</span>
+        <span class="day-tab-date block text-xs text-[var(--slate)] font-mono mt-0.5">Aug 24, 2026</span>
+      </a>
+      <a href="#panel-2" data-day="2" class="day-tab w-full text-left rounded-lg px-4 py-3 bg-white border border-[var(--sand-line)] block">
+        <span class="block text-sm font-semibold">Day 2</span>
+        <span class="day-tab-date block text-xs text-[var(--slate)] font-mono mt-0.5">Aug 25, 2026</span>
+      </a>
+      <a href="#panel-3" data-day="3" class="day-tab w-full text-left rounded-lg px-4 py-3 bg-white border border-[var(--sand-line)] block">
+        <span class="block text-sm font-semibold">Day 3</span>
+        <span class="day-tab-date block text-xs text-[var(--slate)] font-mono mt-0.5">Aug 26, 2026</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Day panels -->
+  <main>
+
+    <!-- DAY 1 -->
+    <section id="panel-1" class="day-panel">
+      <div class="flex items-baseline justify-between border-b border-[var(--sand-line)] pb-4 mb-6">
+        <h2 class="font-display font-semibold text-2xl">Day One</h2>
+        <span class="font-mono text-xs text-[var(--slate)] uppercase tracking-wide">Monday, August 24, 2026</span>
+      </div>
+
+      <ol class="space-y-7 pl-5">
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">8:15 AM</span>
+          <h3 class="font-medium mt-1">Motorcoach Transportation</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">9:00 AM</span>
+          <h3 class="font-medium mt-1">Admission to the Top of George Washington Monument</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">10:30 AM</span>
+          <h3 class="font-medium mt-1">Visit the Lincoln Memorial, Vietnam, and Korean War Memorials, World War II Memorial, and Washington Monument</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">1:00 PM</span>
+          <h3 class="font-medium mt-1">Visit the National Museum of African American History and Culture</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">3:00 PM</span>
+          <h3 class="font-medium mt-1">Visit the Thomas Jefferson, Franklin Delano Roosevelt, and MLK Memorials around the Tidal Basin</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">4:30 PM</span>
+          <h3 class="font-medium mt-1">Hotel Accommodations at Embassy Suites Washington D.C. Georgetown</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">6:45 PM</span>
+          <h3 class="font-medium mt-1">Attend a Washington Nationals Baseball Game</h3>
+        </li>
+      </ol>
+    </section>
+
+    <!-- DAY 2 -->
+    <section id="panel-2" class="day-panel">
+      <div class="flex items-baseline justify-between border-b border-[var(--sand-line)] pb-4 mb-6">
+        <h2 class="font-display font-semibold text-2xl">Day Two</h2>
+        <span class="font-mono text-xs text-[var(--slate)] uppercase tracking-wide">Tuesday, August 25, 2026</span>
+      </div>
+
+      <ol class="space-y-7 pl-5">
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">7:00 AM</span>
+          <h3 class="font-medium mt-1">Breakfast Included with Hotel</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">10:00 AM</span>
+          <h3 class="font-medium mt-1">Private Guided Tram Tour of Arlington National Cemetery - 4 stops</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">12:30 PM</span>
+          <h3 class="font-medium mt-1">Visit the US Marine Corps War Memorial: Iwo Jima</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">2:30 PM</span>
+          <h3 class="font-medium mt-1">Visit the National 9/11 Pentagon Memorial</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">3:15 PM</span>
+          <h3 class="font-medium mt-1">Visit the National Geographic Museum</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">8:00 PM</span>
+          <h3 class="font-medium mt-1">Guided Ghost Tour of Alexandria</h3>
+        </li>
+      </ol>
+    </section>
+
+    <!-- DAY 3 -->
+    <section id="panel-3" class="day-panel">
+      <div class="flex items-baseline justify-between border-b border-[var(--sand-line)] pb-4 mb-6">
+        <h2 class="font-display font-semibold text-2xl">Day Three</h2>
+        <span class="font-mono text-xs text-[var(--slate)] uppercase tracking-wide">Wednesday, August 26, 2026</span>
+      </div>
+
+      <ol class="space-y-7 pl-5">
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">7:00 AM</span>
+          <h3 class="font-medium mt-1">Breakfast Included with Hotel</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">10:00 AM</span>
+          <h3 class="font-medium mt-1">Public Guided Tour of the United States Capitol Building</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">1:00 PM</span>
+          <h3 class="font-medium mt-1">Visit the Supreme Court Building Exhibit</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">2:00 PM</span>
+          <h3 class="font-medium mt-1">Visit the Library of Congress</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">3:00 PM</span>
+          <h3 class="font-medium mt-1">Visit the United States Botanic Garden</h3>
+        </li>
+        <li class="timeline-item pl-6">
+          <span class="timeline-dot"></span>
+          <span class="font-mono text-xs text-[var(--gold)] tracking-wide">4:15 PM</span>
+          <h3 class="font-medium mt-1">Visit the Folger Shakespeare Library</h3>
+        </li>
+      </ol>
+    </section>
+
+  </main>
+</div>
+
+<footer class="border-t border-[var(--sand-line)] mt-6">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 py-6 flex items-center justify-between flex-wrap gap-3">
+    <p class="font-display text-sm text-[var(--rust-deep)] font-semibold">Landmark Educational Tours</p>
+    <p class="text-xs text-[var(--slate)]">888-886-2781 · Hello@LandmarkEducationalTours.com</p>
+  </div>
+</footer>
+
+<script>
+  const dayTabs = document.querySelectorAll('.day-tab');
+  const dayPanels = document.querySelectorAll('.day-panel');
+  const setActive = (id) => {
+    dayTabs.forEach(t => t.classList.toggle('active', t.dataset.day === id));
+  };
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        setActive(entry.target.id.replace('panel-', ''));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  dayPanels.forEach(p => spy.observe(p));
+</script>
+
+</body>
+</html>
