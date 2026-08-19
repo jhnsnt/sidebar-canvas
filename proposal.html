@@ -10,14 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#241a14;
-    --paper:#fbf7f1;
-    --rust:#ac3d20;
-    --rust-deep:#7c2c17;
-    --rust-light:#d97250;
-    --sand:#ecdfce;
-    --sand-line:#ddc7ab;
-    --slate:#6d6153;
+    --ink:#1c1f26;
+    --paper:#f7f7f8;
+    --rust:#c0392b;
+    --rust-deep:#952e21;
+    --rust-light:#e0796a;
+    --sand:#fbeae7;
+    --sand-line:#e4e4e7;
+    --slate:#6b7280;
     --gold:#c9973f;
   }
   html{ scroll-behavior:smooth; }
@@ -43,8 +43,8 @@
     .hero-scrim{
       display:block; position:absolute; inset:0;
       background:
-        linear-gradient(100deg, var(--paper) 0%, var(--paper) 34%, rgba(251,247,241,.88) 48%, rgba(251,247,241,.3) 66%, rgba(251,247,241,0) 82%),
-        linear-gradient(0deg, var(--paper) 0%, rgba(251,247,241,0) 24%);
+        linear-gradient(100deg, var(--paper) 0%, var(--paper) 34%, rgba(247,247,248,.88) 48%, rgba(247,247,248,.3) 66%, rgba(247,247,248,0) 82%),
+        linear-gradient(0deg, var(--paper) 0%, rgba(247,247,248,0) 24%);
     }
     .hero-content{ position:absolute; inset:0; background:transparent; min-height:400px; }
   }
@@ -76,13 +76,23 @@
 
   /* ---- Day banner + rows (same system as the itinerary pages) ---- */
   .day-banner{ background:var(--rust); }
+  .itin-row{ display:grid; grid-template-columns:1fr; gap:.25rem; }
+  @media (min-width:640px){ .itin-row{ grid-template-columns:96px 1fr; gap:1.25rem; } }
+  @media (min-width:640px){ .itin-row .itin-text{ border-left:1px solid var(--sand-line); padding-left:1.25rem; } }
+
+  /* ---- Accordion (What's Included) ---- */
+  .accordion-trigger{ cursor:pointer; background:transparent; border:0; width:100%; text-align:left; }
+  .accordion-chevron{ transition:transform .2s ease; color:var(--slate); flex-shrink:0; }
+  .accordion-item.is-open .accordion-chevron{ transform:rotate(180deg); color:var(--rust); }
+  .accordion-item.is-open .accordion-trigger .acc-label{ color:var(--rust); }
+  .accordion-item.is-open .icon-badge{ background:var(--rust); color:#fff; }
 
   /* ---- Terms scroll box ---- */
   .terms-box{ max-height:460px; overflow-y:auto; }
   .terms-box::-webkit-scrollbar{ width:8px; }
   .terms-box::-webkit-scrollbar-track{ background:transparent; }
   .terms-box::-webkit-scrollbar-thumb{ background:var(--sand-line); border-radius:9999px; }
-  .terms-box h4{ font-weight:600; color:var(--ink); font-size:.875rem; margin-top:1.1rem; margin-bottom:.35rem; }
+  .terms-box h4{ font-weight:600; color:var(--rust); font-size:.875rem; margin-top:1.1rem; margin-bottom:.35rem; }
   .terms-box h4:first-child{ margin-top:0; }
   .terms-box p{ font-size:.8rem; line-height:1.6; color:var(--slate); margin-bottom:.65rem; }
   .terms-box .t-divider{ border-top:1px dashed var(--sand-line); margin:1.1rem 0; }
@@ -93,7 +103,7 @@
   }
 
   .step-num{
-    width:28px; height:28px; border-radius:9999px; background:var(--rust); color:#fff;
+    width:28px; height:28px; border-radius:9999px; background:#fff; color:var(--rust); border:2px solid var(--rust);
     display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; flex-shrink:0;
   }
 
@@ -106,7 +116,7 @@
 
 <!-- ================= TOP NAV ================= -->
 <nav class="site-nav no-print sticky top-0 z-30 border-b border-[var(--sand-line)]">
-  <div class="max-w-6xl mx-auto px-6 md:px-10 h-[64px] flex items-center justify-between gap-6">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 h-[64px] flex items-center justify-between gap-6">
     <a href="#top" class="flex items-center gap-2 flex-shrink-0">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--rust)"><path d="M12 1l2.2 7.3L21 11l-6.8 2.7L12 21l-2.2-7.3L3 11l6.8-2.7L12 1z"/></svg>
       <span class="leading-none">
@@ -150,7 +160,7 @@
   </div>
   <div class="hero-scrim"></div>
 
-  <div class="hero-content max-w-6xl mx-auto px-6 md:px-10 pt-8 pb-8 md:pb-10 md:min-h-[400px] flex flex-col justify-center">
+  <div class="hero-content max-w-7xl mx-auto px-6 md:px-10 pt-8 pb-8 md:pb-10 md:min-h-[400px] flex flex-col justify-center">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
 
       <div class="max-w-xl">
@@ -167,10 +177,10 @@
 </header>
 
 <!-- ================= INFO CARDS ================= -->
-<div class="max-w-6xl mx-auto px-6 md:px-10 mt-6 md:-mt-6 relative z-10">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="max-w-7xl mx-auto px-6 md:px-10 mt-6 md:-mt-6 relative z-10">
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </span>
@@ -181,7 +191,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </span>
@@ -192,7 +202,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       </span>
@@ -203,7 +213,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
       </span>
@@ -214,7 +224,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </span>
@@ -225,7 +235,7 @@
       </div>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
+    <div class="bg-white border border-[var(--sand-line)] rounded-xl p-3.5 lg:p-4 flex items-center gap-3 shadow-sm">
       <span class="icon-badge">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </span>
@@ -239,42 +249,38 @@
   </div>
 </div>
 
-<!-- ================= ABOUT STRIP ================= -->
-<div class="max-w-6xl mx-auto px-6 md:px-10 mt-8 grid md:grid-cols-2 gap-4">
-  <div class="bg-white border border-[var(--sand-line)] rounded-lg px-5 py-4 text-sm text-[var(--slate)] leading-relaxed">
-    <span class="font-semibold text-[var(--ink)] block mb-1">About Landmark Educational Tours</span>
-    Landmark Educational Tours specializes in customized student travel experiences designed to inspire learning beyond the classroom. From initial planning through travel day, we provide personalized support, premium hospitality, dedicated tour leadership, and comprehensive trip management for both students and educators.
-  </div>
-  <div class="bg-white border border-[var(--sand-line)] rounded-lg px-5 py-4 text-sm text-[var(--slate)] leading-relaxed">
-    <span class="font-semibold text-[var(--ink)] block mb-1">About your Travel Consultant</span>
-    Your personal travel consultant for this trip is <strong class="text-[var(--ink)]">Michaela Ruffino</strong>. As your plans evolve, she can update and customize this proposal to reflect itinerary changes, budget adjustments, or additional experiences.
-  </div>
-</div>
-
 <!-- ================= PRICING ================= -->
-<section id="pricing" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24">
+<section id="pricing" class="max-w-7xl mx-auto px-6 md:px-10 py-14 scroll-mt-24">
   <p class="section-eyebrow">Pricing</p>
   <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Choose your group size to see your price</h2>
   <p class="mt-2 text-sm text-[var(--slate)] max-w-2xl">All prices are per paying passenger and include the full package on this page. Pick the group size you expect to hit — you can change it with Michaela before deposits are collected.</p>
 
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8" id="tier-grid">
     <div class="tier-card bg-white border border-[var(--sand-line)] rounded-xl p-5" data-min="35" data-comp="3" data-price="1357">
-      <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+      <div class="flex items-center justify-between">
+        <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+        <span class="tier-radio"></span>
+      </div>
       <div class="flex items-baseline gap-2 mt-1">
         <span class="font-display font-bold text-2xl text-[var(--ink)]">35</span>
         <span class="text-sm text-[var(--slate)]">students</span>
       </div>
-      <p class="font-display font-bold text-xl text-[var(--rust)] mt-4">$1,357.00</p>
+      <div class="border-t border-[var(--sand-line)] my-3"></div>
+      <p class="font-display font-bold text-xl text-[var(--rust)]">$1,357.00</p>
       <p class="text-xs text-[var(--slate)] mt-1">per paying passenger</p>
     </div>
 
     <div class="tier-card bg-white border border-[var(--sand-line)] rounded-xl p-5" data-min="40" data-comp="4" data-price="1273">
-      <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+      <div class="flex items-center justify-between">
+        <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+        <span class="tier-radio"></span>
+      </div>
       <div class="flex items-baseline gap-2 mt-1">
         <span class="font-display font-bold text-2xl text-[var(--ink)]">40</span>
         <span class="text-sm text-[var(--slate)]">students</span>
       </div>
-      <p class="font-display font-bold text-xl text-[var(--rust)] mt-4">$1,273.00</p>
+      <div class="border-t border-[var(--sand-line)] my-3"></div>
+      <p class="font-display font-bold text-xl text-[var(--rust)]">$1,273.00</p>
       <p class="text-xs text-[var(--slate)] mt-1">per paying passenger</p>
     </div>
 
@@ -288,18 +294,23 @@
         <span class="font-display font-bold text-2xl text-[var(--ink)]">45</span>
         <span class="text-sm text-[var(--slate)]">students</span>
       </div>
-      <p class="font-display font-bold text-xl text-[var(--rust)] mt-4">$1,200.00</p>
+      <div class="border-t border-[var(--sand-line)] my-3"></div>
+      <p class="font-display font-bold text-xl text-[var(--rust)]">$1,200.00</p>
       <p class="text-xs text-[var(--slate)] mt-1">per paying passenger</p>
     </div>
 
     <div class="tier-card bg-white border border-[var(--sand-line)] rounded-xl p-5" data-min="50" data-comp="4" data-price="1121">
       <span class="tier-tag">Best value</span>
-      <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+      <div class="flex items-center justify-between">
+        <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Minimum group</p>
+        <span class="tier-radio"></span>
+      </div>
       <div class="flex items-baseline gap-2 mt-1">
         <span class="font-display font-bold text-2xl text-[var(--ink)]">50</span>
         <span class="text-sm text-[var(--slate)]">students</span>
       </div>
-      <p class="font-display font-bold text-xl text-[var(--rust)] mt-4">$1,121.00</p>
+      <div class="border-t border-[var(--sand-line)] my-3"></div>
+      <p class="font-display font-bold text-xl text-[var(--rust)]">$1,121.00</p>
       <p class="text-xs text-[var(--slate)] mt-1">per paying passenger</p>
     </div>
   </div>
@@ -360,7 +371,7 @@
 </section>
 
 <!-- ================= DAY BY DAY ================= -->
-<section id="day-by-day" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
+<section id="day-by-day" class="max-w-7xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
   <p class="section-eyebrow">Day by day</p>
   <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">What the four days look like</h2>
   <p class="mt-2 text-sm text-[var(--slate)] max-w-2xl">Attractions and meals shown together, in order. Meal allocations load onto each traveler's Jassby card before departure.</p>
@@ -379,23 +390,17 @@
         <span class="font-serif italic text-sm text-[var(--sand)]">Saturday, May 15, 2027</span>
       </div>
       <div class="bg-white border border-t-0 border-[var(--sand-line)] rounded-b-xl divide-y divide-[var(--sand-line)]">
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Ground transportation</p><p class="text-sm text-[var(--ink)] mt-0.5">Depart Whitwell Middle School by motorcoach for Williamsburg, VA</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">8:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Depart Whitwell Middle School by motorcoach for Williamsburg, VA</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Hotel</p><p class="text-sm text-[var(--ink)] mt-0.5">Check into Hotel Accommodations* — night 1 of 3</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">4:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Check into Hotel Accommodations* — night 1 of 3</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Sit-down Dinner Included (final restaurant based on availability)</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">6:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Sit-down Dinner Included (final restaurant based on availability)</p>
         </div>
       </div>
     </div>
@@ -407,35 +412,25 @@
         <span class="font-serif italic text-sm text-[var(--sand)]">Sunday, May 16, 2027</span>
       </div>
       <div class="bg-white border border-t-0 border-[var(--sand-line)] rounded-b-xl divide-y divide-[var(--sand-line)]">
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Breakfast Included with Hotel</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">7:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Breakfast Included with Hotel</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12S3 16 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">Admission to Busch Gardens Williamsburg</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">9:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Admission to Busch Gardens Williamsburg</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Busch Gardens — All Day Dining Voucher</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">12:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Busch Gardens — All Day Dining Voucher</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Ground transportation</p><p class="text-sm text-[var(--ink)] mt-0.5">Evening transfer by motorcoach to the Washington, D.C. area</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">6:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Evening transfer by motorcoach to the Washington, D.C. area</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Hotel</p><p class="text-sm text-[var(--ink)] mt-0.5">Check into Hampton Inn &amp; Suites Falls Church — night 1 of 2</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">8:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Check into Hampton Inn &amp; Suites Falls Church — night 1 of 2</p>
         </div>
       </div>
     </div>
@@ -447,59 +442,37 @@
         <span class="font-serif italic text-sm text-[var(--sand)]">Monday, May 17, 2027</span>
       </div>
       <div class="bg-white border border-t-0 border-[var(--sand-line)] rounded-b-xl divide-y divide-[var(--sand-line)]">
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Breakfast Included with Hotel</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">7:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Breakfast Included with Hotel</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">Public Guided Tour of the United States Capitol Building</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">9:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Public Guided Tour of the United States Capitol Building</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">Visit the National Archives Museum</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">11:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Visit the National Archives Museum</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">Visit The People's House</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">12:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">$25.00 Jassby Debit Card Lunch Allocation</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">White House Photo Opportunity Stop from Lafayette Park / Pennsylvania Avenue</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">1:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">White House Photo Opportunity Stop from Lafayette Park / Pennsylvania Avenue</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Attraction</p><p class="text-sm text-[var(--ink)] mt-0.5">Visit the Lincoln Memorial, Vietnam, and Korean War Memorials, World War II Memorial, and Washington Monument</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">2:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Visit The People's House</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">$25.00 Jassby Debit Card Lunch Allocation</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">3:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Visit the Lincoln Memorial, Vietnam, and Korean War Memorials, World War II Memorial, and Washington Monument</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Sit-down Dinner Allocation (final restaurant based on availability)</p></div>
-        </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Hotel</p><p class="text-sm text-[var(--ink)] mt-0.5">Overnight at Hampton Inn &amp; Suites Falls Church — night 2 of 2</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">6:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Sit-down Dinner Allocation (final restaurant based on availability)</p>
         </div>
       </div>
     </div>
@@ -511,23 +484,17 @@
         <span class="font-serif italic text-sm text-[var(--sand)]">Tuesday, May 18, 2027</span>
       </div>
       <div class="bg-white border border-t-0 border-[var(--sand-line)] rounded-b-xl divide-y divide-[var(--sand-line)]">
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">Breakfast Included with Hotel</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">7:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Breakfast Included with Hotel</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7a2 2 0 0 0 2 2v11M5 2v9M7 2v9M17 2c-1.7 0-3 2-3 4.5S15.3 11 17 11v11M17 2v20"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Meal</p><p class="text-sm text-[var(--ink)] mt-0.5">$25.00 Jassby Debit Card Lunch Allocation</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">11:00 AM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">$25.00 Jassby Debit Card Lunch Allocation</p>
         </div>
-        <div class="flex items-start gap-3 px-5 md:px-6 py-4">
-          <span class="icon-badge !w-9 !h-9">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
-          </span>
-          <div><p class="text-[10px] uppercase tracking-wide text-[var(--slate)]">Ground transportation</p><p class="text-sm text-[var(--ink)] mt-0.5">Depart by motorcoach for home</p></div>
+        <div class="itin-row px-5 md:px-6 py-4">
+          <div class="font-display font-semibold text-sm text-[var(--ink)]">12:00 PM</div>
+          <p class="itin-text text-sm text-[var(--ink)]">Depart by motorcoach for home</p>
         </div>
       </div>
     </div>
@@ -536,245 +503,275 @@
 </section>
 
 <!-- ================= WHERE YOU STAY ================= -->
-<section id="where-you-stay" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
+<section id="where-you-stay" class="max-w-7xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
   <p class="section-eyebrow">Where you stay</p>
   <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Hotel and rooming</h2>
   <p class="mt-2 text-sm text-[var(--slate)] max-w-2xl">Occupancy is Quad for students and Single for adults unless your group requests an upgrade. Room upgrade pricing is per traveler and applies for the full length of that hotel stay.</p>
 
-  <div class="grid lg:grid-cols-2 gap-6 mt-8">
+  <div class="space-y-10 mt-8">
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h3 class="font-display font-semibold text-lg text-[var(--ink)]">Hotel Accommodations*</h3>
-          <p class="text-sm text-[var(--slate)] mt-0.5">Williamsburg, VA area</p>
+    <!-- Hotel 1 -->
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 bg-white border border-[var(--sand-line)] rounded-2xl p-6">
+        <h3 class="font-display font-semibold text-xl text-[var(--ink)]">Hotel Accommodations*</h3>
+        <p class="text-xs font-semibold uppercase tracking-wide text-[var(--rust)] mt-1">1 Night &bull; May 15, 2027</p>
+
+        <div class="mt-5 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-[10px] uppercase tracking-wide text-[var(--slate)] text-left border-b border-[var(--sand-line)]">
+                <th class="pb-2 font-medium">Traveler group</th>
+                <th class="pb-2 font-medium">Occupancy</th>
+                <th class="pb-2 font-medium text-right">Rooms</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--sand-line)]">
+              <tr><td class="py-2.5 text-[var(--ink)]">Students</td><td class="py-2.5 text-[var(--slate)]">Quad</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">12</td></tr>
+              <tr><td class="py-2.5 text-[var(--ink)]">Paying adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">0</td></tr>
+              <tr><td class="py-2.5 text-[var(--ink)]">Complimentary adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">4</td></tr>
+            </tbody>
+          </table>
         </div>
-        <span class="bg-[var(--sand)] text-[var(--rust)] text-xs font-semibold rounded-full px-3 py-1 whitespace-nowrap">1 Night</span>
+        <p class="text-xs text-[var(--slate)] mt-4">Room counts reflect the standard shared occupancy in your package. *Exact property and final counts are confirmed once enrollment closes.</p>
       </div>
 
-      <div class="mt-5 overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-[10px] uppercase tracking-wide text-[var(--slate)] text-left border-b border-[var(--sand-line)]">
-              <th class="pb-2 font-medium">Traveler type</th>
-              <th class="pb-2 font-medium">Occupancy</th>
-              <th class="pb-2 font-medium text-right">Rooms</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[var(--sand-line)]">
-            <tr><td class="py-2.5 text-[var(--ink)]">Students</td><td class="py-2.5 text-[var(--slate)]">Quad</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">12</td></tr>
-            <tr><td class="py-2.5 text-[var(--ink)]">Paying adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">0</td></tr>
-            <tr><td class="py-2.5 text-[var(--ink)]">Complimentary adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">4</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
+        <p class="section-eyebrow">Optional</p>
+        <h4 class="font-display font-semibold text-[var(--ink)] mt-1">Room upgrades, per traveler</h4>
+        <p class="text-xs text-[var(--slate)] leading-relaxed mt-2">Prices cover the entire hotel stay and apply to travelers who want a room setup different from the group's standard occupancy. The cost depends on how many people share the upgraded room.</p>
 
-      <div class="mt-5 bg-[var(--paper)] border border-[var(--sand-line)] rounded-lg p-4">
-        <p class="text-xs font-semibold text-[var(--ink)] mb-1">Room upgrade options (per traveler)</p>
-        <p class="text-xs text-[var(--slate)] leading-relaxed mb-3">Prices apply per traveler for the entire hotel stay, for anyone requesting a room setup different from the group's standard shared occupancy above.</p>
-        <div class="space-y-1.5 text-sm">
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Single — private room for one traveler</span><span class="font-semibold text-[var(--ink)]">$830</span></div>
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Double — share with one additional traveler</span><span class="font-semibold text-[var(--ink)]">$415</span></div>
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Triple — share with two additional travelers</span><span class="font-semibold text-[var(--ink)]">$277</span></div>
+        <div class="space-y-2 mt-4">
+          <div class="flex items-center justify-between gap-3 bg-[var(--rust)]/[0.06] rounded-lg px-3.5 py-2.5">
+            <div><p class="text-sm font-semibold text-[var(--ink)]">Single</p><p class="text-xs text-[var(--slate)]">A private room for one traveler</p></div>
+            <p class="font-display font-bold text-[var(--rust)] whitespace-nowrap">$830</p>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-[var(--rust)]/[0.06] rounded-lg px-3.5 py-2.5">
+            <div><p class="text-sm font-semibold text-[var(--ink)]">Double</p><p class="text-xs text-[var(--slate)]">Share with one additional traveler</p></div>
+            <p class="font-display font-bold text-[var(--rust)] whitespace-nowrap">$415</p>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-[var(--rust)]/[0.06] rounded-lg px-3.5 py-2.5">
+            <div><p class="text-sm font-semibold text-[var(--ink)]">Triple</p><p class="text-xs text-[var(--slate)]">Share with two additional travelers</p></div>
+            <p class="font-display font-bold text-[var(--rust)] whitespace-nowrap">$277</p>
+          </div>
         </div>
+        <p class="text-xs text-[var(--slate)] mt-4">Upgrades are calculated <strong class="text-[var(--ink)]">per person</strong> and require Landmark to purchase an additional hotel room beyond what's already included in your group's base package.</p>
       </div>
-      <p class="text-xs text-[var(--slate)] mt-3">*Exact property to be confirmed by your Landmark consultant closer to departure.</p>
     </div>
-
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h3 class="font-display font-semibold text-lg text-[var(--ink)]">Hampton Inn &amp; Suites Falls Church</h3>
-          <p class="text-sm text-[var(--slate)] mt-0.5">Falls Church, VA — Washington, D.C. area</p>
-        </div>
-        <span class="bg-[var(--sand)] text-[var(--rust)] text-xs font-semibold rounded-full px-3 py-1 whitespace-nowrap">2 Nights</span>
-      </div>
-
-      <div class="mt-5 overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-[10px] uppercase tracking-wide text-[var(--slate)] text-left border-b border-[var(--sand-line)]">
-              <th class="pb-2 font-medium">Traveler type</th>
-              <th class="pb-2 font-medium">Occupancy</th>
-              <th class="pb-2 font-medium text-right">Rooms</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[var(--sand-line)]">
-            <tr><td class="py-2.5 text-[var(--ink)]">Students</td><td class="py-2.5 text-[var(--slate)]">Quad</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">12</td></tr>
-            <tr><td class="py-2.5 text-[var(--ink)]">Paying adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">0</td></tr>
-            <tr><td class="py-2.5 text-[var(--ink)]">Complimentary adults</td><td class="py-2.5 text-[var(--slate)]">Single</td><td class="py-2.5 text-right text-[var(--ink)] font-medium">4</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="mt-5 bg-[var(--paper)] border border-[var(--sand-line)] rounded-lg p-4">
-        <p class="text-xs font-semibold text-[var(--ink)] mb-1">Room upgrade options (per traveler)</p>
-        <p class="text-xs text-[var(--slate)] leading-relaxed mb-3">Prices apply per traveler for the entire hotel stay, for anyone requesting a room setup different from the group's standard shared occupancy above.</p>
-        <div class="space-y-1.5 text-sm">
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Single — private room for one traveler</span><span class="font-semibold text-[var(--ink)]">$830</span></div>
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Double — share with one additional traveler</span><span class="font-semibold text-[var(--ink)]">$415</span></div>
-          <div class="flex justify-between"><span class="text-[var(--slate)]">Triple — share with two additional travelers</span><span class="font-semibold text-[var(--ink)]">$277</span></div>
-        </div>
-      </div>
-      <p class="text-xs text-[var(--slate)] mt-3">Room upgrades require Landmark to purchase an additional hotel room beyond what's already included in your group's base package.</p>
-    </div>
-
   </div>
 </section>
 
 <!-- ================= WHAT'S INCLUDED ================= -->
-<section id="whats-included" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
+<section id="whats-included" class="max-w-7xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
   <p class="section-eyebrow">What's included</p>
-  <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Everything in your package</h2>
+  <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Everything covered in the price</h2>
+  <p class="mt-2 text-sm text-[var(--slate)] max-w-2xl">Open any card for the full detail.</p>
 
-  <div class="grid md:grid-cols-2 gap-5 mt-8">
+  <div class="grid md:grid-cols-2 gap-4 mt-8">
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
-      <div class="flex items-center gap-3">
-        <span class="icon-badge">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
+    <!-- Ground transportation -->
+    <div class="accordion-item bg-white border border-[var(--sand-line)] rounded-xl overflow-hidden">
+      <button class="accordion-trigger flex items-center justify-between gap-3 px-5 py-4">
+        <span class="flex items-center gap-3">
+          <span class="icon-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
+          </span>
+          <span class="acc-label font-display font-semibold text-[var(--ink)]">Ground transportation</span>
         </span>
-        <h3 class="font-display font-semibold text-[var(--ink)]">Ground Transportation</h3>
+        <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-panel px-5 pb-5" hidden>
+        <p class="text-sm text-[var(--slate)] leading-relaxed">Round-trip motorcoach transportation for the full group, contracted through DOT-approved carriers who follow FMCSA driving-hour rules. A relief driver is added automatically if your itinerary requires one.</p>
       </div>
-      <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">Round-trip motorcoach transportation for the full group, contracted through DOT-approved carriers who follow FMCSA driving-hour rules. A relief driver is added automatically if your itinerary requires one.</p>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
-      <div class="flex items-center gap-3">
-        <span class="icon-badge">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <!-- Dedicated tour directors -->
+    <div class="accordion-item bg-white border border-[var(--sand-line)] rounded-xl overflow-hidden">
+      <button class="accordion-trigger flex items-center justify-between gap-3 px-5 py-4">
+        <span class="flex items-center gap-3">
+          <span class="icon-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <span class="acc-label font-display font-semibold text-[var(--ink)]">Dedicated tour directors</span>
         </span>
-        <h3 class="font-display font-semibold text-[var(--ink)]">Overnight Manager</h3>
+        <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-panel px-5 pb-5" hidden>
+        <p class="text-sm text-[var(--slate)] leading-relaxed">Your package includes dedicated Tour Directors — Landmark Leaders — who travel with your group to provide on-site leadership, hospitality, logistics, and student support for the entire trip.</p>
+        <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">On-site hospitality &amp; leadership</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Daily itinerary &amp; logistics management</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Transportation &amp; hotel coordination</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Vendor communication &amp; trip execution</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Emergency support &amp; real-time problem solving</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Seamless group movement throughout the destination</span></div>
+        </div>
+        <p class="text-xs text-[var(--slate)] mt-4">Landmark Leaders are hospitality and operations professionals, not licensed historical tour guides. Many groups also travel alongside educators connected to the trip's curriculum to help extend classroom learning beyond school.</p>
       </div>
-      <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">One overnight security guard is included with your package, on duty nightly from 10:00 PM–4:00 AM. Your Landmark Leader meets with the guard each night for instructions. Additional hours can be added through your consultant.</p>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 md:col-span-2">
-      <div class="flex items-center gap-3">
-        <span class="icon-badge">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <!-- Landmark planning experience -->
+    <div class="accordion-item bg-white border border-[var(--sand-line)] rounded-xl overflow-hidden">
+      <button class="accordion-trigger flex items-center justify-between gap-3 px-5 py-4">
+        <span class="flex items-center gap-3">
+          <span class="icon-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <span class="acc-label font-display font-semibold text-[var(--ink)]">The Landmark planning experience</span>
         </span>
-        <h3 class="font-display font-semibold text-[var(--ink)]">Dedicated Tour Directors</h3>
+        <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-panel px-5 pb-5" hidden>
+        <p class="text-sm text-[var(--slate)] leading-relaxed">Your group is paired with a Landmark Account Manager who serves as a consistent point of contact from booking through departure — helping with enrollment setup, family communication, planning timelines, and resources tailored to your goals.</p>
+        <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Personalized registration website &amp; traveler portal</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Custom trip marketing flyers &amp; enrollment materials</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Parent meeting slideshows &amp; planning support</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Monthly planning guidance &amp; payment reminders</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">"Get to Know Your Landmark Leader" resources</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Travel protection information &amp; educational materials</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Packing reminders &amp; departure preparation tools</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Scavenger hunts, photo challenges &amp; student engagement</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Museum engagement guides &amp; educational resources</span></div>
+          <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Ongoing support for organizers, families &amp; travelers</span></div>
+        </div>
       </div>
-      <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">Your package includes dedicated Tour Directors — Landmark Leaders — who travel with your group to provide on-site leadership, hospitality, logistics, and student support for the entire trip.</p>
-      <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">On-site hospitality &amp; leadership</span></div>
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Daily itinerary &amp; logistics management</span></div>
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Transportation &amp; hotel coordination</span></div>
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Vendor communication &amp; trip execution</span></div>
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Emergency support &amp; real-time problem solving</span></div>
-        <div class="checklist-item flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Seamless group movement throughout the destination</span></div>
-      </div>
-      <p class="text-xs text-[var(--slate)] mt-4">Landmark Leaders are hospitality and operations professionals, not licensed historical tour guides. Many groups also travel alongside educators connected to the trip's curriculum to help extend classroom learning beyond school.</p>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 md:col-span-2">
-      <div class="flex items-center gap-3">
-        <span class="icon-badge">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+    <!-- Included traveler swag -->
+    <div class="accordion-item bg-white border border-[var(--sand-line)] rounded-xl overflow-hidden">
+      <button class="accordion-trigger flex items-center justify-between gap-3 px-5 py-4">
+        <span class="flex items-center gap-3">
+          <span class="icon-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </span>
+          <span class="acc-label font-display font-semibold text-[var(--ink)]">Included traveler swag</span>
         </span>
-        <h3 class="font-display font-semibold text-[var(--ink)]">Included Traveler Swag</h3>
+        <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-panel px-5 pb-5" hidden>
+        <p class="text-sm text-[var(--slate)] leading-relaxed">Every Landmark traveler receives complimentary trip swag: a drawstring bag, sunglasses and water bottle, a luggage tag, an emergency poncho, and a lanyard with a card holder. Trips using meal per diems, like this one, also include a Jassby spending card for meal allocations.</p>
       </div>
-      <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">Every Landmark traveler receives complimentary trip swag: a drawstring bag, sunglasses and water bottle, a luggage tag, an emergency poncho, and a lanyard with a card holder. Trips using meal per diems, like this one, also include a Jassby spending card for meal allocations.</p>
     </div>
 
-    <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 md:col-span-2">
-      <div class="flex items-center gap-3">
-        <span class="icon-badge">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <!-- Overnight manager -->
+    <div class="accordion-item bg-white border border-[var(--sand-line)] rounded-xl overflow-hidden md:col-span-2">
+      <button class="accordion-trigger flex items-center justify-between gap-3 px-5 py-4">
+        <span class="flex items-center gap-3">
+          <span class="icon-badge">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          <span class="acc-label font-display font-semibold text-[var(--ink)]">Overnight manager</span>
         </span>
-        <h3 class="font-display font-semibold text-[var(--ink)]">The Landmark Planning Experience</h3>
-      </div>
-      <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">Your group is paired with a Landmark Account Manager who serves as a consistent point of contact from booking through departure — helping with enrollment setup, family communication, planning timelines, and resources tailored to your goals.</p>
-      <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-4">
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Personalized registration website &amp; traveler portal</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Custom trip marketing flyers &amp; enrollment materials</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Parent meeting slideshows &amp; planning support</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Monthly planning guidance &amp; payment reminders</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">"Get to Know Your Landmark Leader" resources</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Travel protection information &amp; educational materials</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Packing reminders &amp; departure preparation tools</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Scavenger hunts, photo challenges &amp; student engagement</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Museum engagement guides &amp; educational resources</span></div>
-        <div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="3" class="mt-1 flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg><span class="text-sm text-[var(--slate)]">Ongoing support for organizers, families &amp; travelers</span></div>
+        <svg class="accordion-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-panel px-5 pb-5" hidden>
+        <p class="text-sm text-[var(--slate)] leading-relaxed">One overnight security guard is included with your package, on duty nightly from 10:00 PM–4:00 AM. Your Landmark Leader meets with the guard each night for instructions. Additional hours can be added through your consultant.</p>
       </div>
     </div>
 
   </div>
-</section>
 
-<!-- ================= TRAVEL PROTECTION ================= -->
-<section id="travel-protection" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
-  <p class="section-eyebrow">Travel protection</p>
-  <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Peace of mind, standard</h2>
+  <!-- Travel protection (always visible) -->
+  <div id="travel-protection" class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 mt-6 scroll-mt-24">
+    <div class="flex items-center gap-3">
+      <span class="icon-badge">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <h3 class="font-display font-semibold text-lg text-[var(--ink)]">Travel protection</h3>
+    </div>
+    <p class="text-sm text-[var(--slate)] leading-relaxed mt-2">Peace of mind comes standard. All U.S.-based travelers automatically receive post-departure travel protection through our partnership with Battleface at no additional cost.</p>
 
-  <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 mt-8">
-    <p class="text-sm text-[var(--slate)] leading-relaxed">At Landmark Educational Tours, we believe peace of mind should come standard. That's why all U.S.-based travelers automatically receive post-departure travel protection in their travel package through our partnership with <strong class="text-[var(--ink)]">Battleface</strong>, at no additional cost. Included coverage helps protect travelers during their journey with benefits such as trip interruption, trip delays, missed connections, emergency medical support, and more.</p>
-    <p class="text-sm text-[var(--slate)] leading-relaxed mt-4">For families seeking even greater flexibility, optional pre-departure cancellation protection plans are available during registration:</p>
+    <div class="border-t border-[var(--sand-line)] my-5"></div>
 
-    <div class="grid sm:grid-cols-2 gap-4 mt-4">
-      <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-lg p-4">
-        <p class="text-sm font-semibold text-[var(--ink)]">Pre-Departure Cancellation Protection</p>
-        <p class="text-sm text-[var(--slate)] leading-relaxed mt-1.5">Provides up to 100% reimbursement if a traveler must cancel prior to departure for an eligible covered reason.</p>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <div class="flex items-start gap-2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><p class="text-sm font-semibold text-[var(--ink)]">Trip interruption</p><p class="text-xs text-[var(--slate)]">Reimbursement for unused, non-refundable trip costs if your trip is interrupted.</p></div>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><p class="text-sm font-semibold text-[var(--ink)]">Trip delays</p><p class="text-xs text-[var(--slate)]">Coverage for additional expenses if your trip is delayed.</p></div>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><p class="text-sm font-semibold text-[var(--ink)]">Missed connections</p><p class="text-xs text-[var(--slate)]">Protection for additional costs if you miss a connection.</p></div>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><p class="text-sm font-semibold text-[var(--ink)]">Emergency medical support</p><p class="text-xs text-[var(--slate)]">Access to emergency medical and travel assistance services.</p></div>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div><p class="text-sm font-semibold text-[var(--ink)]">And more</p><p class="text-xs text-[var(--slate)]">Additional benefits and 24/7 support throughout your journey.</p></div>
+        </div>
       </div>
-      <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-lg p-4">
-        <p class="text-sm font-semibold text-[var(--ink)]">Cancel For Any Reason (CFAR)</p>
-        <p class="text-sm text-[var(--slate)] leading-relaxed mt-1.5">Our most flexible option — cancel prior to departure for any reason and receive a 75% refund per the plan's terms and conditions.</p>
+
+      <div>
+        <p class="text-sm font-semibold text-[var(--rust)] underline">Optional pre-departure cancellation protection available during registration.</p>
+        <p class="text-xs text-[var(--slate)] mt-1">Choose the plan that fits your needs:</p>
+        <div class="space-y-2 mt-3">
+          <div class="bg-[var(--rust)]/[0.06] rounded-lg p-3.5">
+            <p class="text-sm font-semibold text-[var(--ink)]">Pre-Departure Cancellation Protection for Covered Reasons</p>
+            <p class="text-xs text-[var(--slate)] leading-relaxed mt-1">Provides up to 100% reimbursement if a traveler must cancel prior to departure for an eligible covered reason.</p>
+          </div>
+          <div class="bg-[var(--rust)]/[0.06] rounded-lg p-3.5">
+            <p class="text-sm font-semibold text-[var(--ink)]">Cancel For Any Reason (CFAR) Protection</p>
+            <p class="text-xs text-[var(--slate)] leading-relaxed mt-1">Our most flexible option. Cancel for any reason prior to departure and receive a 75% refund according to the plan terms.</p>
+          </div>
+        </div>
       </div>
     </div>
-    <p class="text-sm text-[var(--slate)] leading-relaxed mt-4">With Landmark, your investment is protected both before and during travel, so organizers and families can focus on creating unforgettable memories, not worrying about the unexpected.</p>
-  </div>
 
-  <div class="mt-8">
-    <h3 class="font-display font-semibold text-lg text-[var(--ink)]">Accreditations &amp; Trusted Partnerships</h3>
-    <p class="text-sm text-[var(--slate)] leading-relaxed mt-2 max-w-2xl">Landmark Educational Tours is a BBB Accredited Business and a proud member of SYTA, ABA, IATA/IATAN, and ETOA. We maintain a California Seller of Travel Certificate and active vendor approvals with school districts nationwide — trusted by more than 12,500 travelers since 2021.</p>
-    <div class="flex flex-wrap gap-2.5 mt-4">
-      <span class="accred-badge">BBB Accredited Business</span>
-      <span class="accred-badge">SYTA Member</span>
-      <span class="accred-badge">ABA Member</span>
-      <span class="accred-badge">IATA / IATAN</span>
-      <span class="accred-badge">ETOA Member</span>
-      <span class="accred-badge">CA Seller of Travel</span>
+    <div class="bg-[var(--rust)]/[0.06] border border-[var(--rust)]/25 rounded-lg px-4 py-3.5 text-sm text-[var(--rust-deep)] leading-relaxed flex items-start gap-3 mt-5">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5M12 8h.01"/></svg>
+      <span>With Landmark, your investment is protected both before and during travel, allowing trip organizers and families to focus on creating unforgettable memories, not worrying about the unexpected.</span>
     </div>
   </div>
 </section>
 
 <!-- ================= ACCEPT PROPOSAL ================= -->
-<section id="accept-proposal" class="max-w-6xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
-  <p class="section-eyebrow">Accept proposal</p>
-  <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Ready for next steps?</h2>
+<section id="accept-proposal" class="max-w-7xl mx-auto px-6 md:px-10 py-14 scroll-mt-24 border-t border-[var(--sand-line)]">
+  <p class="section-eyebrow">Next step</p>
+  <h2 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Accepting this proposal opens enrollment</h2>
   <p class="mt-2 text-sm text-[var(--slate)] max-w-2xl">Accepting your proposal simply tells Landmark you're ready to move into the next stage of planning. It does not require your school to open enrollment or make an immediate financial commitment.</p>
 
-  <div class="space-y-5 mt-8">
-    <div class="flex gap-4">
-      <span class="step-num">1</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">Confirm your trip direction</p><p class="text-sm text-[var(--slate)] mt-0.5">Accepting confirms that the sample itinerary, trip inclusions, and pricing package presented reflect your bucket-list trip.</p></div>
-    </div>
-    <div class="flex gap-4">
-      <span class="step-num">2</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">Meet your Account Manager</p><p class="text-sm text-[var(--slate)] mt-0.5">Your dedicated Account Manager reviews your trip and walks you through next steps based on how your school plans to register and pay.</p></div>
-    </div>
-    <div class="flex gap-4">
-      <span class="step-num">3</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">Choose how your group moves forward</p><p class="text-sm text-[var(--slate)] mt-0.5">Open Online Enrollment to gauge student interest, or move directly to booking through a school-paid deposit and invoice.</p></div>
-    </div>
-    <div class="flex gap-4">
-      <span class="step-num">4</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">If you choose Online Enrollment</p><p class="text-sm text-[var(--slate)] mt-0.5">Landmark builds your customized registration portal where families register and pay online, with live enrollment tracking.</p></div>
-    </div>
-    <div class="flex gap-4">
-      <span class="step-num">5</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">Enrollment &amp; airfare are customized to your trip</p><p class="text-sm text-[var(--slate)] mt-0.5">Your Account Manager reviews enrollment timing, audit points, and airfare deadlines specific to your group.</p></div>
-    </div>
-    <div class="flex gap-4">
-      <span class="step-num">6</span>
-      <div><p class="font-display font-semibold text-[var(--ink)]">Everything you need in one place</p><p class="text-sm text-[var(--slate)] mt-0.5">Your Trip Organizer portal gives you enrollment and payment tracking plus rooming lists and traveler medical/emergency info.</p></div>
+  <div class="grid lg:grid-cols-2 gap-10 mt-8 items-start">
+
+  <div>
+    <p class="text-xs font-semibold text-[var(--slate)] uppercase tracking-wide mb-4">Next steps</p>
+    <div class="space-y-5">
+      <div class="flex gap-4">
+        <span class="step-num">1</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">Confirm Your Trip Direction</p><p class="text-sm text-[var(--slate)] mt-0.5">Accepting confirms that the sample itinerary, trip inclusions, and pricing package presented reflect your bucket-list trip and that you're ready to explore next steps with Landmark.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <span class="step-num">2</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">Meet Your Account Manager</p><p class="text-sm text-[var(--slate)] mt-0.5">Your dedicated Account Manager will take it from here, reviewing your trip and walking you through next steps based on how your school plans to register and pay.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <span class="step-num">3</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">Choose How Your Group Moves Forward</p><p class="text-sm text-[var(--slate)] mt-0.5">Your group may open Online Enrollment to gauge student interest, or your school may move directly toward booking through a school-paid deposit and invoice.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <span class="step-num">4</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">If You Choose Online Enrollment</p><p class="text-sm text-[var(--slate)] mt-0.5">Landmark will build your customized registration portal where families can register and pay online. Trip Organizers can track enrollment and payments live as they come in.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <span class="step-num">5</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">Enrollment &amp; Airfare Are Customized to Your Trip</p><p class="text-sm text-[var(--slate)] mt-0.5">Your Account Manager will review enrollment timing, audit points, and airfare deadlines specific to your group.</p></div>
+      </div>
+      <div class="flex gap-4">
+        <span class="step-num">6</span>
+        <div><p class="font-display font-semibold text-[var(--ink)]">Everything You Need in One Place</p><p class="text-sm text-[var(--slate)] mt-0.5">Your Trip Organizer portal gives you access to enrollment and payment tracking plus important trip tools, including rooming lists and traveler medical and emergency information.</p></div>
+      </div>
     </div>
   </div>
 
+  <div>
   <!-- Terms & Conditions -->
-  <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 mt-10">
-    <h3 class="font-display font-semibold text-lg text-[var(--ink)]">Trip Organizer Agreement / Terms and Conditions</h3>
+  <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6">
+    <p class="section-eyebrow">Trip Organizer Agreement / Terms and Conditions</p>
     <p class="text-xs text-[var(--slate)] mt-1 mb-4">Landmark Educational Tours, LLC | 1 Central St, Suite 205, Middleton, MA 01949. Please read the full agreement below before accepting.</p>
 
     <div class="terms-box border border-[var(--sand-line)] rounded-lg p-5 bg-[var(--paper)]">
@@ -879,39 +876,54 @@
       <p>Clicking "I accept" (or checking the equivalent box) confirms that you have read and understood this Agreement, that it affects your legal rights, and that you agree to be bound by its terms — releasing and indemnifying LET from liability for personal injury, property damage, or wrongful death arising from the trip. If accepting on behalf of another individual, you warrant that you have the legal capacity to bind them to these terms.</p>
 
     </div>
-  </div>
 
-  <!-- Acceptance form -->
-  <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 mt-6">
-    <label class="flex items-start gap-3 cursor-pointer">
+    <label class="flex items-start gap-3 cursor-pointer mt-5">
       <input type="checkbox" id="agree-terms" class="mt-1 w-4 h-4 accent-[var(--rust)]">
-      <span class="text-sm text-[var(--ink)]">I have read and understand and accept the Trip Organizer Agreement / Terms and Conditions above.</span>
+      <span class="text-sm text-[var(--ink)]">I have read, understand and accept the terms and conditions.</span>
     </label>
 
     <div class="mt-4">
-      <label for="full-name" class="block text-xs font-medium text-[var(--slate)] mb-1.5">Type your full legal name to confirm acceptance</label>
-      <input type="text" id="full-name" placeholder="Full legal name" class="w-full sm:w-96 border border-[var(--sand-line)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--rust)]/30 focus:border-[var(--rust)]">
+      <label for="full-name" class="block text-xs font-medium text-[var(--slate)] uppercase tracking-wide mb-1.5">Type your full legal name to confirm</label>
+      <input type="text" id="full-name" placeholder="Full legal name" class="w-full border border-[var(--sand-line)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--rust)]/30 focus:border-[var(--rust)]">
     </div>
 
-    <div class="mt-5 space-y-2">
-      <p class="text-xs font-semibold text-[var(--slate)] uppercase tracking-wide">Complete these steps to continue</p>
+    <div class="mt-4 space-y-1.5">
       <div class="flex items-center gap-2" id="check-step-1">
-        <span class="w-4 h-4 rounded-full border border-[var(--sand-line)] flex-shrink-0"></span>
-        <span class="text-sm text-[var(--slate)]">Accept the terms and conditions</span>
+        <span class="w-3.5 h-3.5 rounded-full border border-[var(--sand-line)] flex-shrink-0"></span>
+        <span class="text-xs text-[var(--slate)]">Accept the terms and conditions</span>
       </div>
       <div class="flex items-center gap-2" id="check-step-2">
-        <span class="w-4 h-4 rounded-full border border-[var(--sand-line)] flex-shrink-0"></span>
-        <span class="text-sm text-[var(--slate)]">Type your full legal name</span>
+        <span class="w-3.5 h-3.5 rounded-full border border-[var(--sand-line)] flex-shrink-0"></span>
+        <span class="text-xs text-[var(--slate)]">Type your full legal name</span>
       </div>
     </div>
 
-    <button id="accept-btn" class="btn-rust rounded-full px-6 py-3 text-sm font-semibold mt-6" disabled>Accept Proposal</button>
+    <button id="accept-btn" class="btn-rust rounded-full px-6 py-3 text-sm font-semibold mt-6 w-full sm:w-auto" disabled>Accept proposal &amp; open enrollment</button>
     <p class="text-xs text-[var(--slate)] mt-3">Accepting connects you with your Account Manager and does not open enrollment or charge your school.</p>
+  </div>
+
+  <!-- Accreditations -->
+  <div class="bg-white border border-[var(--sand-line)] rounded-2xl p-6 mt-6">
+    <p class="section-eyebrow">Accreditations &amp; Trusted Partnerships</p>
+    <p class="text-sm text-[var(--slate)] leading-relaxed mt-2">Landmark Educational Tours is a BBB Accredited Business and a proud member of SYTA, ABA, IATA/IATAN, and ETOA.</p>
+    <div class="flex flex-wrap gap-2 mt-3">
+      <span class="accred-badge">BBB Accredited Business</span>
+      <span class="accred-badge">SYTA Member</span>
+      <span class="accred-badge">ABA Member</span>
+      <span class="accred-badge">IATA / IATAN</span>
+      <span class="accred-badge">ETOA Member</span>
+    </div>
+    <p class="text-sm text-[var(--slate)] leading-relaxed mt-3">We maintain a California Seller of Travel Certificate and active vendor approvals with school districts nationwide, including New York City, Boston, Chicago, Miami-Dade, Broward County, and Palm Springs. Trusted by more than 12,500 travelers since 2021.</p>
+    <a href="https://landmarkeducationaltours.com/accreditations-certifications" class="text-sm text-[var(--rust)] font-medium underline mt-2 inline-block">Learn more at landmarkeducationaltours.com/accreditations-certifications</a>
+  </div>
+
+  </div>
+
   </div>
 </section>
 
 <footer class="border-t border-[var(--sand-line)] mt-2">
-  <div class="max-w-6xl mx-auto px-6 md:px-10 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
     <div>
       <p class="font-serif text-sm text-[var(--rust-deep)] font-semibold">Landmark Educational Tours</p>
       <p class="text-xs text-[var(--slate)] mt-0.5">Landmark Educational Tours, LLC · 1 Central St, Suite 205, Middleton, MA 01949</p>
@@ -952,6 +964,18 @@
     document.getElementById('calc-grand-total').textContent = fmt(min * price);
   }
   tierCards.forEach(c => c.addEventListener('click', () => selectTier(c)));
+
+  // What's Included accordion
+  function toggleAccordion(item, forceOpen){
+    const panel = item.querySelector('.accordion-panel');
+    const isOpen = !panel.hasAttribute('hidden');
+    const open = forceOpen === undefined ? !isOpen : forceOpen;
+    panel.toggleAttribute('hidden', !open);
+    item.classList.toggle('is-open', open);
+  }
+  document.querySelectorAll('.accordion-item').forEach(item => {
+    item.querySelector('.accordion-trigger').addEventListener('click', () => toggleAccordion(item));
+  });
 
   // Acceptance checklist
   const agreeBox = document.getElementById('agree-terms');

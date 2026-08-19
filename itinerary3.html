@@ -10,14 +10,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#241a14;
-    --paper:#fbf7f1;
-    --rust:#ac3d20;
-    --rust-deep:#7c2c17;
-    --rust-light:#d97250;
-    --sand:#ecdfce;
-    --sand-line:#ddc7ab;
-    --slate:#6d6153;
+    --ink:#1c1f26;
+    --paper:#f7f7f8;
+    --rust:#c0392b;
+    --rust-deep:#952e21;
+    --rust-light:#e0796a;
+    --sand:#fbeae7;
+    --sand-line:#e4e4e7;
+    --slate:#6b7280;
     --gold:#c9973f;
   }
   body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
@@ -42,13 +42,13 @@
   .hero-content{ position:relative; background:var(--paper); }
 
   @media (min-width:768px){
-    .hero{ position:relative; min-height:460px; }
+    .hero{ position:relative; min-height:370px; }
     .hero-media{ position:absolute; inset:0; height:100%; }
     .hero-scrim{
       display:block; position:absolute; inset:0;
       background:
-        linear-gradient(100deg, var(--paper) 0%, var(--paper) 30%, rgba(251,247,241,.86) 44%, rgba(251,247,241,.25) 62%, rgba(251,247,241,0) 78%),
-        linear-gradient(0deg, var(--paper) 0%, rgba(251,247,241,0) 22%);
+        linear-gradient(100deg, var(--paper) 0%, var(--paper) 30%, rgba(247,247,248,.86) 44%, rgba(247,247,248,.25) 62%, rgba(247,247,248,0) 78%),
+        linear-gradient(0deg, var(--paper) 0%, rgba(247,247,248,0) 22%);
     }
     .hero-content{ position:absolute; inset:0; background:transparent; min-height:460px; }
   }
@@ -89,9 +89,9 @@
   </div>
   <div class="hero-scrim"></div>
 
-  <div class="hero-content max-w-6xl mx-auto px-6 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10 md:min-h-[460px] flex flex-col justify-between">
+  <div class="hero-content max-w-6xl mx-auto px-6 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10 ">
 
-    <div class="flex items-start justify-between gap-6 flex-wrap">
+    <div class="">
       <div class="flex items-center gap-2.5">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--rust)"><path d="M12 1l2.2 7.3L21 11l-6.8 2.7L12 21l-2.2-7.3L3 11l6.8-2.7L12 1z"/></svg>
         <div>
@@ -99,12 +99,12 @@
           <p class="text-[10px] tracking-[0.25em] text-[var(--slate)] mt-0.5">EDUCATIONAL TOURS</p>
         </div>
       </div>
-      <div class="bg-[var(--sand)] border border-[var(--sand-line)] rounded-full px-4 py-1.5 shadow-sm">
+      <div class="bg-[var(--sand)] border border-[var(--sand-line)] rounded-full px-4 py-1.5 shadow-sm w-[170px] mt-3">
         <span class="text-xs text-[var(--slate)]">Quote ID: </span><span class="font-mono text-xs text-[var(--ink)] tracking-wide">HMCV6PXR2I</span>
       </div>
     </div>
 
-    <div class="mt-6 md:mt-0">
+    <div class="mt-6 md:mt-8">
       <h1 class="font-serif font-bold text-4xl md:text-5xl leading-tight text-[var(--rust)]">Dave Consultancy Inc.</h1>
       <p class="mt-1 text-sm md:text-base tracking-[0.15em] text-[var(--ink)] font-medium">WASHINGTON, D.C.</p>
 
