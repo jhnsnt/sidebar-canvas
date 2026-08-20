@@ -47,8 +47,7 @@
     .hero-scrim{
       display:block; position:absolute; inset:0;
       background:
-        linear-gradient(100deg, var(--paper) 0%, var(--paper) 30%, rgba(247,247,248,.86) 44%, rgba(247,247,248,.25) 62%, rgba(247,247,248,0) 78%),
-        linear-gradient(0deg, var(--paper) 0%, rgba(247,247,248,0) 22%);
+        linear-gradient(100deg, var(--paper) 0%, var(--paper) 23%, rgba(247,247,248,.86) 29%, rgba(247,247,248,.25) 47%, rgba(247,247,248,0) 51%)
     }
     .hero-content{ position:absolute; inset:0; background:transparent; min-height:460px; }
   }
@@ -96,11 +95,11 @@
 
   .day-card-compact{
     display:grid;
-    grid-template-columns:56px 44px 1fr;
+    grid-template-columns:56px 1fr;
     align-items:center;
     gap:.75rem 1rem;
   }
-  @media (min-width:640px){ .day-card-compact{ grid-template-columns:80px 48px 1fr; } }
+  @media (min-width:640px){ .day-card-compact{ grid-template-columns:80px 1fr; } }
 
   @media print{
     .no-print{ display:none !important; }
@@ -120,16 +119,10 @@
   </div>
   <div class="hero-scrim"></div>
 
-  <div class="hero-content max-w-6xl mx-auto px-6 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
+  <div class="hero-content max-w-7xl mx-auto px-6 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
 
     <div class="">
-      <div class="flex items-center gap-2.5">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--rust)"><path d="M12 1l2.2 7.3L21 11l-6.8 2.7L12 21l-2.2-7.3L3 11l6.8-2.7L12 1z"/></svg>
-        <div>
-          <p class="font-serif font-bold text-lg tracking-wide text-[var(--rust)] leading-none">LANDMARK</p>
-          <p class="text-[10px] tracking-[0.25em] text-[var(--slate)] mt-0.5">EDUCATIONAL TOURS</p>
-        </div>
-      </div>
+      <img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-9 md:h-11 w-auto">
       <div class="bg-[var(--sand)] border border-[var(--sand-line)] rounded-full px-4 py-1.5 shadow-sm w-[170px] mt-3">
         <span class="text-xs text-[var(--slate)]">Quote ID: </span><span class="font-mono text-xs text-[var(--ink)] tracking-wide">HMCV6PXR2I</span>
       </div>
@@ -144,7 +137,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
           Download PDF
         </button>
-        <button class="btn-outline bg-[var(--paper)]/70 rounded-full pl-4 pr-5 py-2.5 text-sm font-medium flex items-center gap-2">
+        <button class="btn-outline bg-[rgba(247,247,248,0.70)] rounded-full pl-4 pr-5 py-2.5 text-sm font-medium flex items-center gap-2">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           View Visual Itinerary
         </button>
@@ -154,7 +147,7 @@
 </header>
 
 <!-- ================= INFO CARDS ================= -->
-<div class="max-w-6xl mx-auto px-6 md:px-10 mt-6 md:-mt-8 relative z-10">
+<div class="max-w-7xl mx-auto px-6 md:px-10 mt-3 relative z-10">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
 
     <div class="bg-white border border-[var(--sand-line)] rounded-xl p-4 flex items-center gap-3 shadow-sm">
@@ -193,9 +186,9 @@
       </span>
       <div class="min-w-0">
         <p class="text-[10px] uppercase tracking-[0.15em] text-[var(--slate)]">Support Email</p>
-        <p class="text-[11px] leading-snug font-semibold text-[var(--ink)] mt-0.5 break-all">maya@landmarkeducationaltours.com</p>
-        <p class="text-[11px] leading-snug text-[var(--slate)] break-all">hello@landmarkeducationaltours.com</p>
-        <p class="text-[11px] text-[var(--slate)] mt-0.5">888-886-2781</p>
+        <p class="text-[9px] leading-tight font-semibold text-[var(--ink)] mt-0.5 break-all">maya@landmarkeducationaltours.com</p>
+        <p class="text-[9px] leading-tight text-[var(--slate)] break-all">hello@landmarkeducationaltours.com</p>
+        <p class="text-[10px] text-[var(--slate)] mt-0.5">888-886-2781</p>
       </div>
     </div>
 
@@ -203,42 +196,43 @@
 </div>
 
 <!-- ================= POLICY NOTICE ================= -->
-<div class="max-w-6xl mx-auto px-6 md:px-10 mt-6">
+<div class="max-w-7xl mx-auto px-6 md:px-10 mt-6">
   <div class="bg-white border border-[var(--sand-line)] rounded-lg px-5 py-3.5 text-sm text-[var(--slate)] leading-relaxed">
     <span class="font-semibold text-[var(--ink)]">Itinerary lock:</span> no changes are permitted after 30 days prior to departure, or once the final itinerary is approved — whichever comes first. All changes must be submitted to and approved by Landmark Educational Tours before that window closes, to keep the experience seamless for every participant.
   </div>
 </div>
 
 <!-- ================= DAY SCHEDULE ================= -->
-<div class="max-w-6xl mx-auto px-6 md:px-10 py-10">
+<div class="max-w-7xl mx-auto px-6 md:px-10 py-10">
 
   <!-- Day tab strip -->
   <nav class="no-print bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm flex divide-x divide-[var(--sand-line)] overflow-hidden">
     <button data-day="1" class="day-tab is-active flex-1 py-4 text-center bg-transparent">
       <span class="day-tab-label block font-display font-bold text-base text-[var(--ink)]">Day 1</span>
-      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Aug 24, 2026</span>
+      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Mon, Aug 24, 2026</span>
       <span class="day-tab-underline block w-6 h-[3px] rounded-full bg-[var(--rust)] mx-auto mt-2"></span>
     </button>
     <button data-day="2" class="day-tab flex-1 py-4 text-center bg-transparent">
       <span class="day-tab-label block font-display font-bold text-base text-[var(--ink)]">Day 2</span>
-      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Aug 25, 2026</span>
+      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Tue, Aug 25, 2026</span>
       <span class="day-tab-underline block w-6 h-[3px] rounded-full bg-[var(--rust)] mx-auto mt-2"></span>
     </button>
     <button data-day="3" class="day-tab flex-1 py-4 text-center bg-transparent">
       <span class="day-tab-label block font-display font-bold text-base text-[var(--ink)]">Day 3</span>
-      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Aug 26, 2026</span>
+      <span class="day-tab-date block text-xs text-[var(--slate)] mt-1">Wed, Aug 26, 2026</span>
       <span class="day-tab-underline block w-6 h-[3px] rounded-full bg-[var(--rust)] mx-auto mt-2"></span>
     </button>
   </nav>
 
   <!-- DAY 1 -->
   <section data-day="1" class="day-panel mt-8">
-    <div class="flex items-center gap-3 mb-5">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-5">
       <span class="w-11 h-11 rounded-full bg-[var(--sand)] text-[var(--rust)] flex items-center justify-center flex-shrink-0">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </span>
       <h2 class="font-display font-bold text-2xl text-[var(--ink)]">Day 1</h2>
       <span class="font-serif italic text-base text-[var(--rust)]">Monday, August 24, 2026</span>
+      <span class="ml-auto font-serif italic text-xs text-[var(--slate)]">Sample Itinerary – Subject to Availability</span>
     </div>
 
     <div class="space-y-4">
@@ -246,9 +240,6 @@
       <!-- Motorcoach -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">8:15 AM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18"/><circle cx="7.5" cy="19.5" r="1.5"/><circle cx="16.5" cy="19.5" r="1.5"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Board the private motorcoach at the hotel and depart for a full day of sightseeing across the National Mall.</p>
       </div>
 
@@ -269,9 +260,6 @@
       <!-- Mall memorials -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">10:30 AM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">A self-guided walk through the western half of the National Mall, taking in the Lincoln Memorial steps, the Vietnam Veterans and Korean War Veterans Memorials, and the World War II Memorial.</p>
       </div>
 
@@ -306,18 +294,12 @@
       <!-- Hotel -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">4:30 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Check in and settle into your rooms at the Embassy Suites Washington D.C. Georgetown for the next two nights.</p>
       </div>
 
       <!-- Nationals game -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">6:45 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 4.5c1 3 1 13 0 15M16 4.5c-1 3-1 13 0 15"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Cheer on the Washington Nationals under the lights at Nationals Park to cap off the first day.</p>
       </div>
 
@@ -326,12 +308,13 @@
 
   <!-- DAY 2 -->
   <section data-day="2" class="day-panel mt-8 hidden">
-    <div class="flex items-center gap-3 mb-5">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-5">
       <span class="w-11 h-11 rounded-full bg-[var(--sand)] text-[var(--rust)] flex items-center justify-center flex-shrink-0">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </span>
       <h2 class="font-display font-bold text-2xl text-[var(--ink)]">Day 2</h2>
       <span class="font-serif italic text-base text-[var(--rust)]">Tuesday, August 25, 2026</span>
+      <span class="ml-auto font-serif italic text-xs text-[var(--slate)]">Sample Itinerary – Subject to Availability</span>
     </div>
 
     <div class="space-y-4">
@@ -367,36 +350,24 @@
       <!-- Iwo Jima -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">12:30 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V15"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">View the bronze Iwo Jima statue depicting the raising of the flag on Mount Suribachi, one of the most recognized war memorials in the country.</p>
       </div>
 
       <!-- Pentagon Memorial -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">2:30 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Walk among the 184 lit benches, each one dedicated to a victim of the September 11th attack on the Pentagon.</p>
       </div>
 
       <!-- National Geographic Museum -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">3:15 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Explore rotating exhibits on exploration, wildlife, and culture from the magazine's century of storytelling.</p>
       </div>
 
       <!-- Ghost Tour -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">8:00 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Walk the cobblestone streets of Old Town Alexandria after dark on a guided tour of its haunted taverns and colonial-era homes.</p>
       </div>
 
@@ -405,12 +376,13 @@
 
   <!-- DAY 3 -->
   <section data-day="3" class="day-panel mt-8 hidden">
-    <div class="flex items-center gap-3 mb-5">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-5">
       <span class="w-11 h-11 rounded-full bg-[var(--sand)] text-[var(--rust)] flex items-center justify-center flex-shrink-0">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       </span>
       <h2 class="font-display font-bold text-2xl text-[var(--ink)]">Day 3</h2>
       <span class="font-serif italic text-base text-[var(--rust)]">Wednesday, August 26, 2026</span>
+      <span class="ml-auto font-serif italic text-xs text-[var(--slate)]">Sample Itinerary – Subject to Availability</span>
     </div>
 
     <div class="space-y-4">
@@ -446,36 +418,24 @@
       <!-- Supreme Court -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">1:00 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">See the courtroom where the nation's highest court hears oral arguments, plus exhibits on the history of the judicial branch.</p>
       </div>
 
       <!-- Library of Congress -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">2:00 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Marvel at the ornate Great Hall and the Main Reading Room of the world's largest library, housed in the Thomas Jefferson Building.</p>
       </div>
 
       <!-- Botanic Garden -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">3:00 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 4-8 8-8 13a8 8 0 0 0 16 0c0-5-4-9-8-13z"/><path d="M12 21V9"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Wander the glass conservatory's tropical, desert, and garden court rooms just steps from the Capitol.</p>
       </div>
 
       <!-- Folger Shakespeare Library -->
       <div class="day-card-compact bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-4 md:p-5">
         <span class="card-time font-display font-bold text-sm text-[var(--rust)]">4:15 PM</span>
-        <span class="icon-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.24 3.76a6 6 0 0 0-8.49 0L3.5 12v8.5H12l8.24-8.25a6 6 0 0 0 0-8.49z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg>
-        </span>
         <p class="text-sm text-[var(--ink)] leading-relaxed">Step inside the world's largest Shakespeare collection, including a reconstructed Elizabethan-style theater.</p>
       </div>
 
@@ -485,7 +445,7 @@
 </div>
 
 <footer class="border-t border-[var(--sand-line)] mt-2">
-  <div class="max-w-6xl mx-auto px-6 md:px-10 py-6 flex items-center justify-between flex-wrap gap-3">
+  <div class="max-w-7xl mx-auto px-6 md:px-10 py-6 flex items-center justify-between flex-wrap gap-3">
     <p class="font-serif text-sm text-[var(--rust-deep)] font-semibold">Landmark Educational Tours</p>
     <p class="text-xs text-[var(--slate)]">888-886-2781 · Hello@LandmarkEducationalTours.com</p>
   </div>
