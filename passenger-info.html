@@ -312,16 +312,9 @@
         I <input id="guardian-name" type="text" required class="field-input" style="width:210px; display:inline-block; vertical-align:middle; margin:0 .15rem;"> am providing consent for <strong id="consent-traveler-name">&mdash;</strong>, and agree electronically to the terms and conditions above.
       </p>
 
-      <p class="text-base text-[var(--ink)] mt-6">Please confirm the traveler's legal name (first name and last name).</p>
-      <div class="grid sm:grid-cols-2 gap-4 mt-3">
-        <div class="tf-field">
-          <input id="consent-first" type="text" required class="field-input">
-          <p class="field-hint"></p>
-        </div>
-        <div class="tf-field">
-          <input id="consent-last" type="text" required class="field-input">
-          <p class="field-hint"></p>
-        </div>
+      <p class="text-base text-[var(--ink)] mt-6">Traveler's legal name</p>
+      <div class="mt-3 bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl px-5 py-4">
+        <p class="font-display font-bold text-xl text-[var(--ink)]" id="consent-name-display">&mdash;</p>
       </div>
 
       <p class="text-base text-[var(--ink)] mt-6">Please enter today's date.</p>
@@ -523,12 +516,9 @@
     const guardianName = [guardianFirst, guardianLast].filter(Boolean).join(' ');
     document.getElementById('guardian-name').value = guardianName;
 
-    const travelerFirst = document.getElementById('youth-first').value.trim();
-    const travelerLast = document.getElementById('youth-last').value.trim();
-    document.getElementById('consent-traveler-name').textContent =
-      document.getElementById('confirm-name').textContent;
-    document.getElementById('consent-first').value = travelerFirst;
-    document.getElementById('consent-last').value = travelerLast;
+    const travelerFullName = document.getElementById('confirm-name').textContent;
+    document.getElementById('consent-traveler-name').textContent = travelerFullName;
+    document.getElementById('consent-name-display').textContent = travelerFullName;
 
     const dateField = document.getElementById('consent-date');
     if (!dateField.value) {
