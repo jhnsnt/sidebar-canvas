@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Traveler Information</title>
+<link rel="icon" href="https://secureportal.landmarkeducationaltours.com/assets/media/logos/favicon.ico?v=1786814054">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1f26;
+    --paper:#f7f7f8;
+    --rust:#c0392b;
+    --rust-deep:#952e21;
+    --rust-light:#e0796a;
+    --sand:#fbeae7;
+    --sand-line:#e4e4e7;
+    --slate:#6b7280;
+    --gold:#c9973f;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; font-size:17px; }
+  .font-display{ font-family:'Poppins',sans-serif; }
+  .font-serif{ font-family:'Lora',serif; }
+
+  .btn-rust{ background:var(--rust); color:var(--paper); transition:background .2s ease; }
+  .btn-rust:hover{ background:var(--rust-deep); }
+  .btn-rust:disabled, .btn-rust[disabled]{ background:var(--sand-line); color:var(--slate); cursor:not-allowed; }
+
+  .section-eyebrow{ color:var(--rust); font-weight:600; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; }
+
+  /* ---- Form fields (sized up for easy reading & tapping) ---- */
+  .field-label{ display:block; font-size:15px; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
+  .field-input{
+    width:100%; border:1.5px solid var(--sand-line); border-radius:.75rem; padding:1rem 1.1rem;
+    font-size:17px; color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+    min-height:54px;
+  }
+  .field-input::placeholder{ color:var(--slate); opacity:.75; }
+  .field-input:focus{ outline:none; border-color:var(--rust); box-shadow:0 0 0 4px rgba(192,57,43,.15); }
+  .field-input:disabled{ background:var(--paper); color:var(--slate); cursor:not-allowed; }
+  select.field-input{
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 1rem center; padding-right:2.75rem;
+  }
+  .field-hint{ font-size:15px; font-weight:600; margin-top:.5rem; min-height:1.3em; display:flex; align-items:center; gap:.35rem; }
+  .field-hint.is-valid{ color:#15803d; }
+  .field-hint.is-invalid{ color:var(--rust-deep); }
+
+  /* ---- Stepper (desktop) ---- */
+  .tf-step-circle{
+    width:32px; height:32px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.85rem; border:2px solid var(--sand-line); color:var(--slate); background:#fff; flex-shrink:0;
+  }
+  .tf-step.is-active .tf-step-circle{ border-color:var(--rust); color:var(--rust); }
+  .tf-step.is-active .tf-step-label{ color:var(--rust); font-weight:700; }
+  .tf-step.is-done .tf-step-circle{ background:var(--rust); border-color:var(--rust); color:#fff; }
+  .tf-step-label{ color:var(--slate); font-size:.9rem; font-weight:500; white-space:nowrap; }
+  .tf-step-line{ flex:1; height:2px; background:var(--sand-line); margin:0 .65rem; min-width:12px; }
+
+  /* ---- Mobile progress bar ---- */
+  .mobile-progress-track{ height:8px; border-radius:9999px; background:var(--sand-line); overflow:hidden; }
+  .mobile-progress-fill{ height:100%; background:var(--rust); border-radius:9999px; transition:width .3s ease; }
+
+  /* ---- Scrollable terms text (keeps the form fields below within reach) ---- */
+  .terms-scroll{ max-height:220px; overflow-y:auto; padding-right:.5rem; }
+  .terms-scroll::-webkit-scrollbar{ width:8px; }
+  .terms-scroll::-webkit-scrollbar-track{ background:transparent; }
+  .terms-scroll::-webkit-scrollbar-thumb{ background:var(--sand-line); border-radius:9999px; }
+
+  .add-contact-btn{
+    transition:border-color .15s ease, color .15s ease;
+    min-height:54px;
+  }
+  .add-contact-btn:hover{ border-color:var(--rust); color:var(--rust); }
+  .back-link{ color:var(--slate); transition:color .15s ease; font-size:17px; }
+  .back-link:hover{ color:var(--rust); }
+
+  /* ---- Bigger, easier-to-tap checkboxes ---- */
+  .big-checkbox{ width:34px; height:34px; accent-color:var(--rust); flex-shrink:0; }
+  .checkbox-row{ padding:.6rem 0; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ================= HEADER ================= -->
+<header class="border-b border-[var(--sand-line)] bg-white">
+  <div class="max-w-5xl mx-auto px-4 lg:px-0 h-[64px] flex items-center justify-between gap-6">
+    <img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-16 w-auto flex-shrink-0">
+
+    <div class="hidden md:flex items-center flex-1 max-w-lg">
+      <div id="tf-step-1" class="tf-step is-active flex items-center gap-2">
+        <span class="tf-step-circle">1</span>
+        <span class="tf-step-label">Traveler Information</span>
+      </div>
+      <span class="tf-step-line"></span>
+      <div id="tf-step-2" class="tf-step flex items-center gap-2">
+        <span class="tf-step-circle">2</span>
+        <span class="tf-step-label">Parent/Guardian Emergency</span>
+      </div>
+      <span class="tf-step-line"></span>
+      <div id="tf-step-3" class="tf-step flex items-center gap-2">
+        <span class="tf-step-circle">3</span>
+        <span class="tf-step-label">Legal Name</span>
+      </div>
+      <span class="tf-step-line"></span>
+      <div id="tf-step-4" class="tf-step flex items-center gap-2">
+        <span class="tf-step-circle">4</span>
+        <span class="tf-step-label">Terms and Conditions</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile progress bar: the step icons above are desktop-only, so phones need their own indicator -->
+  <div class="md:hidden px-4 pb-3">
+    <p class="text-sm font-semibold text-[var(--ink)]" id="mobile-step-label">Step 1 of 4: Traveler Information</p>
+    <div class="mobile-progress-track mt-2">
+      <div class="mobile-progress-fill" id="mobile-progress-fill" style="width:25%;"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-3xl mx-auto px-4 lg:px-0 py-10 md:py-14">
+  <div class="bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-6 md:p-10">
+
+  <div id="page-1">
+    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center">Welcome to Landmark! &#127760;</h1>
+    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Please enter your youth traveler's information below. This information helps Landmark Educational Tours coordinate with trip-related vendors, such as informing restaurants of the dietary needs of travelers. Please complete all sections to proceed to the next registration step.</p>
+
+    <form id="traveler-form" class="mt-8" novalidate>
+      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Student Traveler Information</h2>
+
+      <div class="grid sm:grid-cols-3 gap-4 mt-5">
+        <div class="tf-field">
+          <label class="field-label" for="youth-first">Youth First Name</label>
+          <input id="youth-first" type="text" required placeholder="e.g. John" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label" for="youth-middle">Youth Middle Name</label>
+          <input id="youth-middle" type="text" required placeholder="e.g. Joe" class="field-input">
+          <label class="checkbox-row flex items-center gap-3 mt-2 text-base text-[var(--ink)] cursor-pointer">
+            <input id="no-middle-name" type="checkbox" class="big-checkbox">
+            No middle name
+          </label>
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label" for="youth-last">Youth Last Name</label>
+          <input id="youth-last" type="text" required placeholder="e.g. Doe" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+        <div class="tf-field">
+          <label class="field-label" for="gender">Gender</label>
+          <select id="gender" required class="field-input">
+            <option value="" disabled selected>Select&hellip;</option>
+            <option>Female</option>
+            <option>Male</option>
+            <option>Non-binary</option>
+            <option>Prefer not to say</option>
+          </select>
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label" for="dob">Date of Birth</label>
+          <input id="dob" type="date" required class="field-input">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+
+      <div class="tf-field mt-4">
+        <label class="field-label" for="address">Home Address</label>
+        <input id="address" type="text" required autocomplete="street-address" placeholder="e.g. 123 Main St, Apt 4B" class="field-input">
+        <p class="field-hint"></p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+        <div class="tf-field">
+          <label class="field-label" for="city">City</label>
+          <input id="city" type="text" required autocomplete="address-level2" placeholder="e.g. Middleton" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label" for="state">State</label>
+          <input id="state" type="text" required autocomplete="address-level1" placeholder="e.g. Massachusetts" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+        <div class="tf-field">
+          <label class="field-label" for="country">Country</label>
+          <input id="country" type="text" required autocomplete="country-name" value="United States" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label" for="zip">Postal/Zip Code</label>
+          <input id="zip" type="text" required autocomplete="postal-code" placeholder="e.g. 01949" class="field-input">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+
+      <div class="tf-field mt-4">
+        <label class="field-label" for="allergies">Food Allergies/Restrictions</label>
+        <input id="allergies" type="text" required placeholder="List any allergies or restrictions, or enter &quot;None&quot;" class="field-input">
+        <p class="field-hint"></p>
+      </div>
+
+      <div class="tf-field mt-4">
+        <label class="field-label" for="ada">Do you require ADA accommodations?</label>
+        <select id="ada" required class="field-input">
+          <option value="" disabled selected>Select&hellip;</option>
+          <option>No</option>
+          <option>Yes</option>
+        </select>
+        <p class="field-hint"></p>
+        <p class="text-sm text-[var(--slate)] italic mt-2 border border-[var(--sand-line)] rounded-lg px-4 py-3">An ADA accommodation refers to adjustments or modifications provided in a setting (like a school or public space) to ensure that individuals with disabilities have equal access and opportunities.</p>
+      </div>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex justify-end">
+        <button type="submit" class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ================= PAGE 2: PARENT/GUARDIAN EMERGENCY ================= -->
+  <div id="page-2" class="hidden">
+    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center">We are almost there!</h1>
+    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Add contacts responsible for travelers.</p>
+
+    <form id="contacts-form" class="mt-8" novalidate>
+      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Parent/Guardian/Emergency Contact Information</h2>
+
+      <div id="contacts-container" class="mt-5 space-y-6"></div>
+
+      <button type="button" id="add-contact" class="add-contact-btn w-full border-2 border-dashed border-[var(--sand-line)] text-[var(--ink)] rounded-xl py-4 text-base font-semibold flex items-center justify-center gap-2 mt-6">
+        Add another contact
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+      </button>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
+        <button type="button" id="back-to-page-1" class="back-link flex items-center gap-2 font-semibold py-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+        <button type="submit" class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ================= PAGE 3: LEGAL NAME ================= -->
+  <div id="page-3" class="hidden">
+    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center">Legal Name</h1>
+    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Please confirm the traveler's legal name and birth date below before continuing.</p>
+
+    <div class="mt-8">
+      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Legal Name Confirmation</h2>
+
+      <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl mt-5 py-10 px-6 text-center">
+        <p class="text-base font-semibold text-[var(--ink)]" id="confirm-dob">Birth Date: &mdash;</p>
+        <p class="font-display font-bold text-2xl md:text-3xl text-[var(--ink)] mt-2" id="confirm-name">&mdash;</p>
+      </div>
+
+      <p class="text-base font-semibold text-[var(--rust)] text-center mt-4">This is the traveler's legal name on government documents.</p>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
+        <button type="button" id="back-to-page-1-from-3" class="back-link flex items-center gap-2 font-semibold py-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          No, I need to correct
+        </button>
+        <button type="button" id="confirm-legal-name" class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
+          Yes, continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 4: TERMS AND CONDITIONS ================= -->
+  <div id="page-4" class="hidden">
+    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center leading-tight">Guardian Consent and Trip Terms and Conditions</h1>
+    <p class="font-display font-bold text-lg text-[var(--rust)] text-center mt-3">Landmark Educational Tours</p>
+    <p class="text-base text-[var(--slate)] text-center mt-1">Trip Organizer Agreement / Terms and Conditions</p>
+
+    <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl mt-6 p-6">
+      <div class="flex items-center gap-2 mb-3">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" class="flex-shrink-0"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <p class="text-xs font-semibold text-[var(--gold)] uppercase tracking-wide">Sample text for layout preview only &mdash; not final legal content</p>
+      </div>
+      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Section 1: Agreement Overview</h2>
+      <div class="terms-scroll mt-3 space-y-3 text-base text-[var(--slate)] leading-relaxed">
+        <p>This Consent Agreement ("Agreement") is entered into between the undersigned parent or legal guardian ("Guardian") and Landmark Educational Tours, LLC ("Landmark") in connection with the youth traveler's participation in the trip identified in this registration. By electronically signing below, the Guardian confirms they have the legal authority to consent on behalf of the traveler and agrees to be bound by the terms outlined in this document.</p>
+        <p>This Agreement covers, among other things, the traveler's participation in trip activities, financial responsibilities related to registration and payment, the refund and cancellation policy described below, and the collection and use of traveler information for trip coordination purposes as described during registration.</p>
+        <p>Additional sections of this Agreement (not shown in this preview) would typically cover topics such as: assumption of risk, medical treatment authorization, code of conduct, photo/media release, and dispute resolution. Please contact your Landmark Travel Consultant for the complete, current version of this Agreement.</p>
+      </div>
+    </div>
+
+    <form id="consent-form" class="mt-8" novalidate>
+      <p class="text-base leading-loose text-[var(--ink)]">
+        I <input id="guardian-name" type="text" required class="field-input" style="width:210px; display:inline-block; vertical-align:middle; margin:0 .15rem;"> am providing consent for <strong id="consent-traveler-name">&mdash;</strong>, and agree electronically to the terms and conditions above.
+      </p>
+
+      <p class="text-base text-[var(--ink)] mt-6">Please confirm the traveler's legal name (first name and last name).</p>
+      <div class="grid sm:grid-cols-2 gap-4 mt-3">
+        <div class="tf-field">
+          <input id="consent-first" type="text" required class="field-input">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <input id="consent-last" type="text" required class="field-input">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+
+      <p class="text-base text-[var(--ink)] mt-6">Please enter today's date.</p>
+      <div class="tf-field mt-3 max-w-xs">
+        <input id="consent-date" type="date" required class="field-input">
+        <p class="field-hint"></p>
+      </div>
+
+      <label class="checkbox-row flex items-start gap-3 mt-4 cursor-pointer">
+        <input id="refund-acknowledge" type="checkbox" required class="big-checkbox">
+        <span class="text-base text-[var(--ink)] leading-relaxed">I acknowledge and accept the refund policy outlined in the customer agreement above. It is explicitly stated that all payments are deemed non-refundable, except in cases covered by an optional travel protection plan, applicable after completing trip registration or open enrollment. I am aware that, during the trip registration or open enrollment process, my trip deposit is fully refundable, and I retain the option to choose whether or not to purchase the optional travel protection at that time.</span>
+      </label>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
+        <button type="button" id="back-to-page-3" class="back-link flex items-center gap-2 font-semibold py-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          No, I need to correct
+        </button>
+        <button type="submit" id="agree-consent" disabled class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
+          I agree the above Customer Agreement
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ================= PAGE 5: THANK YOU ================= -->
+  <div id="page-5" class="hidden text-center py-6">
+    <img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-16 w-auto mx-auto">
+
+    <div class="mx-auto mt-8 flex items-center justify-center rounded-full" style="width:64px; height:64px; background:var(--rust);">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+
+    <h1 class="font-display font-bold text-4xl md:text-5xl text-[var(--rust)] mt-6 leading-tight">Thank You!<br>Registration Completed</h1>
+    <p class="font-display font-bold text-xl text-[var(--ink)] mt-6">What would you like to do now?</p>
+
+    <button type="button" id="go-to-dashboard" class="btn-rust rounded-full px-7 py-4 text-base font-semibold underline inline-flex items-center gap-2 mt-6">
+      Go to Dashboard
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+
+  <!-- ================= TOAST ================= -->
+  <div id="save-toast" class="hidden fixed top-6 right-6 z-50 bg-[rgba(22,163,74,0.08)] border border-[rgba(22,163,74,0.3)] rounded-xl px-5 py-4 shadow-lg max-w-xs">
+    <p class="text-sm font-semibold" style="color:#16a34a;">Saved successfully!</p>
+    <p class="text-xs mt-0.5" style="color:#16a34a;">Your changes have been saved successfully.</p>
+  </div>
+
+  <template id="contact-template">
+    <div class="contact-block pt-6 border-t border-[var(--sand-line)] first:pt-0 first:border-0">
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="tf-field">
+          <label class="field-label">First Name</label>
+          <input type="text" required placeholder="e.g. John" class="field-input contact-first">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label">Last Name</label>
+          <input type="text" required placeholder="e.g. Doe" class="field-input contact-last">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label">Relationship</label>
+          <input type="text" required placeholder="e.g. Father, Mother, Guardian" class="field-input contact-relationship">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4 mt-4">
+        <div class="tf-field">
+          <label class="field-label">Email Address</label>
+          <input type="email" required placeholder="e.g. name@example.com" class="field-input contact-email">
+          <p class="field-hint"></p>
+        </div>
+        <div class="tf-field">
+          <label class="field-label">Phone Number</label>
+          <input type="tel" required placeholder="e.g. (555) 123-4567" class="field-input contact-phone">
+          <p class="field-hint"></p>
+        </div>
+      </div>
+      <button type="button" class="remove-contact text-xs font-medium text-[var(--rust)] underline mt-3 hidden">Remove this contact</button>
+    </div>
+  </template>
+</main>
+
+<footer class="border-t border-[var(--sand-line)] mt-2">
+  <div class="max-w-5xl mx-auto px-4 lg:px-0 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div>
+      <p class="font-serif text-sm text-[var(--rust-deep)] font-semibold">Landmark Educational Tours</p>
+      <p class="text-xs text-[var(--slate)] mt-0.5">Landmark Educational Tours, LLC · 1 Central St, Suite 205, Middleton, MA 01949</p>
+    </div>
+    <p class="text-xs text-[var(--slate)]">888-886-2781 · Hello@LandmarkEducationalTours.com</p>
+  </div>
+</footer>
+
+<script>
+  // ---- "No middle name" toggles the middle-name field ----
+  const middleInput = document.getElementById('youth-middle');
+  const noMiddleCheckbox = document.getElementById('no-middle-name');
+  noMiddleCheckbox.addEventListener('change', () => {
+    middleInput.disabled = noMiddleCheckbox.checked;
+    middleInput.required = !noMiddleCheckbox.checked;
+    if (noMiddleCheckbox.checked) { middleInput.value = ''; setHint(middleInput, true); }
+    else { setHint(middleInput, null); }
+  });
+
+  // ---- Live inline validation ("This field is required" / "Looks good") ----
+  const HINT_ICON_VALID = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="flex-shrink-0"><path d="M20 6 9 17l-5-5"/></svg>';
+  const HINT_ICON_INVALID = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
+
+  function setHint(field, valid){
+    const hint = field.closest('.tf-field').querySelector('.field-hint');
+    if (valid === null) { hint.innerHTML = ''; hint.className = 'field-hint'; return; }
+    if (valid) { hint.innerHTML = HINT_ICON_VALID + 'Looks good'; hint.className = 'field-hint is-valid'; }
+    else { hint.innerHTML = HINT_ICON_INVALID + 'This field is required'; hint.className = 'field-hint is-invalid'; }
+  }
+
+  document.querySelectorAll('#traveler-form .field-input').forEach(field => {
+    if (field.id === 'youth-middle') return; // handled by the checkbox logic above
+    field.addEventListener('blur', () => {
+      if (!field.required) return;
+      setHint(field, field.value.trim() !== '');
+    });
+    field.addEventListener('input', () => {
+      const hint = field.closest('.tf-field').querySelector('.field-hint');
+      if (hint.classList.contains('is-invalid') && field.value.trim() !== '') setHint(field, true);
+    });
+  });
+
+  // ---- Submit: validate all fields, show hints, then advance to page 2 ----
+  document.getElementById('traveler-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let firstInvalid = null;
+    document.querySelectorAll('#traveler-form .field-input').forEach(field => {
+      if (!field.required || field.disabled) return;
+      const valid = field.value.trim() !== '';
+      setHint(field, valid);
+      if (!valid && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) { firstInvalid.focus(); return; }
+    goToPage(2);
+  });
+
+  // ---- Page navigation (Traveler Information -> Parent/Guardian Emergency -> Legal Name -> Terms -> Thank You) ----
+  const page1 = document.getElementById('page-1');
+  const page2 = document.getElementById('page-2');
+  const page3 = document.getElementById('page-3');
+  const page4 = document.getElementById('page-4');
+  const page5 = document.getElementById('page-5');
+  const siteHeader = document.querySelector('header');
+  const tfStep1 = document.getElementById('tf-step-1');
+  const tfStep2 = document.getElementById('tf-step-2');
+  const tfStep3 = document.getElementById('tf-step-3');
+  const tfStep4 = document.getElementById('tf-step-4');
+
+  function goToPage(page){
+    page1.classList.toggle('hidden', page !== 1);
+    page2.classList.toggle('hidden', page !== 2);
+    page3.classList.toggle('hidden', page !== 3);
+    page4.classList.toggle('hidden', page !== 4);
+    page5.classList.toggle('hidden', page !== 5);
+    siteHeader.classList.toggle('hidden', page === 5);
+    tfStep1.classList.toggle('is-active', page === 1);
+    tfStep1.classList.toggle('is-done', page > 1);
+    tfStep2.classList.toggle('is-active', page === 2);
+    tfStep2.classList.toggle('is-done', page > 2);
+    tfStep3.classList.toggle('is-active', page === 3);
+    tfStep3.classList.toggle('is-done', page > 3);
+    tfStep4.classList.toggle('is-active', page === 4);
+    tfStep4.classList.toggle('is-done', page > 4);
+
+    const stepLabels = ['Traveler Information', 'Parent/Guardian Emergency', 'Legal Name', 'Terms and Conditions'];
+    if (page <= 4) {
+      document.getElementById('mobile-step-label').textContent = 'Step ' + page + ' of 4: ' + stepLabels[page - 1];
+      document.getElementById('mobile-progress-fill').style.width = (page / 4 * 100) + '%';
+    }
+
+    if (page === 3) populateLegalName();
+    if (page === 4) populateConsent();
+    if (page === 5) showSaveToast();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showSaveToast(){
+    const toast = document.getElementById('save-toast');
+    toast.classList.remove('hidden');
+    setTimeout(() => toast.classList.add('hidden'), 4000);
+  }
+
+  document.getElementById('back-to-page-1').addEventListener('click', () => goToPage(1));
+  document.getElementById('back-to-page-1-from-3').addEventListener('click', () => goToPage(1));
+  document.getElementById('back-to-page-3').addEventListener('click', () => goToPage(3));
+  document.getElementById('confirm-legal-name').addEventListener('click', () => goToPage(4));
+
+  // ---- Terms & Conditions consent: pulled from earlier steps ----
+  function populateConsent(){
+    const guardianFirst = contactsContainer.querySelector('.contact-first').value.trim();
+    const guardianLast = contactsContainer.querySelector('.contact-last').value.trim();
+    const guardianName = [guardianFirst, guardianLast].filter(Boolean).join(' ');
+    document.getElementById('guardian-name').value = guardianName;
+
+    const travelerFirst = document.getElementById('youth-first').value.trim();
+    const travelerLast = document.getElementById('youth-last').value.trim();
+    document.getElementById('consent-traveler-name').textContent =
+      document.getElementById('confirm-name').textContent;
+    document.getElementById('consent-first').value = travelerFirst;
+    document.getElementById('consent-last').value = travelerLast;
+
+    const dateField = document.getElementById('consent-date');
+    if (!dateField.value) {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateField.value = `${yyyy}-${mm}-${dd}`;
+    }
+  }
+
+  document.getElementById('refund-acknowledge').addEventListener('change', function(){
+    document.getElementById('agree-consent').disabled = !this.checked;
+  });
+
+  document.querySelectorAll('#consent-form .field-input').forEach(field => {
+    const hasHintWrapper = !!field.closest('.tf-field');
+    field.addEventListener('blur', () => {
+      if (!field.required) return;
+      const valid = field.value.trim() !== '';
+      if (hasHintWrapper) setHint(field, valid);
+      field.classList.toggle('border-[var(--rust)]', !valid);
+    });
+    field.addEventListener('input', () => {
+      if (field.value.trim() === '') return;
+      if (hasHintWrapper) {
+        const hint = field.closest('.tf-field').querySelector('.field-hint');
+        if (hint.classList.contains('is-invalid')) setHint(field, true);
+      }
+      field.classList.remove('border-[var(--rust)]');
+    });
+  });
+
+  document.getElementById('consent-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let firstInvalid = null;
+    document.querySelectorAll('#consent-form .field-input').forEach(field => {
+      if (!field.required) return;
+      const valid = field.value.trim() !== '';
+      if (field.closest('.tf-field')) setHint(field, valid);
+      field.classList.toggle('border-[var(--rust)]', !valid);
+      if (!valid && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) { firstInvalid.focus(); return; }
+    goToPage(5);
+  });
+
+  // ---- Legal Name confirmation: pulled from Step 1's traveler fields ----
+  function formatDOB(iso){
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-');
+    return `${m}/${d}/${y}`;
+  }
+
+  function populateLegalName(){
+    const first = document.getElementById('youth-first').value.trim();
+    const middle = document.getElementById('youth-middle').value.trim();
+    const last = document.getElementById('youth-last').value.trim();
+    const dob = document.getElementById('dob').value;
+
+    const fullName = [first, middle, last].filter(Boolean).join(' ');
+    document.getElementById('confirm-name').textContent = fullName || '—';
+    document.getElementById('confirm-dob').textContent = 'Birth Date: ' + (formatDOB(dob) || '—');
+  }
+
+  // ---- Contact blocks (Parent/Guardian/Emergency contacts) ----
+  const contactsContainer = document.getElementById('contacts-container');
+  const contactTemplate = document.getElementById('contact-template');
+
+  function addContact(){
+    const clone = contactTemplate.content.cloneNode(true);
+    const block = clone.querySelector('.contact-block');
+
+    block.querySelectorAll('.field-input').forEach(field => {
+      field.addEventListener('blur', () => setHint(field, field.value.trim() !== ''));
+      field.addEventListener('input', () => {
+        const hint = field.closest('.tf-field').querySelector('.field-hint');
+        if (hint.classList.contains('is-invalid') && field.value.trim() !== '') setHint(field, true);
+      });
+    });
+
+    const removeBtn = block.querySelector('.remove-contact');
+    removeBtn.addEventListener('click', () => {
+      block.remove();
+      updateRemoveButtons();
+    });
+
+    contactsContainer.appendChild(clone);
+    updateRemoveButtons();
+  }
+
+  function updateRemoveButtons(){
+    const blocks = contactsContainer.querySelectorAll('.contact-block');
+    blocks.forEach((block, i) => {
+      block.querySelector('.remove-contact').classList.toggle('hidden', blocks.length === 1);
+    });
+  }
+
+  document.getElementById('add-contact').addEventListener('click', addContact);
+  addContact(); // start with one contact block
+
+  // ---- Contacts form submit ----
+  document.getElementById('contacts-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let firstInvalid = null;
+    contactsContainer.querySelectorAll('.field-input').forEach(field => {
+      if (!field.required) return;
+      const valid = field.value.trim() !== '';
+      setHint(field, valid);
+      if (!valid && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) { firstInvalid.focus(); return; }
+    goToPage(3);
+  });
+</script>
+
+</body>
+</html>
