@@ -98,24 +98,14 @@
       <span class="tf-step-line"></span>
       <div id="tf-step-2" class="tf-step flex items-center gap-2">
         <span class="tf-step-circle">2</span>
-        <span class="tf-step-label">Parent/Guardian Emergency</span>
-      </div>
-      <span class="tf-step-line"></span>
-      <div id="tf-step-3" class="tf-step flex items-center gap-2">
-        <span class="tf-step-circle">3</span>
-        <span class="tf-step-label">Legal Name</span>
-      </div>
-      <span class="tf-step-line"></span>
-      <div id="tf-step-4" class="tf-step flex items-center gap-2">
-        <span class="tf-step-circle">4</span>
-        <span class="tf-step-label">Terms and Conditions</span>
+        <span class="tf-step-label">Emergency Contact &amp; Consent</span>
       </div>
     </div>
   </div>
 
   <!-- Mobile progress bar: the step icons above are desktop-only, so phones need their own indicator -->
   <div class="md:hidden px-4 pb-3">
-    <p class="text-sm font-semibold text-[var(--ink)]" id="mobile-step-label">Step 1 of 4: Traveler Information</p>
+    <p class="text-sm font-semibold text-[var(--ink)]" id="mobile-step-label">Step 1 of 2: Traveler Information</p>
     <div class="mobile-progress-track mt-2">
       <div class="mobile-progress-fill" id="mobile-progress-fill" style="width:25%;"></div>
     </div>
@@ -123,7 +113,7 @@
 </header>
 
 <!-- ================= MAIN ================= -->
-<main class="max-w-3xl mx-auto px-4 lg:px-0 py-10 md:py-14">
+<main class="max-w-3xl mx-auto px-4 lg:px-0 py-4 md:py-8">
   <div class="bg-white border border-[var(--sand-line)] rounded-2xl shadow-sm p-6 md:p-10">
 
   <div id="page-1">
@@ -232,12 +222,12 @@
     </form>
   </div>
 
-  <!-- ================= PAGE 2: PARENT/GUARDIAN EMERGENCY ================= -->
+  <!-- ================= PAGE 2: EMERGENCY CONTACT & CONSENT (merged) ================= -->
   <div id="page-2" class="hidden">
     <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center">We are almost there!</h1>
-    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Add contacts responsible for travelers.</p>
+    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Add an emergency contact, confirm the traveler's name, and agree to the trip terms &mdash; all on this one page.</p>
 
-    <form id="contacts-form" class="mt-8" novalidate>
+    <form id="registration-form-2" class="mt-8" novalidate>
       <h2 class="font-display font-bold text-xl text-[var(--ink)]">Parent/Guardian/Emergency Contact Information</h2>
 
       <div id="contacts-container" class="mt-5 space-y-6"></div>
@@ -247,93 +237,55 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
       </button>
 
-      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
-        <button type="button" id="back-to-page-1" class="back-link flex items-center gap-2 font-semibold py-3">
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6">
+        <h2 class="font-display font-bold text-xl text-[var(--ink)]">Traveler's Legal Name</h2>
+        <p class="text-sm text-[var(--slate)] mt-1">Confirmed from the previous step &mdash; use Back above if this needs correcting.</p>
+        <div class="mt-4 bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+          <p class="font-display font-bold text-xl text-[var(--ink)]" id="confirm-name">&mdash;</p>
+          <p class="text-base font-semibold text-[var(--slate)]" id="confirm-dob">Birth Date: &mdash;</p>
+        </div>
+      </div>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6">
+        <h2 class="font-display font-bold text-xl text-[var(--ink)] text-center leading-tight">Guardian Consent and Trip Terms and Conditions</h2>
+        <p class="font-display font-bold text-base text-[var(--rust)] text-center mt-2">Landmark Educational Tours</p>
+        <p class="text-sm text-[var(--slate)] text-center mt-1">Trip Organizer Agreement / Terms and Conditions</p>
+
+        <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl mt-5 p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" class="flex-shrink-0"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            <p class="text-xs font-semibold text-[var(--gold)] uppercase tracking-wide">Sample text for layout preview only &mdash; not final legal content</p>
+          </div>
+          <h3 class="font-display font-bold text-lg text-[var(--ink)]">Section 1: Agreement Overview</h3>
+          <div class="terms-scroll mt-3 space-y-3 text-base text-[var(--slate)] leading-relaxed">
+            <p>This Consent Agreement ("Agreement") is entered into between the undersigned parent or legal guardian ("Guardian") and Landmark Educational Tours, LLC ("Landmark") in connection with the youth traveler's participation in the trip identified in this registration. By electronically signing below, the Guardian confirms they have the legal authority to consent on behalf of the traveler and agrees to be bound by the terms outlined in this document.</p>
+            <p>This Agreement covers, among other things, the traveler's participation in trip activities, financial responsibilities related to registration and payment, the refund and cancellation policy described below, and the collection and use of traveler information for trip coordination purposes as described during registration.</p>
+            <p>Additional sections of this Agreement (not shown in this preview) would typically cover topics such as: assumption of risk, medical treatment authorization, code of conduct, photo/media release, and dispute resolution. Please contact your Landmark Travel Consultant for the complete, current version of this Agreement.</p>
+          </div>
+        </div>
+
+        <p class="text-base leading-loose text-[var(--ink)] mt-6">
+          I <input id="guardian-name" type="text" required placeholder="Type your full name" class="field-input" style="width:210px; display:inline-block; vertical-align:middle; margin:0 .15rem;"> am providing consent for <strong id="consent-traveler-name">&mdash;</strong>, and agree electronically to the terms and conditions above.
+        </p>
+
+        <p class="text-base text-[var(--ink)] mt-6">Please enter today's date.</p>
+        <div class="tf-field mt-3 max-w-xs">
+          <input id="consent-date" type="date" required class="field-input">
+          <p class="field-hint"></p>
+        </div>
+
+        <label class="checkbox-row flex items-start gap-3 mt-4 cursor-pointer">
+          <input id="refund-acknowledge" type="checkbox" required class="big-checkbox">
+          <span class="text-base text-[var(--ink)] leading-relaxed">I acknowledge and accept the refund policy outlined in the customer agreement above. It is explicitly stated that all payments are deemed non-refundable, except in cases covered by an optional travel protection plan, applicable after completing trip registration or open enrollment. I am aware that, during the trip registration or open enrollment process, my trip deposit is fully refundable, and I retain the option to choose whether or not to purchase the optional travel protection at that time.</span>
+        </label>
+      </div>
+
+      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+        <button type="button" id="back-to-page-1" class="back-link flex items-center justify-center gap-2 font-semibold py-3 sm:justify-start order-2 sm:order-1">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Back
         </button>
-        <button type="submit" class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
-          Continue
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- ================= PAGE 3: LEGAL NAME ================= -->
-  <div id="page-3" class="hidden">
-    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center">Legal Name</h1>
-    <p class="mt-3 text-base text-[var(--slate)] text-center max-w-xl mx-auto leading-relaxed">Please confirm the traveler's legal name and birth date below before continuing.</p>
-
-    <div class="mt-8">
-      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Legal Name Confirmation</h2>
-
-      <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl mt-5 py-10 px-6 text-center">
-        <p class="text-base font-semibold text-[var(--ink)]" id="confirm-dob">Birth Date: &mdash;</p>
-        <p class="font-display font-bold text-2xl md:text-3xl text-[var(--ink)] mt-2" id="confirm-name">&mdash;</p>
-      </div>
-
-      <p class="text-base font-semibold text-[var(--rust)] text-center mt-4">This is the traveler's legal name on government documents.</p>
-
-      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
-        <button type="button" id="back-to-page-1-from-3" class="back-link flex items-center gap-2 font-semibold py-3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          No, I need to correct
-        </button>
-        <button type="button" id="confirm-legal-name" class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
-          Yes, continue
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= PAGE 4: TERMS AND CONDITIONS ================= -->
-  <div id="page-4" class="hidden">
-    <h1 class="font-display font-bold text-3xl md:text-4xl text-[var(--rust)] text-center leading-tight">Guardian Consent and Trip Terms and Conditions</h1>
-    <p class="font-display font-bold text-lg text-[var(--rust)] text-center mt-3">Landmark Educational Tours</p>
-    <p class="text-base text-[var(--slate)] text-center mt-1">Trip Organizer Agreement / Terms and Conditions</p>
-
-    <div class="bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl mt-6 p-6">
-      <div class="flex items-center gap-2 mb-3">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" class="flex-shrink-0"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-        <p class="text-xs font-semibold text-[var(--gold)] uppercase tracking-wide">Sample text for layout preview only &mdash; not final legal content</p>
-      </div>
-      <h2 class="font-display font-bold text-xl text-[var(--ink)]">Section 1: Agreement Overview</h2>
-      <div class="terms-scroll mt-3 space-y-3 text-base text-[var(--slate)] leading-relaxed">
-        <p>This Consent Agreement ("Agreement") is entered into between the undersigned parent or legal guardian ("Guardian") and Landmark Educational Tours, LLC ("Landmark") in connection with the youth traveler's participation in the trip identified in this registration. By electronically signing below, the Guardian confirms they have the legal authority to consent on behalf of the traveler and agrees to be bound by the terms outlined in this document.</p>
-        <p>This Agreement covers, among other things, the traveler's participation in trip activities, financial responsibilities related to registration and payment, the refund and cancellation policy described below, and the collection and use of traveler information for trip coordination purposes as described during registration.</p>
-        <p>Additional sections of this Agreement (not shown in this preview) would typically cover topics such as: assumption of risk, medical treatment authorization, code of conduct, photo/media release, and dispute resolution. Please contact your Landmark Travel Consultant for the complete, current version of this Agreement.</p>
-      </div>
-    </div>
-
-    <form id="consent-form" class="mt-8" novalidate>
-      <p class="text-base leading-loose text-[var(--ink)]">
-        I <input id="guardian-name" type="text" required class="field-input" style="width:210px; display:inline-block; vertical-align:middle; margin:0 .15rem;"> am providing consent for <strong id="consent-traveler-name">&mdash;</strong>, and agree electronically to the terms and conditions above.
-      </p>
-
-      <p class="text-base text-[var(--ink)] mt-6">Traveler's legal name</p>
-      <div class="mt-3 bg-[var(--paper)] border border-[var(--sand-line)] rounded-xl px-5 py-4">
-        <p class="font-display font-bold text-xl text-[var(--ink)]" id="consent-name-display">&mdash;</p>
-      </div>
-
-      <p class="text-base text-[var(--ink)] mt-6">Please enter today's date.</p>
-      <div class="tf-field mt-3 max-w-xs">
-        <input id="consent-date" type="date" required class="field-input">
-        <p class="field-hint"></p>
-      </div>
-
-      <label class="checkbox-row flex items-start gap-3 mt-4 cursor-pointer">
-        <input id="refund-acknowledge" type="checkbox" required class="big-checkbox">
-        <span class="text-base text-[var(--ink)] leading-relaxed">I acknowledge and accept the refund policy outlined in the customer agreement above. It is explicitly stated that all payments are deemed non-refundable, except in cases covered by an optional travel protection plan, applicable after completing trip registration or open enrollment. I am aware that, during the trip registration or open enrollment process, my trip deposit is fully refundable, and I retain the option to choose whether or not to purchase the optional travel protection at that time.</span>
-      </label>
-
-      <div class="border-t border-[var(--sand-line)] mt-8 pt-6 flex items-center justify-between">
-        <button type="button" id="back-to-page-3" class="back-link flex items-center gap-2 font-semibold py-3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          No, I need to correct
-        </button>
-        <button type="submit" id="agree-consent" disabled class="btn-rust rounded-full pl-7 pr-6 py-4 text-base font-semibold inline-flex items-center gap-2">
+        <button type="submit" id="agree-consent" disabled class="btn-rust rounded-2xl sm:rounded-full w-full sm:w-auto px-6 py-4 text-base font-semibold inline-flex items-center justify-center gap-2 order-1 sm:order-2">
           I agree the above Customer Agreement
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
@@ -341,8 +293,8 @@
     </form>
   </div>
 
-  <!-- ================= PAGE 5: THANK YOU ================= -->
-  <div id="page-5" class="hidden text-center py-6">
+  <!-- ================= PAGE 3: THANK YOU ================= -->
+  <div id="page-3" class="hidden text-center py-6">
     <img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-16 w-auto mx-auto">
 
     <div class="mx-auto mt-8 flex items-center justify-center rounded-full" style="width:64px; height:64px; background:var(--rust);">
@@ -458,43 +410,32 @@
     goToPage(2);
   });
 
-  // ---- Page navigation (Traveler Information -> Parent/Guardian Emergency -> Legal Name -> Terms -> Thank You) ----
+  // ---- Page navigation (Traveler Information -> Emergency Contact & Consent -> Thank You) ----
   const page1 = document.getElementById('page-1');
   const page2 = document.getElementById('page-2');
   const page3 = document.getElementById('page-3');
-  const page4 = document.getElementById('page-4');
-  const page5 = document.getElementById('page-5');
   const siteHeader = document.querySelector('header');
   const tfStep1 = document.getElementById('tf-step-1');
   const tfStep2 = document.getElementById('tf-step-2');
-  const tfStep3 = document.getElementById('tf-step-3');
-  const tfStep4 = document.getElementById('tf-step-4');
 
   function goToPage(page){
     page1.classList.toggle('hidden', page !== 1);
     page2.classList.toggle('hidden', page !== 2);
     page3.classList.toggle('hidden', page !== 3);
-    page4.classList.toggle('hidden', page !== 4);
-    page5.classList.toggle('hidden', page !== 5);
-    siteHeader.classList.toggle('hidden', page === 5);
+    siteHeader.classList.toggle('hidden', page === 3);
     tfStep1.classList.toggle('is-active', page === 1);
     tfStep1.classList.toggle('is-done', page > 1);
     tfStep2.classList.toggle('is-active', page === 2);
     tfStep2.classList.toggle('is-done', page > 2);
-    tfStep3.classList.toggle('is-active', page === 3);
-    tfStep3.classList.toggle('is-done', page > 3);
-    tfStep4.classList.toggle('is-active', page === 4);
-    tfStep4.classList.toggle('is-done', page > 4);
 
-    const stepLabels = ['Traveler Information', 'Parent/Guardian Emergency', 'Legal Name', 'Terms and Conditions'];
-    if (page <= 4) {
-      document.getElementById('mobile-step-label').textContent = 'Step ' + page + ' of 4: ' + stepLabels[page - 1];
-      document.getElementById('mobile-progress-fill').style.width = (page / 4 * 100) + '%';
+    const stepLabels = ['Traveler Information', 'Emergency Contact & Consent'];
+    if (page <= 2) {
+      document.getElementById('mobile-step-label').textContent = 'Step ' + page + ' of 2: ' + stepLabels[page - 1];
+      document.getElementById('mobile-progress-fill').style.width = (page / 2 * 100) + '%';
     }
 
-    if (page === 3) populateLegalName();
-    if (page === 4) populateConsent();
-    if (page === 5) showSaveToast();
+    if (page === 2) populatePage2();
+    if (page === 3) showSaveToast();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -505,20 +446,26 @@
   }
 
   document.getElementById('back-to-page-1').addEventListener('click', () => goToPage(1));
-  document.getElementById('back-to-page-1-from-3').addEventListener('click', () => goToPage(1));
-  document.getElementById('back-to-page-3').addEventListener('click', () => goToPage(3));
-  document.getElementById('confirm-legal-name').addEventListener('click', () => goToPage(4));
 
-  // ---- Terms & Conditions consent: pulled from earlier steps ----
-  function populateConsent(){
-    const guardianFirst = contactsContainer.querySelector('.contact-first').value.trim();
-    const guardianLast = contactsContainer.querySelector('.contact-last').value.trim();
-    const guardianName = [guardianFirst, guardianLast].filter(Boolean).join(' ');
-    document.getElementById('guardian-name').value = guardianName;
+  // ---- Page 2 setup: traveler name/DOB, guardian name prefill, today's date ----
+  function formatDOB(iso){
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-');
+    return `${m}/${d}/${y}`;
+  }
 
-    const travelerFullName = document.getElementById('confirm-name').textContent;
-    document.getElementById('consent-traveler-name').textContent = travelerFullName;
-    document.getElementById('consent-name-display').textContent = travelerFullName;
+  function populatePage2(){
+    const first = document.getElementById('youth-first').value.trim();
+    const middle = document.getElementById('youth-middle').value.trim();
+    const last = document.getElementById('youth-last').value.trim();
+    const dob = document.getElementById('dob').value;
+    const fullName = [first, middle, last].filter(Boolean).join(' ') || '—';
+
+    document.getElementById('confirm-name').textContent = fullName;
+    document.getElementById('confirm-dob').textContent = 'Birth Date: ' + (formatDOB(dob) || '—');
+    document.getElementById('consent-traveler-name').textContent = fullName;
+
+    // guardian-name is left blank on purpose — typing it is the e-signature action.
 
     const dateField = document.getElementById('consent-date');
     if (!dateField.value) {
@@ -534,7 +481,7 @@
     document.getElementById('agree-consent').disabled = !this.checked;
   });
 
-  document.querySelectorAll('#consent-form .field-input').forEach(field => {
+  document.querySelectorAll('#registration-form-2 .field-input').forEach(field => {
     const hasHintWrapper = !!field.closest('.tf-field');
     field.addEventListener('blur', () => {
       if (!field.required) return;
@@ -552,41 +499,18 @@
     });
   });
 
-  document.getElementById('consent-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    let firstInvalid = null;
-    document.querySelectorAll('#consent-form .field-input').forEach(field => {
-      if (!field.required) return;
-      const valid = field.value.trim() !== '';
-      if (field.closest('.tf-field')) setHint(field, valid);
-      field.classList.toggle('border-[var(--rust)]', !valid);
-      if (!valid && !firstInvalid) firstInvalid = field;
-    });
-    if (firstInvalid) { firstInvalid.focus(); return; }
-    goToPage(5);
-  });
-
-  // ---- Legal Name confirmation: pulled from Step 1's traveler fields ----
-  function formatDOB(iso){
-    if (!iso) return '';
-    const [y, m, d] = iso.split('-');
-    return `${m}/${d}/${y}`;
-  }
-
-  function populateLegalName(){
-    const first = document.getElementById('youth-first').value.trim();
-    const middle = document.getElementById('youth-middle').value.trim();
-    const last = document.getElementById('youth-last').value.trim();
-    const dob = document.getElementById('dob').value;
-
-    const fullName = [first, middle, last].filter(Boolean).join(' ');
-    document.getElementById('confirm-name').textContent = fullName || '—';
-    document.getElementById('confirm-dob').textContent = 'Birth Date: ' + (formatDOB(dob) || '—');
-  }
-
   // ---- Contact blocks (Parent/Guardian/Emergency contacts) ----
   const contactsContainer = document.getElementById('contacts-container');
   const contactTemplate = document.getElementById('contact-template');
+
+  // Carried over from jointrip.html's account-creation step, if present, so the
+  // parent doesn't have to retype the name/email they already gave us there.
+  function readGuardianInfo(){
+    try {
+      const raw = sessionStorage.getItem('landmark-guardian-info');
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) { return null; }
+  }
 
   function addContact(){
     const clone = contactTemplate.content.cloneNode(true);
@@ -606,7 +530,23 @@
       updateRemoveButtons();
     });
 
+    const isFirstContact = contactsContainer.children.length === 0;
     contactsContainer.appendChild(clone);
+
+    if (isFirstContact) {
+      const guardian = readGuardianInfo();
+      if (guardian) {
+        const first = contactsContainer.querySelector('.contact-first');
+        const last = contactsContainer.querySelector('.contact-last');
+        const email = contactsContainer.querySelector('.contact-email');
+        const relationship = contactsContainer.querySelector('.contact-relationship');
+        if (guardian.firstName) first.value = guardian.firstName;
+        if (guardian.lastName) last.value = guardian.lastName;
+        if (guardian.email) email.value = guardian.email;
+        if (guardian.relationship) relationship.value = guardian.relationship;
+      }
+    }
+
     updateRemoveButtons();
   }
 
@@ -620,14 +560,15 @@
   document.getElementById('add-contact').addEventListener('click', addContact);
   addContact(); // start with one contact block
 
-  // ---- Contacts form submit ----
-  document.getElementById('contacts-form').addEventListener('submit', (e) => {
+  // ---- Page 2 submit: validate contacts + consent fields together, then finish ----
+  document.getElementById('registration-form-2').addEventListener('submit', (e) => {
     e.preventDefault();
     let firstInvalid = null;
-    contactsContainer.querySelectorAll('.field-input').forEach(field => {
+    document.querySelectorAll('#registration-form-2 .field-input').forEach(field => {
       if (!field.required) return;
       const valid = field.value.trim() !== '';
-      setHint(field, valid);
+      if (field.closest('.tf-field')) setHint(field, valid);
+      field.classList.toggle('border-[var(--rust)]', !valid);
       if (!valid && !firstInvalid) firstInvalid = field;
     });
     if (firstInvalid) { firstInvalid.focus(); return; }

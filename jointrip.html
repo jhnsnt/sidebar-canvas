@@ -77,7 +77,7 @@
 </header>
 
 <!-- ================= MAIN ================= -->
-<main class="max-w-5xl mx-auto px-4 lg:px-0 py-10 md:py-14">
+<main class="max-w-5xl mx-auto px-4 lg:px-0 py-4 md:py-8">
   <div class="grid lg:grid-cols-[1fr_1.35fr] gap-6 lg:gap-8 items-start">
 
     <!-- LEFT: Trip summary -->
@@ -147,88 +147,16 @@
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
           </button>
-          <p class="text-sm font-semibold text-[var(--ink)] ml-auto" id="step-indicator">Step 1 of 3</p>
+          <p class="text-sm font-semibold text-[var(--ink)] ml-auto" id="step-indicator">Step 1 of 2</p>
         </div>
         <div class="mobile-progress-track mt-3">
-          <div class="mobile-progress-fill" id="mobile-progress-fill" style="width:33%;"></div>
+          <div class="mobile-progress-fill" id="mobile-progress-fill" style="width:50%;"></div>
         </div>
 
       <div id="step-1" class="mt-3">
         <p class="section-eyebrow">Registration</p>
-        <h1 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Join this trip</h1>
-        <p class="mt-2 text-base text-[var(--slate)]">Let us know if you already have a Landmark account, and we'll take you to the right next step.</p>
-
-        <!-- Step 1: account status -->
-        <div class="grid sm:grid-cols-2 gap-3 mt-6" id="account-toggle">
-          <button type="button" data-choice="new" class="choice-card is-selected bg-white border border-[var(--sand-line)] rounded-xl p-4">
-            <div class="flex items-center justify-between">
-              <p class="font-display font-semibold text-base text-[var(--ink)]">I'm new here</p>
-              <span class="choice-radio"></span>
-            </div>
-            <p class="text-sm text-[var(--slate)] mt-1">I don't have a Landmark account yet</p>
-          </button>
-          <button type="button" data-choice="existing" class="choice-card bg-white border border-[var(--sand-line)] rounded-xl p-4">
-            <div class="flex items-center justify-between">
-              <p class="font-display font-semibold text-base text-[var(--ink)]">I have an account</p>
-              <span class="choice-radio"></span>
-            </div>
-            <p class="text-sm text-[var(--slate)] mt-1">I've booked with Landmark before</p>
-          </button>
-        </div>
-
-        <!-- Panel: new user -->
-        <div id="panel-new" class="mt-5">
-          <div class="option-card bg-[rgba(192,57,43,0.06)] border border-[var(--sand-line)] rounded-xl p-5 flex items-start gap-4">
-            <span class="icon-badge !w-11 !h-11 !bg-white">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-            </span>
-            <div class="flex-1 min-w-0">
-              <p class="font-display font-semibold text-[var(--ink)]">Create your account</p>
-              <p class="text-sm text-[var(--slate)] mt-1">Set up your login and complete registration for this trip &mdash; takes about 2 minutes.</p>
-              <button type="button" id="btn-create-account" class="btn-rust rounded-full pl-6 pr-5 py-3.5 text-base font-semibold mt-4 inline-flex items-center gap-2">
-                Create account &amp; register
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Panel: existing user -->
-        <div id="panel-existing" class="mt-5 space-y-3 hidden">
-          <div class="option-card bg-white border border-[var(--sand-line)] rounded-xl p-5 flex items-start gap-4">
-            <span class="icon-badge !w-11 !h-11">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </span>
-            <div class="flex-1 min-w-0">
-              <p class="font-display font-semibold text-[var(--ink)]">Join this trip</p>
-              <p class="text-sm text-[var(--slate)] mt-1">Log in and add this trip to your existing Landmark account.</p>
-              <button type="button" id="btn-join-account" class="btn-rust rounded-full pl-6 pr-5 py-3.5 text-base font-semibold mt-4 inline-flex items-center gap-2">
-                Join with my account
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="option-card bg-white border border-[var(--sand-line)] rounded-xl p-5 flex items-start gap-4">
-            <span class="icon-badge !w-11 !h-11">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
-            </span>
-            <div class="flex-1 min-w-0">
-              <p class="font-display font-semibold text-[var(--ink)]">Already joined? Go to your dashboard</p>
-              <p class="text-sm text-[var(--slate)] mt-1">Log in to manage your booking, payments, and trip details.</p>
-              <button type="button" class="btn-outline rounded-full pl-6 pr-5 py-3.5 text-base font-semibold mt-4 inline-flex items-center gap-2">
-                Log in
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 2: traveler type -->
-      <div id="step-2" class="mt-3 hidden">
-        <p class="section-eyebrow">Registration</p>
         <h1 class="font-display font-bold text-3xl text-[var(--ink)] mt-1">Who are you registering?</h1>
-        <p class="mt-2 text-base text-[var(--slate)]">Choose the type of traveler for this registration. You'll be able to add more travelers from your dashboard later.</p>
+        <p class="mt-2 text-base text-[var(--slate)]">Choose the type of traveler, then create your account to get started &mdash; takes about 2 minutes.</p>
 
         <div class="grid sm:grid-cols-2 gap-3 mt-6" id="traveler-toggle">
           <button type="button" data-choice="youth" class="choice-card bg-white border border-[var(--sand-line)] rounded-xl p-5 flex flex-col items-center text-center gap-2.5">
@@ -254,8 +182,7 @@
           <span>This sets up your initial traveler account. Once you're in your dashboard, you can add another traveler to this trip anytime.</span>
         </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-3 mt-6">
-          <a href="#" class="text-base font-semibold text-[var(--rust)] underline">Have an account from a previous trip? Join with it instead</a>
+        <div class="flex justify-end mt-6">
           <button type="button" id="btn-continue" disabled class="btn-rust rounded-full pl-6 pr-5 py-3.5 text-base font-semibold inline-flex items-center gap-2">
             Continue
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -263,10 +190,15 @@
         </div>
 
         <p class="text-sm text-[var(--slate)] mt-5">Deposits due at registration: $50 for land-only trips &middot; $150 for trips that include flights.</p>
+
+        <div class="border-t border-[var(--sand-line)] mt-6 pt-5 flex flex-wrap gap-x-6 gap-y-2">
+          <a href="#" id="btn-join-account" class="text-sm font-semibold text-[var(--rust)] underline">Already have an account? Join with it instead</a>
+          <a href="#" class="text-sm font-semibold text-[var(--rust)] underline">Already joined this trip? Go to your dashboard</a>
+        </div>
       </div>
 
-      <!-- Step 3: account details -->
-      <div id="step-3" class="mt-3 hidden">
+      <!-- Step 2: account details -->
+      <div id="step-2" class="mt-3 hidden">
         <p class="section-eyebrow">Registration</p>
         <h1 class="font-display font-bold text-3xl text-[var(--ink)] mt-1" id="step3-heading">Youth Traveler Registration</h1>
         <p class="mt-2 text-base text-[var(--slate)]" id="step3-subtext">Create your parent/guardian account for your youth traveler.</p>
@@ -338,47 +270,29 @@
 </footer>
 
 <script>
-  const toggleButtons = document.querySelectorAll('#account-toggle .choice-card');
-  const panelNew = document.getElementById('panel-new');
-  const panelExisting = document.getElementById('panel-existing');
-
-  toggleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      toggleButtons.forEach(b => b.classList.remove('is-selected'));
-      btn.classList.add('is-selected');
-      const isNew = btn.dataset.choice === 'new';
-      panelNew.classList.toggle('hidden', !isNew);
-      panelExisting.classList.toggle('hidden', isNew);
-    });
-  });
-
   // ---- Step navigation ----
-  const steps = { 1: document.getElementById('step-1'), 2: document.getElementById('step-2'), 3: document.getElementById('step-3') };
+  const steps = { 1: document.getElementById('step-1'), 2: document.getElementById('step-2') };
   const backLink = document.getElementById('back-link');
   const stepIndicator = document.getElementById('step-indicator');
   let currentStep = 1;
-  let prevStep = 1;
 
   function goToStep(step){
-    prevStep = currentStep;
     currentStep = step;
     Object.keys(steps).forEach(s => steps[s].classList.toggle('hidden', Number(s) !== step));
     backLink.classList.toggle('hidden', step === 1);
     backLink.classList.toggle('flex', step !== 1);
-    stepIndicator.textContent = 'Step ' + step + ' of 3';
-    document.getElementById('mobile-progress-fill').style.width = (step / 3 * 100) + '%';
+    stepIndicator.textContent = 'Step ' + step + ' of 2';
+    document.getElementById('mobile-progress-fill').style.width = (step / 2 * 100) + '%';
   }
 
-  document.getElementById('btn-create-account').addEventListener('click', () => goToStep(2));
-  document.getElementById('btn-join-account').addEventListener('click', () => goToStep(2));
-  backLink.addEventListener('click', () => goToStep(currentStep === 3 ? 2 : 1));
+  backLink.addEventListener('click', () => goToStep(1));
 
   // ---- Traveler type selection ----
   const travelerButtons = document.querySelectorAll('#traveler-toggle .choice-card');
   const continueBtn = document.getElementById('btn-continue');
   let travelerType = null;
 
-  const step3Copy = {
+  const step2Copy = {
     youth: {
       heading: 'Youth Traveler Registration',
       subtext: 'Create your parent/guardian account for your youth traveler.',
@@ -406,13 +320,13 @@
 
   continueBtn.addEventListener('click', () => {
     if (!travelerType) return;
-    const copy = step3Copy[travelerType];
+    const copy = step2Copy[travelerType];
     document.getElementById('step3-heading').textContent = copy.heading;
     document.getElementById('step3-subtext').textContent = copy.subtext;
     document.getElementById('label-first-name').textContent = copy.firstName;
     document.getElementById('label-last-name').textContent = copy.lastName;
     document.getElementById('label-email').textContent = copy.email;
-    goToStep(3);
+    goToStep(2);
   });
 
   // ---- Password visibility toggles ----
@@ -434,6 +348,18 @@
       return;
     }
     confirm.setCustomValidity('');
+
+    // Carry the account holder's info forward so passenger-info.html can reuse it
+    // as the default emergency contact instead of asking the parent to retype it.
+    try {
+      sessionStorage.setItem('landmark-guardian-info', JSON.stringify({
+        firstName: document.getElementById('first-name').value.trim(),
+        lastName: document.getElementById('last-name').value.trim(),
+        email: document.getElementById('reg-email').value.trim(),
+        relationship: travelerType === 'chaperone' ? 'Self' : ''
+      }));
+    } catch (err) { /* sessionStorage unavailable — passenger-info.html falls back to blank fields */ }
+
     window.location.href = 'passenger-info.html';
   });
   document.getElementById('reg-password-confirm').addEventListener('input', function(){ this.setCustomValidity(''); });
