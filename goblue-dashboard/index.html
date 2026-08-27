@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — Dashboard</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-mono{ font-family:'Space Mono',monospace; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .num{ font-family:'Space Mono',monospace; font-variant-numeric:tabular-nums; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+
+  .section-eyebrow{ color:var(--primary); font-weight:600; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; font-family:'Space Mono',monospace; }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+  @media (min-width:640px){ .search-input:focus{ min-width:220px; } }
+
+  /* ---- Sidebar ---- */
+  .sidebar{ background:var(--sidebar); width:236px; transition:width .2s ease; }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  /* ---- Mobile: sidebar becomes an off-canvas drawer instead of squeezing the page ---- */
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-size:.875rem; font-weight:500; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-size:.82rem; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  /* ---- KPI ledger strip: one continuous board, not scattered blob-decorated cards ---- */
+  .ledger{
+    background:#fff; border:1px solid var(--line); border-radius:.6rem;
+    display:grid; grid-template-columns:repeat(4, 1fr);
+  }
+  .ledger-cell{ position:relative; padding:1.1rem 1.35rem; border-left:1px solid var(--line-soft); }
+  .ledger-cell:first-child{ border-left:0; }
+  .ledger-tab{ position:absolute; top:0; left:0; width:3px; height:100%; }
+  .ledger-figure{ font-size:1.5rem; font-weight:700; line-height:1.15; }
+  .ledger-sub{ font-size:.68rem; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); margin-top:.3rem; font-weight:600; }
+  .ledger-detail{ font-size:.78rem; color:var(--ink); margin-top:.6rem; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
+  .ledger-detail:first-of-type{ border-top:0; padding-top:0; margin-top:.5rem; }
+  @media (max-width:1023px){ .ledger{ grid-template-columns:repeat(2, 1fr); } .ledger-cell:nth-child(3){ border-left:0; } .ledger-cell:nth-child(n+3){ border-top:1px solid var(--line-soft); } }
+  @media (max-width:639px){ .ledger{ grid-template-columns:1fr; } .ledger-cell{ border-left:0 !important; } .ledger-cell:not(:first-child){ border-top:1px solid var(--line-soft); } }
+
+  /* ---- Data tables ---- */
+  .data-table{ width:100%; font-size:.85rem; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:.66rem; text-transform:uppercase; letter-spacing:.09em; color:var(--slate);
+    font-weight:500; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Space Mono',monospace;
+  }
+  .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .empty-row td{ text-align:center; color:var(--slate); padding:2rem .75rem; }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .page-btn{
+    width:30px; height:30px; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+    font-size:.8rem; font-weight:600; color:var(--slate); border:1px solid var(--line); background:#fff;
+    transition:background .15s ease, color .15s ease;
+  }
+  .page-btn:hover{ background:var(--sand); color:var(--primary); }
+  .page-btn.is-active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR ================= -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+  <aside id="sidebar" class="sidebar flex-shrink-0 flex flex-col py-5">
+    <div class="flex items-center justify-between pl-5 pr-4 pb-5 mb-2 border-b border-white/10">
+      <div class="sidebar-brand-text leading-none">
+        <img src="https://gobluetours.com/_next/image/?url=%2Flogo.webp&w=390&q=75" alt="Go Blue Tours" class="h-9 w-auto rounded">
+      </div>
+      <button id="sidebar-toggle" class="sidebar-toggle text-white/50 hover:text-white transition">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+    </div>
+
+    <nav class="flex-1 space-y-0.5">
+      <div class="nav-item is-active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span class="sidebar-label">Dashboard</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11a9 9 0 0 1 18 0v5a3 3 0 0 1-3 3h-1v-7h4"/><path d="M3 16v-5h4v7H6a3 3 0 0 1-3-3z"/></svg>
+        <span class="sidebar-label">Helpdesk</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="sidebar-label">Task</span>
+      </div>
+      <div class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="sidebar-label">Conversations</span>
+      </div>
+
+      <div id="nav-operations" class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
+        <span class="sidebar-label">Operations</span>
+        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="sub-nav" data-submenu-for="nav-operations">
+        <a href="#">Itineraries</a>
+        <a href="#">Vendors</a>
+        <a href="#">Rooming Lists</a>
+      </div>
+
+      <div id="nav-reports" class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
+        <span class="sidebar-label">Reports</span>
+        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="sub-nav" data-submenu-for="nav-reports">
+        <a href="#">Revenue</a>
+        <a href="#">Sales by Rep</a>
+        <a href="#">Enrollment</a>
+      </div>
+
+      <div id="nav-settings" class="nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="sidebar-label">Settings</span>
+        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="sub-nav" data-submenu-for="nav-settings">
+        <a href="#">Users &amp; Roles</a>
+        <a href="#">Integrations</a>
+        <a href="#">Billing</a>
+      </div>
+    </nav>
+
+    <div class="px-5 pt-4 mt-2 border-t border-white/10 sidebar-label">
+      <p class="text-[11px] text-white/30">GoBlue Tours CRM v3.2</p>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- Top accent bar -->
+    <div class="h-[3px]" style="background:var(--primary);"></div>
+
+    <!-- ================= TOP BAR ================= -->
+    <header class="bg-white border-b border-[var(--line)] sticky top-0 z-30">
+      <div class="px-4 sm:px-6 py-3 sm:py-0 sm:h-[68px] flex flex-col sm:flex-row sm:items-center gap-3">
+        <div class="flex items-center gap-3 min-w-0 content-between">
+          <button id="mobile-menu-btn" class="mobile-menu-btn top-icon-btn flex-shrink-0" title="Menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
+          <div class="flex items-center gap-2 overflow-x-auto min-w-0 sm:flex-1">
+            <button class="top-icon-btn flex-shrink-0" title="Home">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+            </button>
+            <button class="top-icon-btn flex-shrink-0" title="Messages">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </button>
+            <button class="top-icon-btn flex-shrink-0" title="New">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            </button>
+            <button class="top-icon-btn flex-shrink-0" title="Documents">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            </button>
+            <button class="top-icon-btn flex-shrink-0" title="Send">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+            </button>
+            <button class="top-icon-btn is-alert flex-shrink-0" title="Alerts">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+            </button>
+            <button class="top-icon-btn flex-shrink-0" title="Log out">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><path d="M12 2v10"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative w-full sm:w-auto sm:ml-auto flex-shrink-0">
+          <input type="text" class="search-input w-full sm:w-[180px]" placeholder="Global search…">
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="px-6 py-6 max-w-[1400px]">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="section-eyebrow">Overview</p>
+          <h1 class="font-bold text-2xl text-[var(--ink)] mt-0.5">Dashboard</h1>
+        </div>
+      </div>
+
+      <!-- ---- KPI ledger strip ---- -->
+      <div class="ledger">
+
+        <div class="ledger-cell">
+          <div class="ledger-tab" style="background:var(--brick);"></div>
+          <p class="ledger-figure num text-[var(--brick)]">149</p>
+          <p class="ledger-sub">Pax Past Due</p>
+          <div class="ledger-detail flex items-baseline justify-between">
+            <span class="text-[var(--slate)]">Total past due</span>
+            <span class="num font-semibold">$17,755</span>
+          </div>
+          <div class="ledger-detail flex items-baseline justify-between">
+            <span class="text-[var(--slate)]">Revenue at risk</span>
+            <span class="num font-semibold">$120,194</span>
+          </div>
+        </div>
+
+        <div class="ledger-cell">
+          <div class="ledger-tab" style="background:var(--forest);"></div>
+          <p class="ledger-figure num text-[var(--forest)]">05</p>
+          <p class="ledger-sub">Open Proposals</p>
+          <div class="ledger-detail flex items-baseline justify-between">
+            <span class="text-[var(--slate)]">Quoted revenue</span>
+            <span class="num font-semibold">$32,875</span>
+          </div>
+        </div>
+
+        <div class="ledger-cell">
+          <div class="ledger-tab" style="background:var(--primary);"></div>
+          <p class="ledger-figure num text-[var(--primary)]">17</p>
+          <p class="ledger-sub">Bookings</p>
+          <div class="ledger-detail flex items-baseline justify-between">
+            <span class="text-[var(--slate)]">Total revenue</span>
+            <span class="num font-semibold">$302,799</span>
+          </div>
+        </div>
+
+        <div class="ledger-cell">
+          <div class="ledger-tab" style="background:var(--amber);"></div>
+          <p class="ledger-sub">Month Goal</p>
+          <p class="mt-1"><span class="num font-bold text-lg text-[var(--ink)]">$54,619</span> <span class="num text-[var(--slate)] text-sm">/ $425,000</span></p>
+          <div class="mt-1.5 h-1.5 rounded-full" style="background:var(--line-soft);">
+            <div class="h-full rounded-full" style="width:12%; background:var(--amber);"></div>
+          </div>
+          <div class="ledger-detail">
+            <p class="ledger-sub" style="margin-top:0;">Year Goal</p>
+            <p class="mt-1"><span class="num font-bold text-lg text-[var(--ink)]">$302,799</span> <span class="num text-[var(--slate)] text-sm">/ $0</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- Alerts / Proposals / Bookings ---- -->
+      <div class="grid lg:grid-cols-2 gap-5 mt-6">
+
+        <div class="space-y-5 min-w-0">
+          <div class="panel p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-semibold text-base text-[var(--ink)]">Alerts</h2>
+              <input type="text" class="search-input" placeholder="Search…">
+            </div>
+            <div class="overflow-x-auto w-full">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Sales Person</th><th>Date</th><th>Message</th><th class="text-right">Delete</th></tr>
+                </thead>
+                <tbody>
+                  <tr class="empty-row"><td colspan="4">No alerts right now — you're all caught up.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-semibold text-base text-[var(--ink)]">Proposals</h2>
+              <input type="text" class="search-input" placeholder="Search…">
+            </div>
+            <div class="overflow-x-auto w-full">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Elena Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">4NGY2LZK2M</td><td class="num">2</td><td class="text-right num font-semibold">$2,418.00</td></tr>
+                  <tr><td>Pedro Salvador</td><td>Meghan Jenkins</td><td class="font-mono text-xs">KR9RSHYOIC</td><td class="num">7</td><td class="text-right num font-semibold">$5,893.00</td></tr>
+                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">YSCYCCP2IF</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XQ82EERG5C</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">V0XSJVPBID</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-semibold text-base text-[var(--ink)]">Bookings</h2>
+            <input type="text" class="search-input" placeholder="Search…">
+          </div>
+          <div class="overflow-x-auto w-full">
+            <table class="data-table">
+              <thead>
+                <tr><th>Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Thomas Byrne</td><td>Meghan Jenkins</td><td class="font-mono text-xs">F5C756X7YF</td><td class="num">4</td><td class="text-right num font-semibold">$4,448.00</td></tr>
+                <tr><td>Gina Mignosa</td><td>Meghan Jenkins</td><td class="font-mono text-xs">C5PNKM7T6K</td><td class="num">4</td><td class="text-right num font-semibold">$2,796.00</td></tr>
+                <tr><td>Jackson Scott</td><td>Meghan Jenkins</td><td class="font-mono text-xs">JKCQSRTFQK</td><td class="num">15</td><td class="text-right num font-semibold">$14,500.00</td></tr>
+                <tr><td>Mason Stephenson</td><td>Justin Rodriguez</td><td class="font-mono text-xs">KVDEOYUXYI</td><td class="num">31</td><td class="text-right num font-semibold">$24,965.00</td></tr>
+                <tr><td>Olivia Hernandez</td><td>Meghan Jenkins</td><td class="font-mono text-xs">9CFJHDIJFZ</td><td class="num">52</td><td class="text-right num font-semibold">$41,781.00</td></tr>
+                <tr><td>Achilles Heavin</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XA6QBB4ZZB</td><td class="num">16</td><td class="text-right num font-semibold">$11,984.00</td></tr>
+                <tr><td>Lily Reynoso</td><td>Spiffy Darko</td><td class="font-mono text-xs">EWHUER9NZE</td><td class="num">28</td><td class="text-right num font-semibold">$22,372.00</td></tr>
+                <tr><td>Taylor Fisher</td><td>Meghan Jenkins</td><td class="font-mono text-xs">QVDATI0KMV</td><td class="num">12</td><td class="text-right num font-semibold">$9,166.00</td></tr>
+                <tr><td>Madison Silva</td><td>Meghan Jenkins</td><td class="font-mono text-xs">90N4KG6IAW</td><td class="num">81</td><td class="text-right num font-semibold">$59,176.00</td></tr>
+                <tr><td>Madeline Heil</td><td>Meghan Jenkins</td><td class="font-mono text-xs">TJ3KQHETQ6</td><td class="num">8</td><td class="text-right num font-semibold">$7,765.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex items-center justify-center gap-2 mt-5">
+            <button class="page-btn is-active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+            <button class="page-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 17 5-5-5-5M13 17l5-5-5-5"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- Overdue Travelers ---- -->
+      <div class="panel p-5 mt-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold text-base text-[var(--ink)]">Overdue Travelers</h2>
+          <input type="text" class="search-input" placeholder="Search…">
+        </div>
+        <div class="overflow-x-auto w-full">
+          <table class="data-table">
+            <thead>
+              <tr><th>Traveler</th><th>Organizer</th><th>Rep</th><th>Days Overdue</th><th class="text-right">Amount Due</th></tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="5">Overdue traveler details weren't visible in the reference screenshot — connect real data to populate this table.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+
+  function openMobileSidebar(){
+    sidebar.classList.add('is-mobile-open');
+    backdrop.classList.add('is-visible');
+  }
+  function closeMobileSidebar(){
+    sidebar.classList.remove('is-mobile-open');
+    backdrop.classList.remove('is-visible');
+  }
+
+  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileSidebar);
+  backdrop.addEventListener('click', closeMobileSidebar);
+
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    if (window.innerWidth < 1024) { closeMobileSidebar(); return; }
+    sidebar.classList.toggle('is-collapsed');
+  });
+
+  document.querySelectorAll('[data-submenu-for]').forEach(submenu => {
+    const trigger = document.getElementById(submenu.dataset.submenuFor);
+    trigger.addEventListener('click', () => {
+      trigger.classList.toggle('is-open');
+      submenu.classList.toggle('is-open');
+    });
+  });
+</script>
+
+</body>
+</html>
