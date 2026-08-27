@@ -46,7 +46,10 @@
   @media (min-width:640px){ .search-input:focus{ min-width:220px; } }
 
   /* ---- Sidebar ---- */
-  .sidebar{ background:var(--sidebar); width:236px; transition:width .2s ease; }
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
   .sidebar.is-collapsed{ width:76px; }
   .sidebar.is-collapsed .sidebar-label,
   .sidebar.is-collapsed .sidebar-chevron,
