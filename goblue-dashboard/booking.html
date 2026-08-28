@@ -217,6 +217,20 @@
   .action-menu-item.is-danger svg{ color:var(--brick); }
   .action-menu-item.is-danger:hover{ background:var(--brick-tint); }
   .action-menu-empty{ display:none; padding:1.5rem .75rem; text-align:center; color:var(--slate); font-size:.82rem; }
+  .action-menu-item.is-danger-separated{ margin-top:.5rem; padding-top:.75rem; border-top:1px solid var(--line-soft); }
+
+  /* ---- Actions menu: expandable parent groups (Mass Changes, Payments, etc.) ---- */
+  .action-menu-parent{
+    display:flex; align-items:center; gap:.65rem; width:100%; text-align:left; padding:.55rem .6rem; border-radius:.5rem;
+    font-size:.83rem; font-weight:600; color:var(--ink); transition:background .12s ease; cursor:pointer;
+  }
+  .action-menu-parent:hover, .action-menu-parent:focus-visible{ background:var(--sand); outline:none; }
+  .action-menu-parent svg:first-child{ flex-shrink:0; color:var(--slate); }
+  .action-menu-parent-chevron{ margin-left:auto; color:var(--slate); transition:transform .15s ease; flex-shrink:0; }
+  .action-menu-parent.is-open .action-menu-parent-chevron{ transform:rotate(180deg); }
+  .action-menu-subitems{ display:none; padding-left:1.6rem; border-left:1px solid var(--line-soft); margin:.15rem 0 .15rem .95rem; }
+  .action-menu-subitems.is-open{ display:block; }
+  .action-menu-subitems .action-menu-item{ font-weight:400; }
 
   /* ---- Actions menu: bottom sheet on mobile ---- */
   @media (max-width:639px){
@@ -284,98 +298,140 @@
               </div>
               <div class="action-menu-list" id="actions-menu-list">
 
-                <p class="action-menu-section">Booking Details</p>
-                <button class="action-menu-item" data-label="Add Room">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-                  Add Room
-                </button>
-                <button class="action-menu-item" data-label="Rooming List">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-                  Rooming List
-                </button>
-                <button class="action-menu-item" data-label="Add Hotel Info">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-                  Add Hotel Info
-                </button>
-                <button class="action-menu-item" data-label="Add Flight Info">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-1 .1-1.3.5l-.4.5c-.4.5-.2 1.2.3 1.5L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5 1 .7 1.5.3l.5-.4c.4-.3.6-.8.5-1.3z"/></svg>
-                  Add Flight Info
-                </button>
-
-                <p class="action-menu-section">Payments</p>
-                <button class="action-menu-item" data-label="Accept Payment">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                  Accept Payment
-                </button>
-                <button class="action-menu-item" data-label="Transfer Payment">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3v18M3 7l4-4 4 4"/><path d="M17 21V3M13 17l4 4 4-4"/></svg>
-                  Transfer Payment
-                </button>
                 <button class="action-menu-item" data-label="Refunds Process">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
                   Refunds Process
-                </button>
-                <button class="action-menu-item" data-label="Override Display Price">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.6 2.6a2 2 0 0 0-1.4-.6H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
-                  Override Display Price
-                </button>
-                <button class="action-menu-item" data-label="Change Passenger Payment Schedule">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                  Change Passenger Payment Schedule
-                </button>
-                <button class="action-menu-item" data-label="Change Booking Payment Schedule">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                  Change Booking Payment Schedule
-                </button>
-
-                <p class="action-menu-section">Mass Changes</p>
-                <button class="action-menu-item" data-label="Mass Add Product">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></svg>
-                  Mass Add Product
-                </button>
-                <button class="action-menu-item" data-label="Mass Add Adjustment">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
-                  Mass Add Adjustment
-                </button>
-                <button class="action-menu-item" data-label="Mass Change Hotel">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-                  Mass Change Hotel
-                </button>
-                <button class="action-menu-item" data-label="Mass Add Names">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  Mass Add Names
-                </button>
-                <button class="action-menu-item" data-label="Mass Delete">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
-                  Mass Delete
-                </button>
-
-                <p class="action-menu-section">Documents</p>
-                <button class="action-menu-item" data-label="Invoice">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-                  Invoice
                 </button>
                 <button class="action-menu-item" data-label="Refund Approval Report">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
                   Refund Approval Report
                 </button>
+                <button class="action-menu-item" data-label="Invoice">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                  Invoice
+                </button>
+                <button class="action-menu-item" data-label="Add Room">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                  Add Room
+                </button>
 
-                <p class="action-menu-section">Communication</p>
-                <button class="action-menu-item" data-label="Send Email">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
-                  Send Email
+                <div class="action-menu-group">
+                  <button class="action-menu-parent" data-parent-label="Mass Changes" aria-expanded="false" aria-controls="submenu-mass-changes">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg>
+                    Mass Changes
+                    <svg class="action-menu-parent-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="action-menu-subitems" id="submenu-mass-changes">
+                    <button class="action-menu-item" data-label="Mass Add Product">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></svg>
+                      Mass Add Product
+                    </button>
+                    <button class="action-menu-item" data-label="Mass Add Adjustment">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+                      Mass Add Adjustment
+                    </button>
+                    <button class="action-menu-item" data-label="Mass Change Hotel">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                      Mass Change Hotel
+                    </button>
+                    <button class="action-menu-item" data-label="Mass Delete">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+                      Mass Delete
+                    </button>
+                    <button class="action-menu-item" data-label="Mass Add Names">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                      Mass Add Names
+                    </button>
+                  </div>
+                </div>
+
+                <div class="action-menu-group">
+                  <button class="action-menu-parent" data-parent-label="Payments" aria-expanded="false" aria-controls="submenu-payments">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                    Payments
+                    <svg class="action-menu-parent-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="action-menu-subitems" id="submenu-payments">
+                    <button class="action-menu-item" data-label="Transfer Payment">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3v18M3 7l4-4 4 4"/><path d="M17 21V3M13 17l4 4 4-4"/></svg>
+                      Transfer Payment
+                    </button>
+                    <button class="action-menu-item" data-label="Accept Payment">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                      Accept Payment
+                    </button>
+                  </div>
+                </div>
+
+                <div class="action-menu-group">
+                  <button class="action-menu-parent" data-parent-label="Confirmations" aria-expanded="false" aria-controls="submenu-confirmations">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v6c0 5 4 9 9 9s9-4 9-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Confirmations
+                    <svg class="action-menu-parent-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="action-menu-subitems" id="submenu-confirmations">
+                    <button class="action-menu-item" data-label="Add Hotel Info">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                      Add Hotel Info
+                    </button>
+                    <button class="action-menu-item" data-label="Add Flight Info">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-1 .1-1.3.5l-.4.5c-.4.5-.2 1.2.3 1.5L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.5 1 .7 1.5.3l.5-.4c.4-.3.6-.8.5-1.3z"/></svg>
+                      Add Flight Info
+                    </button>
+                  </div>
+                </div>
+
+                <button class="action-menu-item" data-label="Rooming List">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                  Rooming List
                 </button>
-                <button class="action-menu-item" data-label="Send Text Message">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  Send Text Message
+
+                <div class="action-menu-group">
+                  <button class="action-menu-parent" data-parent-label="Override" aria-expanded="false" aria-controls="submenu-override">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="7" width="22" height="10" rx="5"/><circle cx="16" cy="12" r="3"/></svg>
+                    Override
+                    <svg class="action-menu-parent-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="action-menu-subitems" id="submenu-override">
+                    <button class="action-menu-item" data-label="Override Display Price">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.6 2.6a2 2 0 0 0-1.4-.6H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+                      Override Display Price
+                    </button>
+                    <button class="action-menu-item" data-label="Change Booking Payment Schedule">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Change Booking Payment Schedule
+                    </button>
+                  </div>
+                </div>
+
+                <button class="action-menu-item" data-label="Change Passenger Payment Schedule">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Change Passenger Payment Schedule
                 </button>
+
+                <div class="action-menu-group">
+                  <button class="action-menu-parent" data-parent-label="Send Message" aria-expanded="false" aria-controls="submenu-send-message">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                    Send Message
+                    <svg class="action-menu-parent-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="action-menu-subitems" id="submenu-send-message">
+                    <button class="action-menu-item" data-label="Send Email">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+                      Send Email
+                    </button>
+                    <button class="action-menu-item" data-label="Send Announcement">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+                      Send Announcement
+                    </button>
+                  </div>
+                </div>
+
                 <button class="action-menu-item" data-label="User Actions">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><circle cx="19" cy="8" r="2"/><path d="M17 21a4 4 0 0 0-3-3.87"/></svg>
                   User Actions
                 </button>
-
-                <p class="action-menu-section" style="color:var(--brick);">Danger Zone</p>
-                <button class="action-menu-item is-danger" data-label="Cancel Booking">
+                <button class="action-menu-item is-danger is-danger-separated" data-label="Cancel Booking">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
                   Cancel Booking
                 </button>
@@ -675,11 +731,14 @@
 
   // ---- Collapsible section panels ----
   document.querySelectorAll('.collapse-trigger').forEach(trigger => {
+    const body = document.getElementById(trigger.dataset.target);
+    trigger.setAttribute('aria-controls', trigger.dataset.target);
+    trigger.setAttribute('aria-expanded', body.classList.contains('hidden') ? 'false' : 'true');
     function toggle(){
-      const body = document.getElementById(trigger.dataset.target);
       const chevron = document.querySelector('[data-icon-for="' + trigger.dataset.target + '"]');
       body.classList.toggle('hidden');
       chevron.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', body.classList.contains('hidden') ? 'false' : 'true');
     }
     trigger.addEventListener('click', toggle);
     if (trigger.tagName !== 'BUTTON') {
@@ -699,20 +758,39 @@
     const list = document.getElementById('actions-menu-list');
     const empty = document.getElementById('actions-menu-empty');
 
+    function setGroupOpen(parent, subitems, isOpen) {
+      parent.classList.toggle('is-open', isOpen);
+      subitems.classList.toggle('is-open', isOpen);
+      parent.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
     function filterItems(query) {
       const q = query.trim().toLowerCase();
       let anyVisible = false;
-      list.querySelectorAll('.action-menu-section').forEach(section => {
-        let node = section.nextElementSibling;
-        let sectionHasVisible = false;
-        while (node && !node.classList.contains('action-menu-section') && !node.classList.contains('action-menu-empty')) {
-          const match = !q || node.dataset.label.toLowerCase().includes(q);
-          node.style.display = match ? '' : 'none';
-          if (match) { sectionHasVisible = true; anyVisible = true; }
-          node = node.nextElementSibling;
+
+      Array.from(list.children).forEach(el => {
+        if (el.classList.contains('action-menu-item')) {
+          const match = !q || el.dataset.label.toLowerCase().includes(q);
+          el.style.display = match ? '' : 'none';
+          if (match) anyVisible = true;
+          return;
         }
-        section.style.display = sectionHasVisible ? '' : 'none';
+        if (el.classList.contains('action-menu-group')) {
+          const parent = el.querySelector('.action-menu-parent');
+          const subitems = el.querySelector('.action-menu-subitems');
+          const parentMatches = !q || parent.dataset.parentLabel.toLowerCase().includes(q);
+          let groupVisible = parentMatches;
+          Array.from(subitems.children).forEach(child => {
+            const childMatches = !q || parentMatches || child.dataset.label.toLowerCase().includes(q);
+            child.style.display = childMatches ? '' : 'none';
+            if (childMatches) groupVisible = true;
+          });
+          el.style.display = groupVisible ? '' : 'none';
+          if (groupVisible) anyVisible = true;
+          setGroupOpen(parent, subitems, q ? groupVisible : false);
+        }
       });
+
       empty.style.display = anyVisible ? 'none' : 'block';
     }
 
@@ -742,6 +820,10 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
     search.addEventListener('input', () => filterItems(search.value));
     list.querySelectorAll('.action-menu-item').forEach(item => item.addEventListener('click', closeMenu));
+    list.querySelectorAll('.action-menu-parent').forEach(parent => {
+      const subitems = document.getElementById(parent.getAttribute('aria-controls'));
+      parent.addEventListener('click', () => setGroupOpen(parent, subitems, !parent.classList.contains('is-open')));
+    });
   })();
 </script>
 

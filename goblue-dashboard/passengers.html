@@ -171,6 +171,49 @@
   .info-row a.info-value{ color:var(--primary); font-weight:600; }
   .info-row a.info-value:hover{ text-decoration:underline; }
 
+  /* ---- Actions menu ---- */
+  .action-menu-wrap{ position:relative; }
+  .action-menu-backdrop{ display:none; position:fixed; inset:0; background:rgba(11,26,51,.45); z-index:65; }
+  .action-menu-panel{
+    display:flex; flex-direction:column; position:absolute; top:calc(100% + 8px); right:0; z-index:70;
+    width:300px; max-width:min(90vw, 320px); background:#fff; border:1px solid var(--line); border-radius:.75rem;
+    box-shadow:0 16px 40px -12px rgba(11,26,51,.28); overflow:hidden;
+    opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-6px);
+    transition:opacity .15s ease, transform .15s ease, visibility .15s;
+  }
+  .action-menu-panel.is-open{ opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0); }
+  .action-menu-mobile-header{ display:none; }
+  .action-menu-search-wrap{ padding:.65rem; border-bottom:1px solid var(--line-soft); flex-shrink:0; }
+  .action-menu-list{ overflow-y:auto; max-height:min(60vh, 420px); padding:.4rem; -webkit-overflow-scrolling:touch; }
+  .action-menu-section{
+    padding:.6rem .6rem .2rem; font-size:.64rem; text-transform:uppercase; letter-spacing:.08em; color:var(--slate);
+    font-weight:700; font-family:'Space Mono',monospace;
+  }
+  .action-menu-section:not(:first-child){ margin-top:.15rem; padding-top:.75rem; border-top:1px solid var(--line-soft); }
+  .action-menu-item{
+    display:flex; align-items:center; gap:.65rem; width:100%; text-align:left; padding:.55rem .6rem; border-radius:.5rem;
+    font-size:.83rem; color:var(--ink); transition:background .12s ease; cursor:pointer;
+  }
+  .action-menu-item:hover, .action-menu-item:focus-visible{ background:var(--sand); outline:none; }
+  .action-menu-item svg{ flex-shrink:0; color:var(--slate); }
+  .action-menu-item.is-danger{ color:var(--brick); }
+  .action-menu-item.is-danger svg{ color:var(--brick); }
+  .action-menu-item.is-danger:hover{ background:var(--brick-tint); }
+  .action-menu-empty{ display:none; padding:1.5rem .75rem; text-align:center; color:var(--slate); font-size:.82rem; }
+
+  @media (max-width:639px){
+    .action-menu-backdrop.is-visible{ display:block; }
+    .action-menu-panel{
+      position:fixed; inset:auto 0 0 0; width:100%; max-width:none; max-height:82vh; border-radius:1rem 1rem 0 0;
+      transform:translateY(100%); transition:transform .28s ease;
+      box-shadow:0 -12px 34px -10px rgba(11,26,51,.35); padding-bottom:env(safe-area-inset-bottom);
+    }
+    .action-menu-panel.is-open{ transform:translateY(0); }
+    .action-menu-mobile-header{ display:block; padding:.65rem .9rem .35rem; flex-shrink:0; }
+    .action-menu-handle{ display:block; width:36px; height:4px; border-radius:9999px; background:var(--line); margin:0 auto .65rem; }
+    .action-menu-list{ max-height:none; flex:1; }
+  }
+
   /* ---- Read-only field grid (Passenger Info / Emergency Contact) ---- */
   .field-label{ font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; color:var(--slate); font-weight:600; }
   .field-value{ font-size:.9rem; color:var(--ink); font-weight:600; margin-top:.3rem; }
@@ -213,10 +256,97 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
           </button>
-          <button class="btn-primary rounded-lg pl-4 pr-3 py-2.5 text-sm font-semibold inline-flex items-center gap-1.5">
-            Actions
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
+          <div class="action-menu-wrap">
+            <button id="actions-menu-btn" class="btn-primary rounded-lg pl-4 pr-3 py-2.5 text-sm font-semibold inline-flex items-center gap-1.5">
+              Actions
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+
+            <div id="actions-menu-backdrop" class="action-menu-backdrop"></div>
+
+            <div id="actions-menu" class="action-menu-panel">
+              <div class="action-menu-mobile-header">
+                <span class="action-menu-handle"></span>
+                <div class="flex items-center justify-between">
+                  <h3 class="font-semibold text-base text-[var(--ink)]">Actions</h3>
+                  <button id="actions-menu-close" class="w-8 h-8 -mr-1.5 flex items-center justify-center rounded-full" style="color:var(--slate);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="action-menu-search-wrap">
+                <input type="text" id="actions-menu-search" class="text-field w-full text-sm" placeholder="Search actions…" autocomplete="off">
+              </div>
+              <div class="action-menu-list" id="actions-menu-list">
+
+                <p class="action-menu-section">Products</p>
+                <button class="action-menu-item" data-label="Add Product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/></svg>
+                  Add Product
+                </button>
+                <button class="action-menu-item is-danger" data-label="Delete Product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>
+                  Delete Product
+                </button>
+
+                <p class="action-menu-section">Payments</p>
+                <button class="action-menu-item" data-label="Add Adjustment">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/></svg>
+                  Add Adjustment
+                </button>
+                <button class="action-menu-item" data-label="Payment Link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  Payment Link
+                </button>
+
+                <p class="action-menu-section">Documents</p>
+                <button class="action-menu-item" data-label="Invoice">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                  Invoice
+                </button>
+                <button class="action-menu-item" data-label="Statement">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+                  Statement
+                </button>
+                <button class="action-menu-item" data-label="Agreement Log">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+                  Agreement Log
+                </button>
+                <button class="action-menu-item" data-label="See Vouchers">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                  See Vouchers
+                </button>
+
+                <p class="action-menu-section">Communication</p>
+                <button class="action-menu-item" data-label="Show Emails">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+                  Show Emails
+                </button>
+
+                <p class="action-menu-section">Account</p>
+                <button class="action-menu-item" data-label="Change Password">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Change Password
+                </button>
+                <button class="action-menu-item" data-label="Update Email">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-5.5 8.28"/></svg>
+                  Update Email
+                </button>
+                <button class="action-menu-item" data-label="Impersonate">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Impersonate
+                </button>
+
+                <p class="action-menu-section">Booking</p>
+                <button class="action-menu-item" data-label="Move to New Reservation">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  Move to New Reservation
+                </button>
+
+                <p class="action-menu-empty" id="actions-menu-empty">No actions match your search.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -381,11 +511,14 @@
 
   // ---- Collapsible section panels ----
   document.querySelectorAll('.collapse-trigger').forEach(trigger => {
+    const body = document.getElementById(trigger.dataset.target);
+    trigger.setAttribute('aria-controls', trigger.dataset.target);
+    trigger.setAttribute('aria-expanded', body.classList.contains('hidden') ? 'false' : 'true');
     function toggle(){
-      const body = document.getElementById(trigger.dataset.target);
       const chevron = document.querySelector('[data-icon-for="' + trigger.dataset.target + '"]');
       body.classList.toggle('hidden');
       chevron.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', body.classList.contains('hidden') ? 'false' : 'true');
     }
     trigger.addEventListener('click', toggle);
     if (trigger.tagName !== 'BUTTON') {
@@ -394,6 +527,61 @@
       });
     }
   });
+
+  // ---- Actions menu ----
+  (function () {
+    const btn = document.getElementById('actions-menu-btn');
+    const panel = document.getElementById('actions-menu');
+    const backdrop = document.getElementById('actions-menu-backdrop');
+    const closeBtn = document.getElementById('actions-menu-close');
+    const search = document.getElementById('actions-menu-search');
+    const list = document.getElementById('actions-menu-list');
+    const empty = document.getElementById('actions-menu-empty');
+
+    function filterItems(query) {
+      const q = query.trim().toLowerCase();
+      let anyVisible = false;
+      list.querySelectorAll('.action-menu-section').forEach(section => {
+        let node = section.nextElementSibling;
+        let sectionHasVisible = false;
+        while (node && !node.classList.contains('action-menu-section') && !node.classList.contains('action-menu-empty')) {
+          const match = !q || node.dataset.label.toLowerCase().includes(q);
+          node.style.display = match ? '' : 'none';
+          if (match) { sectionHasVisible = true; anyVisible = true; }
+          node = node.nextElementSibling;
+        }
+        section.style.display = sectionHasVisible ? '' : 'none';
+      });
+      empty.style.display = anyVisible ? 'none' : 'block';
+    }
+
+    function openMenu() {
+      panel.classList.add('is-open');
+      backdrop.classList.add('is-visible');
+      if (window.innerWidth < 640) document.body.style.overflow = 'hidden';
+      search.value = '';
+      filterItems('');
+      search.focus();
+    }
+    function closeMenu() {
+      panel.classList.remove('is-open');
+      backdrop.classList.remove('is-visible');
+      document.body.style.overflow = '';
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      panel.classList.contains('is-open') ? closeMenu() : openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    backdrop.addEventListener('click', closeMenu);
+    document.addEventListener('click', (e) => {
+      if (!panel.contains(e.target) && e.target !== btn) closeMenu();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    search.addEventListener('input', () => filterItems(search.value));
+    list.querySelectorAll('.action-menu-item').forEach(item => item.addEventListener('click', closeMenu));
+  })();
 </script>
 
 </body>

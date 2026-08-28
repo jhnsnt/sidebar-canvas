@@ -78,12 +78,13 @@
       '<a href="' + child.href + '"' + (child.id === activeId ? ' class="is-active"' : '') + '>' + child.label + '</a>'
     ).join('');
 
-    return '<div id="nav-' + item.id + '" class="nav-item' + (isActive || isParentOfActive ? ' is-active' : '') + (isOpen ? ' is-open' : '') + '">' +
+    return '<div id="nav-' + item.id + '" class="nav-item' + (isActive || isParentOfActive ? ' is-active' : '') + (isOpen ? ' is-open' : '') +
+      '" role="button" tabindex="0" aria-expanded="' + (isOpen ? 'true' : 'false') + '" aria-controls="subnav-' + item.id + '">' +
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + item.icon + '</svg>' +
       '<span class="sidebar-label">' + item.label + '</span>' +
       chevronSvg('sidebar-chevron') +
       '</div>' +
-      '<div class="sub-nav' + (isOpen ? ' is-open' : '') + '" data-submenu-for="nav-' + item.id + '">' + childrenHtml + '</div>';
+      '<div id="subnav-' + item.id + '" class="sub-nav' + (isOpen ? ' is-open' : '') + '" data-submenu-for="nav-' + item.id + '">' + childrenHtml + '</div>';
   }
 
   function render(activeId) {
@@ -139,9 +140,14 @@
 
     sidebar.querySelectorAll('[data-submenu-for]').forEach(submenu => {
       const trigger = document.getElementById(submenu.dataset.submenuFor);
-      trigger.addEventListener('click', () => {
-        trigger.classList.toggle('is-open');
-        submenu.classList.toggle('is-open');
+      function toggle() {
+        const isOpen = trigger.classList.toggle('is-open');
+        submenu.classList.toggle('is-open', isOpen);
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+      trigger.addEventListener('click', toggle);
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
       });
     });
   }
