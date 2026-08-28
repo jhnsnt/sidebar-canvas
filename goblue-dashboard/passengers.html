@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — Passenger 233907</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-mono{ font-family:'Space Mono',monospace; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  .num{ font-family:'Space Mono',monospace; font-variant-numeric:tabular-nums; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--primary); border:1px solid var(--primary); transition:background .15s ease, color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); }
+
+  .section-eyebrow{ color:var(--primary); font-weight:600; font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; font-family:'Space Mono',monospace; }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+  @media (min-width:640px){ .search-input:focus{ min-width:220px; } }
+
+  .text-field{
+    border:1px solid var(--line); border-radius:.5rem; padding:.55rem .9rem; font-size:.875rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field::placeholder{ color:var(--slate); }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-size:.875rem; font-weight:500; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-size:.82rem; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:600; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:.6rem; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Space Mono',monospace;
+  }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .data-table{ width:100%; font-size:.85rem; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:.66rem; text-transform:uppercase; letter-spacing:.09em; color:var(--slate);
+    font-weight:500; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Space Mono',monospace;
+  }
+  .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .total-row td{ background:var(--paper); font-weight:700; border-top:1.5px solid var(--ink); border-bottom:0; }
+
+  /* ---- Sticky identity column + edge-fade hint for wide tables on mobile/tablet ---- */
+  .data-table .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .data-table .total-row .sticky-col{ background:var(--paper); }
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .export-btn{
+    padding:.4rem .85rem; border-radius:.5rem; border:1px solid var(--line); background:#fff;
+    font-size:.78rem; font-weight:500; color:var(--ink); transition:background .15s ease, border-color .15s ease;
+    display:inline-flex; align-items:center; gap:.4rem;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  /* ---- Collapsible section panels ---- */
+  .collapse-trigger{ cursor:pointer; }
+  .collapse-chevron{ transition:transform .2s ease; color:var(--slate); flex-shrink:0; }
+  .collapse-chevron.is-open{ transform:rotate(180deg); }
+  .count-badge{
+    background:var(--sand); color:var(--primary); font-size:.68rem; font-weight:700; min-width:20px; height:20px;
+    border-radius:9999px; display:inline-flex; align-items:center; justify-content:center; padding:0 .35rem; font-family:'Space Mono',monospace;
+  }
+
+  .info-row{ display:flex; align-items:baseline; justify-content:space-between; gap:.75rem; font-size:.85rem; padding:.3rem 0; }
+  .info-row .info-label{ color:var(--slate); flex-shrink:0; }
+  .info-row .info-value{ text-align:right; font-weight:600; color:var(--ink); }
+  .info-row a.info-value{ color:var(--primary); font-weight:600; }
+  .info-row a.info-value:hover{ text-decoration:underline; }
+
+  /* ---- Read-only field grid (Passenger Info / Emergency Contact) ---- */
+  .field-label{ font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; color:var(--slate); font-weight:600; }
+  .field-value{ font-size:.9rem; color:var(--ink); font-weight:600; margin-top:.3rem; }
+  .field-value.is-empty{ color:var(--slate); font-weight:400; }
+
+  .status-pill{
+    display:inline-flex; align-items:center; font-size:.72rem; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .status-pill.is-active{ background:var(--forest-tint); color:var(--forest); }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--slate)" stroke-width="2" class="flex-shrink-0"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          <span class="text-[var(--slate)]">/</span>
+          <a href="booking.html" class="num text-[var(--primary)] hover:underline">N2KDGS2P7M</a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="font-semibold text-[var(--ink)] truncate">Passenger <span class="num text-[var(--primary)]">233907</span></h1>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button class="export-btn" onclick="window.location.href='booking.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button class="btn-primary rounded-lg pl-4 pr-3 py-2.5 text-sm font-semibold inline-flex items-center gap-1.5">
+            Actions
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= PASSENGER INFO ================= -->
+      <div class="panel p-5 md:p-6">
+        <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-passenger-info" role="button" tabindex="0">
+          <h2 class="font-semibold text-lg text-[var(--ink)]">Passenger Info</h2>
+          <div class="flex items-center gap-3">
+            <button class="export-btn font-semibold" onclick="event.stopPropagation()">
+              Notes <span class="count-badge">0</span>
+            </button>
+            <svg class="collapse-chevron is-open" data-icon-for="body-passenger-info" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div id="body-passenger-info" class="mt-5">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5">
+            <div><p class="field-label">First Name</p><p class="field-value">Gerardo</p></div>
+            <div><p class="field-label">Middle Name</p><p class="field-value">Antonio</p></div>
+            <div><p class="field-label">Last Name</p><p class="field-value">Barrera</p></div>
+            <div><p class="field-label">Gender</p><p class="field-value is-empty">&mdash;</p></div>
+
+            <div><p class="field-label">DOB</p><p class="field-value num">01/01/2005</p></div>
+            <div><p class="field-label">Address</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">City</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">State</p><p class="field-value">MA</p></div>
+
+            <div><p class="field-label">Zip</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">Country</p><p class="field-value">United States</p></div>
+            <div class="col-span-2 sm:col-span-1"><p class="field-label">Email</p><p class="field-value num text-xs break-all">gbarrera@gobluetours.com</p></div>
+            <div><p class="field-label">Phone</p><p class="field-value num">+16178945836</p></div>
+
+            <div><p class="field-label">Instagram Name</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">Passport Country</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">Passport No</p><p class="field-value is-empty">&mdash;</p></div>
+            <div><p class="field-label">Passport Exp Date</p><p class="field-value is-empty">&mdash;</p></div>
+          </div>
+
+          <h3 class="font-semibold text-base text-[var(--ink)] mt-7 pb-3 border-b border-[var(--line)]">Emergency Contact Information</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 mt-4">
+            <div><p class="field-label">First Name</p><p class="field-value">Gerardo</p></div>
+            <div><p class="field-label">Last Name</p><p class="field-value">Barrera</p></div>
+            <div><p class="field-label">Email</p><p class="field-value num text-xs break-all">gbarrera@gobluetours.com</p></div>
+            <div><p class="field-label">Phone</p><p class="field-value num">16178945836</p></div>
+            <div><p class="field-label">Contact Relationship</p><p class="field-value">Father</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TRIP INFO ================= -->
+      <div class="panel p-5 md:p-6 mt-5">
+        <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-trip-info">
+          <h2 class="font-semibold text-lg text-[var(--ink)]">Trip Info</h2>
+          <svg class="collapse-chevron is-open" data-icon-for="body-trip-info" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+
+        <div id="body-trip-info" class="mt-5">
+          <div class="grid lg:grid-cols-2 gap-6 lg:gap-8">
+
+            <div>
+              <div class="divide-y divide-[var(--line-soft)]">
+                <div class="info-row"><span class="info-label">Booking ID</span><a href="booking.html" class="info-value num">N2KDGS2P7M</a></div>
+                <div class="info-row"><span class="info-label">School</span><span class="info-value" style="color:var(--slate); font-weight:400;">&mdash;</span></div>
+                <div class="info-row"><span class="info-label">Destination</span><span class="info-value">Cancun</span></div>
+                <div class="info-row"><span class="info-label">Trip Dates</span><span class="info-value num">03/01/2027 &ndash; 03/06/2027</span></div>
+                <div class="info-row"><span class="info-label">Nights</span><span class="info-value num">5</span></div>
+                <div class="info-row"><span class="info-label">Occupancy</span><span class="info-value num">4</span></div>
+                <div class="info-row"><span class="info-label">Status</span><span class="status-pill is-active">Active</span></div>
+                <div class="info-row"><span class="info-label">Login User</span><a href="#" class="info-value">Gerardo Barrera</a></div>
+                <div class="info-row"><span class="info-label">Book Date</span><span class="info-value num">08/27/2026</span></div>
+              </div>
+            </div>
+
+            <div class="lg:border-l lg:border-[var(--line)] lg:pl-8">
+              <div class="overflow-x-auto">
+                <table class="data-table">
+                  <thead><tr><th>Product</th><th class="text-right">Price</th></tr></thead>
+                  <tbody>
+                    <tr><td><a href="#" class="text-[var(--primary)] hover:underline">Grand Oasis Cancun</a></td><td class="text-right num">$765.00</td></tr>
+                    <tr><td><a href="#" class="text-[var(--primary)] hover:underline">Round Trip Airport/Hotel/Airport Transfers Cancun</a></td><td class="text-right num">$34.00</td></tr>
+                    <tr><td>CC&#8209;ADJ</td><td class="text-right num">$0.00</td></tr>
+                    <tr><td>System Fee</td><td class="text-right num">$0.00</td></tr>
+                    <tr><td>Onsite Fee</td><td class="text-right num">$0.00</td></tr>
+                    <tr class="total-row"><td>Total</td><td class="text-right num">$799.00</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="text-center mt-5">
+                <button class="btn-primary rounded-lg px-5 py-2 text-sm font-semibold italic">Show Cost</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PAYMENTS ================= -->
+      <div class="panel p-5 md:p-6 mt-5">
+        <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-payments" role="button" tabindex="0">
+          <h2 class="font-semibold text-lg text-[var(--ink)]">Payments</h2>
+          <div class="flex items-center gap-3">
+            <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Transfer Payment</button>
+            <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Accept Payment</button>
+            <svg class="collapse-chevron is-open" data-icon-for="body-payments" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div id="body-payments" class="mt-5">
+          <div class="grid lg:grid-cols-2 gap-6 lg:gap-8">
+
+            <div class="overflow-x-auto table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr><th class="sticky-col">Date</th><th>Amount</th><th>Payment Type</th><th>Transaction ID</th><th class="text-right">Balance</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="num sticky-col">08/27/2026</td>
+                    <td class="num">$50.00</td>
+                    <td>
+                      <a href="#" class="text-[var(--primary)] hover:underline inline-flex items-center gap-1.5">
+                        Credit Card
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      </a>
+                    </td>
+                    <td><span class="num text-xs px-1.5 py-0.5 rounded" style="background:var(--paper); color:var(--slate);">pi_3U8rB0xxxxxxxxxx</span></td>
+                    <td class="text-right num font-semibold">$749.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="lg:border-l lg:border-[var(--line)] lg:pl-8">
+              <p class="text-xs uppercase tracking-wide text-[var(--slate)] font-semibold">Payment Schedule</p>
+              <div class="mt-2 divide-y divide-[var(--line-soft)]">
+                <div class="info-row"><span class="info-label num">1) 08/27/2026</span><span class="info-value num">$50.00</span></div>
+                <div class="info-row"><span class="info-label num">2) 09/20/2026</span><span class="info-value num">$100.00</span></div>
+                <div class="info-row"><span class="info-label num">3) 10/14/2026</span><span class="info-value num">$150.00</span></div>
+                <div class="info-row"><span class="info-label num">4) 11/07/2026</span><span class="info-value num">$150.00</span></div>
+                <div class="info-row"><span class="info-label num">5) 12/01/2026</span><span class="info-value num"><span class="font-bold">Balance:</span> $349.00</span></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="text-center mt-6 pt-5 border-t border-[var(--line)]">
+            <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold">Change Payment Schedule</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('bookings');
+  GoBlueTopBar.render();
+
+  // ---- Collapsible section panels ----
+  document.querySelectorAll('.collapse-trigger').forEach(trigger => {
+    function toggle(){
+      const body = document.getElementById(trigger.dataset.target);
+      const chevron = document.querySelector('[data-icon-for="' + trigger.dataset.target + '"]');
+      body.classList.toggle('hidden');
+      chevron.classList.toggle('is-open');
+    }
+    trigger.addEventListener('click', toggle);
+    if (trigger.tagName !== 'BUTTON') {
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

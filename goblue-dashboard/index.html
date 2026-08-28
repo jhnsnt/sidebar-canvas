@@ -93,12 +93,16 @@
 
   /* ---- Top action icons ---- */
   .top-icon-btn{
-    width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
-    display:flex; align-items:center; justify-content:center; transition:background .15s ease;
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
   }
   .top-icon-btn:hover{ background:#dbe9f8; }
   .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
   .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:.6rem; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Space Mono',monospace;
+  }
 
   .mobile-menu-btn{ display:none; }
   @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
@@ -131,6 +135,24 @@
   .data-table tbody tr:hover{ background:var(--paper); }
   .data-table .empty-row td{ text-align:center; color:var(--slate); padding:2rem .75rem; }
 
+  /* ---- Sticky identity column + edge-fade hint for wide tables on mobile/tablet ---- */
+  .data-table .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
   .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
 
   .page-btn{
@@ -140,125 +162,31 @@
   }
   .page-btn:hover{ background:var(--sand); color:var(--primary); }
   .page-btn.is-active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  .export-btn{
+    padding:.4rem .85rem; border-radius:.5rem; border:1px solid var(--line); background:#fff;
+    font-size:.78rem; font-weight:500; color:var(--ink); transition:background .15s ease, border-color .15s ease;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .sort-caret{ display:inline-flex; flex-direction:column; margin-left:.3rem; vertical-align:middle; gap:1px; }
+  .sort-caret::before, .sort-caret::after{ content:''; display:block; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; }
+  .sort-caret::before{ border-bottom:3px solid var(--line); }
+  .sort-caret::after{ border-top:3px solid var(--line); }
 </style>
 </head>
 <body class="antialiased">
 
 <div class="flex min-h-screen">
 
-  <!-- ================= SIDEBAR ================= -->
-  <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
-
-  <aside id="sidebar" class="sidebar flex-shrink-0 flex flex-col py-5">
-    <div class="flex items-center justify-between pl-5 pr-4 pb-5 mb-2 border-b border-white/10">
-      <div class="sidebar-brand-text leading-none">
-        <img src="https://gobluetours.com/_next/image/?url=%2Flogo.webp&w=390&q=75" alt="Go Blue Tours" class="h-9 w-auto rounded">
-      </div>
-      <button id="sidebar-toggle" class="sidebar-toggle text-white/50 hover:text-white transition">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-    </div>
-
-    <nav class="flex-1 space-y-0.5">
-      <div class="nav-item is-active">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-        <span class="sidebar-label">Dashboard</span>
-      </div>
-      <div class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11a9 9 0 0 1 18 0v5a3 3 0 0 1-3 3h-1v-7h4"/><path d="M3 16v-5h4v7H6a3 3 0 0 1-3-3z"/></svg>
-        <span class="sidebar-label">Helpdesk</span>
-      </div>
-      <div class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span class="sidebar-label">Task</span>
-      </div>
-      <div class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span class="sidebar-label">Conversations</span>
-      </div>
-
-      <div id="nav-operations" class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>
-        <span class="sidebar-label">Operations</span>
-        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-      </div>
-      <div class="sub-nav" data-submenu-for="nav-operations">
-        <a href="#">Itineraries</a>
-        <a href="#">Vendors</a>
-        <a href="#">Rooming Lists</a>
-      </div>
-
-      <div id="nav-reports" class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
-        <span class="sidebar-label">Reports</span>
-        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-      </div>
-      <div class="sub-nav" data-submenu-for="nav-reports">
-        <a href="#">Revenue</a>
-        <a href="#">Sales by Rep</a>
-        <a href="#">Enrollment</a>
-      </div>
-
-      <div id="nav-settings" class="nav-item">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="sidebar-label">Settings</span>
-        <svg class="sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-      </div>
-      <div class="sub-nav" data-submenu-for="nav-settings">
-        <a href="#">Users &amp; Roles</a>
-        <a href="#">Integrations</a>
-        <a href="#">Billing</a>
-      </div>
-    </nav>
-
-    <div class="px-5 pt-4 mt-2 border-t border-white/10 sidebar-label">
-      <p class="text-[11px] text-white/30">GoBlue Tours CRM v3.2</p>
-    </div>
-  </aside>
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
 
   <!-- ================= MAIN ================= -->
   <div class="flex-1 min-w-0">
 
-    <!-- Top accent bar -->
-    <div class="h-[3px]" style="background:var(--primary);"></div>
-
-    <!-- ================= TOP BAR ================= -->
-    <header class="bg-white border-b border-[var(--line)] sticky top-0 z-30">
-      <div class="px-4 sm:px-6 py-3 sm:py-0 sm:h-[68px] flex flex-col sm:flex-row sm:items-center gap-3">
-        <div class="flex items-center gap-3 min-w-0 content-between">
-          <button id="mobile-menu-btn" class="mobile-menu-btn top-icon-btn flex-shrink-0" title="Menu">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-          </button>
-          <div class="flex items-center gap-2 overflow-x-auto min-w-0 sm:flex-1">
-            <button class="top-icon-btn flex-shrink-0" title="Home">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-            </button>
-            <button class="top-icon-btn flex-shrink-0" title="Messages">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </button>
-            <button class="top-icon-btn flex-shrink-0" title="New">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-            </button>
-            <button class="top-icon-btn flex-shrink-0" title="Documents">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            </button>
-            <button class="top-icon-btn flex-shrink-0" title="Send">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-            </button>
-            <button class="top-icon-btn is-alert flex-shrink-0" title="Alerts">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-            </button>
-            <button class="top-icon-btn flex-shrink-0" title="Log out">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><path d="M12 2v10"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="relative w-full sm:w-auto sm:ml-auto flex-shrink-0">
-          <input type="text" class="search-input w-full sm:w-[180px]" placeholder="Global search…">
-        </div>
-      </div>
-    </header>
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root"></div>
 
     <!-- ================= PAGE CONTENT ================= -->
     <main class="p-4 md:p-6">
@@ -329,10 +257,10 @@
               <h2 class="font-semibold text-base text-[var(--ink)]">Alerts</h2>
               <input type="text" class="search-input" placeholder="Search…">
             </div>
-            <div class="overflow-x-auto w-full">
+            <div class="overflow-x-auto w-full table-scroll">
               <table class="data-table">
                 <thead>
-                  <tr><th>Sales Person</th><th>Date</th><th>Message</th><th class="text-right">Delete</th></tr>
+                  <tr><th class="sticky-col">Sales Person</th><th>Date</th><th>Message</th><th class="text-right">Delete</th></tr>
                 </thead>
                 <tbody>
                   <tr class="empty-row"><td colspan="4">No alerts right now — you're all caught up.</td></tr>
@@ -346,17 +274,17 @@
               <h2 class="font-semibold text-base text-[var(--ink)]">Proposals</h2>
               <input type="text" class="search-input" placeholder="Search…">
             </div>
-            <div class="overflow-x-auto w-full">
+            <div class="overflow-x-auto w-full table-scroll">
               <table class="data-table">
                 <thead>
-                  <tr><th>Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
+                  <tr><th class="sticky-col">Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Elena Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">4NGY2LZK2M</td><td class="num">2</td><td class="text-right num font-semibold">$2,418.00</td></tr>
-                  <tr><td>Pedro Salvador</td><td>Meghan Jenkins</td><td class="font-mono text-xs">KR9RSHYOIC</td><td class="num">7</td><td class="text-right num font-semibold">$5,893.00</td></tr>
-                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">YSCYCCP2IF</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
-                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XQ82EERG5C</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
-                  <tr><td>Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">V0XSJVPBID</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                  <tr><td class="sticky-col">Elena Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">4NGY2LZK2M</td><td class="num">2</td><td class="text-right num font-semibold">$2,418.00</td></tr>
+                  <tr><td class="sticky-col">Pedro Salvador</td><td>Meghan Jenkins</td><td class="font-mono text-xs">KR9RSHYOIC</td><td class="num">7</td><td class="text-right num font-semibold">$5,893.00</td></tr>
+                  <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">YSCYCCP2IF</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                  <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XQ82EERG5C</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+                  <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">V0XSJVPBID</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
                 </tbody>
               </table>
             </div>
@@ -368,22 +296,22 @@
             <h2 class="font-semibold text-base text-[var(--ink)]">Bookings</h2>
             <input type="text" class="search-input" placeholder="Search…">
           </div>
-          <div class="overflow-x-auto w-full">
+          <div class="overflow-x-auto w-full table-scroll">
             <table class="data-table">
               <thead>
-                <tr><th>Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
+                <tr><th class="sticky-col">Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
               </thead>
               <tbody>
-                <tr><td>Thomas Byrne</td><td>Meghan Jenkins</td><td class="font-mono text-xs">F5C756X7YF</td><td class="num">4</td><td class="text-right num font-semibold">$4,448.00</td></tr>
-                <tr><td>Gina Mignosa</td><td>Meghan Jenkins</td><td class="font-mono text-xs">C5PNKM7T6K</td><td class="num">4</td><td class="text-right num font-semibold">$2,796.00</td></tr>
-                <tr><td>Jackson Scott</td><td>Meghan Jenkins</td><td class="font-mono text-xs">JKCQSRTFQK</td><td class="num">15</td><td class="text-right num font-semibold">$14,500.00</td></tr>
-                <tr><td>Mason Stephenson</td><td>Justin Rodriguez</td><td class="font-mono text-xs">KVDEOYUXYI</td><td class="num">31</td><td class="text-right num font-semibold">$24,965.00</td></tr>
-                <tr><td>Olivia Hernandez</td><td>Meghan Jenkins</td><td class="font-mono text-xs">9CFJHDIJFZ</td><td class="num">52</td><td class="text-right num font-semibold">$41,781.00</td></tr>
-                <tr><td>Achilles Heavin</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XA6QBB4ZZB</td><td class="num">16</td><td class="text-right num font-semibold">$11,984.00</td></tr>
-                <tr><td>Lily Reynoso</td><td>Spiffy Darko</td><td class="font-mono text-xs">EWHUER9NZE</td><td class="num">28</td><td class="text-right num font-semibold">$22,372.00</td></tr>
-                <tr><td>Taylor Fisher</td><td>Meghan Jenkins</td><td class="font-mono text-xs">QVDATI0KMV</td><td class="num">12</td><td class="text-right num font-semibold">$9,166.00</td></tr>
-                <tr><td>Madison Silva</td><td>Meghan Jenkins</td><td class="font-mono text-xs">90N4KG6IAW</td><td class="num">81</td><td class="text-right num font-semibold">$59,176.00</td></tr>
-                <tr><td>Madeline Heil</td><td>Meghan Jenkins</td><td class="font-mono text-xs">TJ3KQHETQ6</td><td class="num">8</td><td class="text-right num font-semibold">$7,765.00</td></tr>
+                <tr><td class="sticky-col">Thomas Byrne</td><td>Meghan Jenkins</td><td class="font-mono text-xs">F5C756X7YF</td><td class="num">4</td><td class="text-right num font-semibold">$4,448.00</td></tr>
+                <tr><td class="sticky-col">Gina Mignosa</td><td>Meghan Jenkins</td><td class="font-mono text-xs">C5PNKM7T6K</td><td class="num">4</td><td class="text-right num font-semibold">$2,796.00</td></tr>
+                <tr><td class="sticky-col">Jackson Scott</td><td>Meghan Jenkins</td><td class="font-mono text-xs">JKCQSRTFQK</td><td class="num">15</td><td class="text-right num font-semibold">$14,500.00</td></tr>
+                <tr><td class="sticky-col">Mason Stephenson</td><td>Justin Rodriguez</td><td class="font-mono text-xs">KVDEOYUXYI</td><td class="num">31</td><td class="text-right num font-semibold">$24,965.00</td></tr>
+                <tr><td class="sticky-col">Olivia Hernandez</td><td>Meghan Jenkins</td><td class="font-mono text-xs">9CFJHDIJFZ</td><td class="num">52</td><td class="text-right num font-semibold">$41,781.00</td></tr>
+                <tr><td class="sticky-col">Achilles Heavin</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XA6QBB4ZZB</td><td class="num">16</td><td class="text-right num font-semibold">$11,984.00</td></tr>
+                <tr><td class="sticky-col">Lily Reynoso</td><td>Spiffy Darko</td><td class="font-mono text-xs">EWHUER9NZE</td><td class="num">28</td><td class="text-right num font-semibold">$22,372.00</td></tr>
+                <tr><td class="sticky-col">Taylor Fisher</td><td>Meghan Jenkins</td><td class="font-mono text-xs">QVDATI0KMV</td><td class="num">12</td><td class="text-right num font-semibold">$9,166.00</td></tr>
+                <tr><td class="sticky-col">Madison Silva</td><td>Meghan Jenkins</td><td class="font-mono text-xs">90N4KG6IAW</td><td class="num">81</td><td class="text-right num font-semibold">$59,176.00</td></tr>
+                <tr><td class="sticky-col">Madeline Heil</td><td>Meghan Jenkins</td><td class="font-mono text-xs">TJ3KQHETQ6</td><td class="num">8</td><td class="text-right num font-semibold">$7,765.00</td></tr>
               </tbody>
             </table>
           </div>
@@ -398,19 +326,43 @@
 
       <!-- ---- Overdue Travelers ---- -->
       <div class="panel p-5 mt-5">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-semibold text-base text-[var(--ink)]">Overdue Travelers</h2>
-          <input type="text" class="search-input" placeholder="Search…">
+        <h2 class="font-semibold text-base text-[var(--ink)] pb-4 border-b border-[var(--line)]">Overdue Travelers</h2>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-4 mb-4">
+          <div class="flex items-center gap-2">
+            <button class="export-btn">Copy</button>
+            <button class="export-btn">CSV</button>
+            <button class="export-btn">Excel</button>
+            <button class="export-btn">PDF</button>
+          </div>
+          <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
+            Search:
+            <input type="text" class="search-input" style="padding-left:.75rem; background-image:none;">
+          </label>
         </div>
-        <div class="overflow-x-auto w-full">
+
+        <div class="overflow-x-auto w-full table-scroll">
           <table class="data-table">
             <thead>
-              <tr><th>Traveler</th><th>Organizer</th><th>Rep</th><th>Days Overdue</th><th class="text-right">Amount Due</th></tr>
+              <tr>
+                <th class="sticky-col">Organizer <span class="sort-caret"></span></th>
+                <th>Rep <span class="sort-caret"></span></th>
+                <th>Pax <span class="sort-caret"></span></th>
+                <th>Due <span class="sort-caret"></span></th>
+              </tr>
             </thead>
             <tbody>
-              <tr class="empty-row"><td colspan="5">Overdue traveler details weren't visible in the reference screenshot — connect real data to populate this table.</td></tr>
+              <tr class="empty-row"><td colspan="4">No data available in table</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)]">
+          <p>Showing 0 to 0 of 0 entries</p>
+          <div class="flex items-center gap-4">
+            <span class="opacity-40 cursor-not-allowed">Previous</span>
+            <span class="opacity-40 cursor-not-allowed">Next</span>
+          </div>
         </div>
       </div>
 
@@ -419,34 +371,11 @@
   </div>
 </div>
 
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
 <script>
-  const sidebar = document.getElementById('sidebar');
-  const backdrop = document.getElementById('sidebar-backdrop');
-
-  function openMobileSidebar(){
-    sidebar.classList.add('is-mobile-open');
-    backdrop.classList.add('is-visible');
-  }
-  function closeMobileSidebar(){
-    sidebar.classList.remove('is-mobile-open');
-    backdrop.classList.remove('is-visible');
-  }
-
-  document.getElementById('mobile-menu-btn').addEventListener('click', openMobileSidebar);
-  backdrop.addEventListener('click', closeMobileSidebar);
-
-  document.getElementById('sidebar-toggle').addEventListener('click', () => {
-    if (window.innerWidth < 1024) { closeMobileSidebar(); return; }
-    sidebar.classList.toggle('is-collapsed');
-  });
-
-  document.querySelectorAll('[data-submenu-for]').forEach(submenu => {
-    const trigger = document.getElementById(submenu.dataset.submenuFor);
-    trigger.addEventListener('click', () => {
-      trigger.classList.toggle('is-open');
-      submenu.classList.toggle('is-open');
-    });
-  });
+  GoBlueSidebar.render('dashboard');
+  GoBlueTopBar.render();
 </script>
 
 </body>
