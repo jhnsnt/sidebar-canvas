@@ -33,6 +33,7 @@
 
   .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
   .panel-title{ font-family:'Archivo',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+  .panel-title-bar{ display:inline-block; width:3px; height:16px; border-radius:2px; margin-right:.6rem; vertical-align:-2px; flex-shrink:0; }
   .kpi-footer-value{ font-family:'Archivo',sans-serif; font-size:14.5px; line-height:1.35; font-weight:800; }
 
   .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
@@ -453,7 +454,7 @@
       <!-- ================= SUMMARY INFO ================= -->
       <div class="panel p-5 md:p-6">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-summary">
-          <h2 class="panel-title text-[var(--ink)]">Summary Info</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Summary Info</h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-summary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
 
@@ -545,7 +546,7 @@
       <!-- ================= NOTES ================= -->
       <div class="panel p-5 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-notes">
-          <h2 class="panel-title text-[var(--ink)] flex items-center gap-2">Notes <span class="count-badge">0</span></h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center gap-2"><span class="panel-title-bar" style="background:var(--primary); margin-right:0;"></span>Notes <span class="count-badge">0</span></h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-notes" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="body-notes" class="mt-4 flex items-center gap-3">
@@ -559,7 +560,7 @@
       <!-- ================= TRAVELERS ================= -->
       <div class="panel p-5 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-travelers">
-          <h2 class="panel-title text-[var(--ink)]">Travelers</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Travelers</h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-travelers" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="body-travelers" class="mt-4 overflow-x-auto table-scroll">
@@ -608,7 +609,7 @@
       <!-- ================= CANCELED TRAVELERS ================= -->
       <div class="panel p-5 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-canceled">
-          <h2 class="panel-title text-[var(--ink)]">Canceled Travelers</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Canceled Travelers</h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-canceled" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="body-canceled" class="mt-4 overflow-x-auto table-scroll">
@@ -632,7 +633,7 @@
       <!-- ================= CANCELED WITHOUT PAYMENTS (collapsed) ================= -->
       <div class="panel p-5 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-canceled-nopay">
-          <h2 class="panel-title text-[var(--ink)]">Canceled Without Payments</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Canceled Without Payments</h2>
           <svg class="collapse-chevron" data-icon-for="body-canceled-nopay" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="body-canceled-nopay" class="mt-4 hidden">
@@ -643,7 +644,7 @@
       <!-- ================= DOCUMENTS ================= -->
       <div class="panel p-5 mt-5">
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-documents" role="button" tabindex="0">
-          <h2 class="panel-title text-[var(--ink)]">Documents</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Documents</h2>
           <div class="flex items-center gap-3">
             <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Upload</button>
             <svg class="collapse-chevron is-open" data-icon-for="body-documents" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
@@ -657,7 +658,7 @@
       <!-- ================= CUSTOMER TRIP DOCUMENTS ================= -->
       <div class="panel p-5 mt-5">
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-customer-docs" role="button" tabindex="0">
-          <h2 class="panel-title text-[var(--ink)]">Customer Trip Documents</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Customer Trip Documents</h2>
           <div class="flex items-center gap-3">
             <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Upload</button>
             <svg class="collapse-chevron is-open" data-icon-for="body-customer-docs" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
@@ -671,7 +672,7 @@
       <!-- ================= BOOKING AGREEMENTS ================= -->
       <div class="panel p-5 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-agreements">
-          <h2 class="panel-title text-[var(--ink)]">Booking Agreements</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Booking Agreements</h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-agreements" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div id="body-agreements" class="mt-4">

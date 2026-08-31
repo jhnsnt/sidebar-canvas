@@ -33,6 +33,7 @@
 
   .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
   .panel-title{ font-family:'Archivo',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+  .panel-title-bar{ display:inline-block; width:3px; height:16px; border-radius:2px; margin-right:.6rem; vertical-align:-2px; flex-shrink:0; }
   .kpi-footer-value{ font-family:'Archivo',sans-serif; font-size:14.5px; line-height:1.35; font-weight:800; }
 
   .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
@@ -375,7 +376,7 @@
       <!-- ================= PASSENGER INFO ================= -->
       <div class="panel p-5 md:p-6">
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-passenger-info" role="button" tabindex="0">
-          <h2 class="panel-title text-[var(--ink)]">Passenger Info</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Passenger Info</h2>
           <div class="flex items-center gap-3">
             <button class="export-btn font-semibold" onclick="event.stopPropagation()">
               Notes <span class="count-badge">0</span>
@@ -425,7 +426,7 @@
       <!-- ================= TRIP INFO ================= -->
       <div class="panel p-5 md:p-6 mt-5">
         <button class="collapse-trigger w-full flex items-center justify-between" data-target="body-trip-info">
-          <h2 class="panel-title text-[var(--ink)]">Trip Info</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Trip Info</h2>
           <svg class="collapse-chevron is-open" data-icon-for="body-trip-info" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
         </button>
 
@@ -476,7 +477,7 @@
       <!-- ================= PAYMENTS ================= -->
       <div class="panel p-5 md:p-6 mt-5">
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-payments" role="button" tabindex="0">
-          <h2 class="panel-title text-[var(--ink)]">Payments</h2>
+          <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Payments</h2>
           <div class="flex items-center gap-3">
             <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Transfer Payment</button>
             <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Accept Payment</button>
