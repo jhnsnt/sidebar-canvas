@@ -113,20 +113,41 @@
   @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
   @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
 
-  /* ---- KPI ledger strip: one continuous board, not scattered blob-decorated cards ---- */
-  .ledger{
-    background:#fff; border:1px solid var(--line); border-radius:.6rem;
-    display:grid; grid-template-columns:repeat(4, 1fr);
+  /* ---- Greeting header + period tabs ---- */
+  .greeting-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .period-tabs{ display:inline-flex; align-items:center; gap:.25rem; background:#fff; border:1px solid var(--line); border-radius:.6rem; padding:.25rem; }
+  .period-tab{
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:.82rem; font-weight:600; color:var(--slate);
+    padding:.45rem .9rem; border-radius:.4rem; transition:background .15s ease, color .15s ease; cursor:pointer; white-space:nowrap;
   }
-  .ledger-cell{ position:relative; padding:1.1rem 1.35rem; border-left:1px solid var(--line-soft); }
-  .ledger-cell:first-child{ border-left:0; }
-  .ledger-tab{ position:absolute; top:0; left:0; width:3px; height:100%; }
+  .period-tab:hover{ color:var(--ink); }
+  .period-tab.is-active{ background:var(--sidebar); color:#fff; }
+
+  /* ---- KPI ledger strip: separate cards with top accent, icon badge, and comparison pill ---- */
+  .ledger{ display:grid; grid-template-columns:repeat(5, 1fr); gap:1rem; align-items:stretch; }
+  .ledger-avatar{
+    width:34px; height:34px; border-radius:9999px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    background:rgba(255,255,255,.12); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:700;
+  }
+  .ledger-wave{ position:absolute; bottom:0; left:0; width:100%; height:36px; opacity:.55; pointer-events:none; }
+  .ledger-cell{
+    position:relative; background:#fff; border:1px solid var(--line); border-radius:.75rem;
+    padding:1.15rem 1.35rem 1.35rem; overflow:hidden;
+  }
+  .ledger-tab{ position:absolute; top:0; left:0; width:100%; height:3px; }
+  .ledger-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+  .ledger-icon{ width:34px; height:34px; border-radius:9999px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ledger-pill{ font-family:'Plus Jakarta Sans',sans-serif; font-size:.68rem; font-weight:700; padding:.25rem .65rem; border-radius:9999px; white-space:nowrap; }
   .ledger-figure{ font-family:'Archivo',sans-serif; font-size:32px; font-weight:800; letter-spacing:-0.025em; line-height:1.15; }
   .ledger-sub{ font-size:.68rem; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); margin-top:.3rem; font-weight:600; }
-  .ledger-detail{ font-size:.78rem; color:var(--ink); margin-top:.6rem; padding-top:.6rem; border-top:1px dashed var(--line-soft); }
-  .ledger-detail:first-of-type{ border-top:0; padding-top:0; margin-top:.5rem; }
-  @media (max-width:1023px){ .ledger{ grid-template-columns:repeat(2, 1fr); } .ledger-cell:nth-child(3){ border-left:0; } .ledger-cell:nth-child(n+3){ border-top:1px solid var(--line-soft); } }
-  @media (max-width:639px){ .ledger{ grid-template-columns:1fr; } .ledger-cell{ border-left:0 !important; } .ledger-cell:not(:first-child){ border-top:1px solid var(--line-soft); } }
+  .ledger-detail{ font-size:.78rem; color:var(--ink); margin-top:.7rem; padding-top:.7rem; border-top:1px solid var(--line-soft); }
+  .ledger-detail-row{ display:flex; align-items:baseline; justify-content:space-between; }
+  .ledger-detail-row + .ledger-detail-row{ margin-top:.45rem; }
+  .ledger-cell.is-dark{ background:var(--sidebar); border-color:var(--sidebar); }
+  .ledger-cell.is-dark .ledger-sub{ color:rgba(255,255,255,.6); }
+  .ledger-cell.is-dark .ledger-detail{ border-top-color:rgba(255,255,255,.14); }
+  @media (max-width:1023px){ .ledger{ grid-template-columns:repeat(2, 1fr); } .ledger-cell.is-dark{ grid-column:1 / -1; } }
+  @media (max-width:639px){ .ledger{ grid-template-columns:1fr; } .ledger-cell.is-dark{ grid-column:auto; } }
 
   /* ---- Data tables ---- */
   .data-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
@@ -211,10 +232,15 @@
 
     <!-- ================= PAGE CONTENT ================= -->
     <main class="p-4 md:p-6">
-      <div class="flex items-center justify-between mb-5">
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
         <div>
-          <p class="section-eyebrow">Overview</p>
-          <h1 class="page-title text-[var(--ink)] mt-0.5">Dashboard</h1>
+          <h1 class="greeting-title text-[var(--ink)]">Good morning, Meghan</h1>
+          <p class="text-[var(--slate)] mt-1.5">Wednesday, August 26 &middot; <span class="num">17</span> bookings and <span class="num">$123,124</span> at risk need a look today.</p>
+        </div>
+        <div class="period-tabs" id="period-tabs">
+          <span class="period-tab" data-period="today">Today</span>
+          <span class="period-tab is-active" data-period="month">This month</span>
+          <span class="period-tab" data-period="season">Season to date</span>
         </div>
       </div>
 
@@ -223,48 +249,87 @@
 
         <div class="ledger-cell">
           <div class="ledger-tab" style="background:var(--brick);"></div>
-          <p class="ledger-figure num text-[var(--brick)]">149</p>
-          <p class="ledger-sub">Pax Past Due</p>
-          <div class="ledger-detail flex items-baseline justify-between">
-            <span class="text-[var(--slate)]">Total past due</span>
-            <span class="num font-semibold kpi-footer-value">$17,755</span>
+          <div class="ledger-header">
+            <div class="ledger-icon" style="background:var(--brick-tint); color:var(--brick);">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+            <span class="ledger-pill" style="background:var(--brick-tint); color:var(--brick);">+9 this week</span>
           </div>
-          <div class="ledger-detail flex items-baseline justify-between">
-            <span class="text-[var(--slate)]">Revenue at risk</span>
-            <span class="num font-semibold kpi-footer-value">$120,194</span>
-          </div>
-        </div>
-
-        <div class="ledger-cell">
-          <div class="ledger-tab" style="background:var(--forest);"></div>
-          <p class="ledger-figure num text-[var(--forest)]">05</p>
-          <p class="ledger-sub">Open Proposals</p>
-          <div class="ledger-detail flex items-baseline justify-between">
-            <span class="text-[var(--slate)]">Quoted revenue</span>
-            <span class="num font-semibold kpi-footer-value">$32,875</span>
+          <p class="ledger-figure num text-[var(--ink)]">154</p>
+          <p class="ledger-sub">Travelers Overdue</p>
+          <div class="ledger-detail">
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Past due</span><span class="num font-semibold kpi-footer-value text-[var(--brick)]">$18,275</span></div>
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Revenue at risk</span><span class="num font-semibold kpi-footer-value">$123,124</span></div>
           </div>
         </div>
 
         <div class="ledger-cell">
           <div class="ledger-tab" style="background:var(--primary);"></div>
-          <p class="ledger-figure num text-[var(--primary)]">17</p>
-          <p class="ledger-sub">Bookings</p>
-          <div class="ledger-detail flex items-baseline justify-between">
-            <span class="text-[var(--slate)]">Total revenue</span>
-            <span class="num font-semibold kpi-footer-value">$302,799</span>
+          <div class="ledger-header">
+            <div class="ledger-icon" style="background:var(--sand); color:var(--primary);">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <span class="ledger-pill" style="background:var(--sand); color:var(--primary);">31% &rarr; proposal</span>
+          </div>
+          <p class="ledger-figure num text-[var(--ink)]">42</p>
+          <p class="ledger-sub">Open Quotes</p>
+          <div class="ledger-detail">
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Quoted value</span><span class="num font-semibold kpi-footer-value">$187,400</span></div>
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Awaiting first reply</span><span class="num font-semibold kpi-footer-value text-[var(--brick)]">11</span></div>
           </div>
         </div>
 
         <div class="ledger-cell">
           <div class="ledger-tab" style="background:var(--amber);"></div>
-          <p class="ledger-sub">Month Goal</p>
-          <p class="mt-1"><span class="num kpi-footer-value text-[var(--ink)]">$54,619</span> <span class="num text-[var(--slate)] text-sm">/ $425,000</span></p>
-          <div class="mt-1.5 h-1.5 rounded-full" style="background:var(--line-soft);">
-            <div class="h-full rounded-full" style="width:12%; background:var(--amber);"></div>
+          <div class="ledger-header">
+            <div class="ledger-icon" style="background:var(--amber-tint); color:var(--amber);">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+            </div>
+            <span class="ledger-pill" style="background:var(--amber-tint); color:var(--amber);">27 pax</span>
           </div>
+          <p class="ledger-figure num text-[var(--ink)]">5</p>
+          <p class="ledger-sub">Active Proposals</p>
           <div class="ledger-detail">
-            <p class="ledger-sub" style="margin-top:0;">Year Goal</p>
-            <p class="mt-1"><span class="num kpi-footer-value text-[var(--ink)]">$302,799</span> <span class="num text-[var(--slate)] text-sm">/ $0</span></p>
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Quoted revenue</span><span class="num font-semibold kpi-footer-value">$32,875</span></div>
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Avg. age</span><span class="num font-semibold kpi-footer-value">6 days</span></div>
+          </div>
+        </div>
+
+        <div class="ledger-cell">
+          <div class="ledger-tab" style="background:var(--forest);"></div>
+          <div class="ledger-header">
+            <div class="ledger-icon" style="background:var(--forest-tint); color:var(--forest);">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <span class="ledger-pill" style="background:var(--forest-tint); color:var(--forest);">+4 vs. last month</span>
+          </div>
+          <p class="ledger-figure num text-[var(--ink)]">17</p>
+          <p class="ledger-sub">Bookings This Month</p>
+          <div class="ledger-detail">
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Booked revenue</span><span class="num font-semibold kpi-footer-value text-[var(--forest)]">$304,995</span></div>
+            <div class="ledger-detail-row"><span class="text-[var(--slate)]">Travelers</span><span class="num font-semibold kpi-footer-value">255</span></div>
+          </div>
+        </div>
+
+        <div class="ledger-cell is-dark">
+          <svg class="ledger-wave" viewBox="0 0 400 40" preserveAspectRatio="none">
+            <path d="M0 28 Q 50 10 100 22 T 200 18 T 300 26 T 400 14 V40 H0 Z" fill="var(--primary-light)" opacity="0.35"/>
+          </svg>
+          <div class="ledger-header">
+            <div class="flex items-center gap-2">
+              <div class="ledger-avatar">MJ</div>
+              <span class="font-semibold text-sm" style="color:#fff;">My goal</span>
+            </div>
+            <span class="ledger-pill" style="background:rgba(168,63,46,.4); color:#f5b8ab;">18% behind pace</span>
+          </div>
+          <p class="ledger-figure num" style="color:#fff;">12%</p>
+          <p class="ledger-sub" style="color:rgba(255,255,255,.6);">$53,919 of $425,000 &middot; August</p>
+          <div class="mt-3 h-1.5 rounded-full" style="background:rgba(255,255,255,.15); position:relative; z-index:1;">
+            <div class="h-full rounded-full" style="width:12%; background:var(--primary-light);"></div>
+          </div>
+          <div class="ledger-detail" style="position:relative; z-index:1;">
+            <div class="ledger-detail-row"><span style="color:rgba(255,255,255,.6);">Season to date</span><span class="num font-semibold kpi-footer-value" style="color:#fff;">$304,995</span></div>
+            <div class="ledger-detail-row"><span style="color:rgba(255,255,255,.6);">Season goal</span><span class="num font-semibold kpi-footer-value" style="color:#f0b86e;">Not set</span></div>
           </div>
         </div>
       </div>
@@ -417,6 +482,13 @@
 <script>
   GoBlueSidebar.render('dashboard');
   GoBlueTopBar.render();
+
+  document.querySelectorAll('#period-tabs .period-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#period-tabs .period-tab').forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+    });
+  });
 </script>
 
 </body>
