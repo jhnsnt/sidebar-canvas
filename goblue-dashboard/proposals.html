@@ -166,6 +166,15 @@
 
   .check-row{ display:flex; align-items:center; gap:.55rem; font-size:.85rem; color:var(--ink); cursor:pointer; }
   .check-row input{ accent-color:var(--primary); width:16px; height:16px; }
+
+  .data-table tr.is-duplicate td{ background:var(--amber-tint); }
+  .data-table tr.is-duplicate:hover td{ background:#f2e6c9; }
+  .data-table tr.is-duplicate .sticky-col{ background:var(--amber-tint); }
+  .data-table tr.is-duplicate:hover .sticky-col{ background:#f2e6c9; }
+  .dup-badge{
+    display:inline-block; font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px; font-weight:700;
+    background:var(--amber); color:#fff; padding:.05rem .5rem; border-radius:9999px; margin-left:.4rem; vertical-align:middle;
+  }
 </style>
 </head>
 <body class="antialiased">
@@ -206,26 +215,26 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
           <div>
             <label class="field-label">Depart Date Begin</label>
-            <input type="date" class="text-field">
+            <input type="date" class="text-field" id="depart-begin">
           </div>
           <div>
             <label class="field-label">Depart Date End</label>
-            <input type="date" class="text-field">
+            <input type="date" class="text-field" id="depart-end">
           </div>
           <div>
-            <label class="field-label">Book Date Begin</label>
-            <input type="date" class="text-field">
+            <label class="field-label">Proposal Date Begin</label>
+            <input type="date" class="text-field" id="proposal-begin">
           </div>
           <div>
-            <label class="field-label">Book Date End</label>
-            <input type="date" class="text-field">
+            <label class="field-label">Proposal Date End</label>
+            <input type="date" class="text-field" id="proposal-end">
           </div>
         </div>
 
         <div class="flex flex-wrap items-end gap-4 mt-5 pt-5 border-t border-[var(--line-soft)]">
           <div class="flex-1 min-w-[180px]">
             <label class="field-label">Filter By Sales Person</label>
-            <select class="text-field">
+            <select class="text-field" id="sales-person-filter">
               <option value="">All Sales People</option>
               <option>Meghan Jenkins</option>
               <option>Justin Rodriguez</option>
@@ -234,7 +243,7 @@
           </div>
           <div class="flex-1 min-w-[180px]">
             <label class="field-label">Filter By Origin</label>
-            <select class="text-field">
+            <select class="text-field" id="origin-filter">
               <option value="">All Origins</option>
               <option>online</option>
               <option>phone</option>
@@ -242,8 +251,8 @@
             </select>
           </div>
           <div class="flex items-center gap-2">
-            <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold">Filter</button>
-            <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold">Clear</button>
+            <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="proposals-filter-btn">Filter</button>
+            <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="proposals-clear-btn">Clear</button>
           </div>
         </div>
       </div>
@@ -271,7 +280,7 @@
           </div>
           <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
             Search:
-            <input type="text" class="text-field" style="width:auto;" placeholder="">
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="proposals-search">
           </label>
         </div>
 
@@ -281,7 +290,6 @@
               <tr>
                 <th class="sticky-col">
                   <label class="flex items-center gap-2"><input type="checkbox" style="accent-color:var(--primary);"> #</label>
-                  <span class="sort-caret"></span>
                 </th>
                 <th>Sales Person</th>
                 <th>Origin</th>
@@ -297,7 +305,7 @@
                 <th class="text-right">Total</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="proposals-tbody">
               <tr>
                 <td class="sticky-col"><input type="checkbox" style="accent-color:var(--primary);"></td>
                 <td>Meghan Jenkins</td>
@@ -328,7 +336,7 @@
                 <td class="text-right num">7</td>
                 <td class="text-right num font-semibold">$5,893.00</td>
               </tr>
-              <tr>
+              <tr class="is-duplicate">
                 <td class="sticky-col"><input type="checkbox" style="accent-color:var(--primary);"></td>
                 <td>Meghan Jenkins</td>
                 <td class="text-[var(--slate)]">online</td>
@@ -337,13 +345,13 @@
                 <td class="num">03/21/2027</td>
                 <td class="num">08/28/2026</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">YSCYCCP2IF</a></td>
-                <td>Kelly Tula</td>
+                <td>Kelly Tula <span class="dup-badge">Possible duplicate</span></td>
                 <td>Adelphi</td>
                 <td>Cancun</td>
                 <td class="text-right num">6</td>
                 <td class="text-right num font-semibold">$8,188.00</td>
               </tr>
-              <tr>
+              <tr class="is-duplicate">
                 <td class="sticky-col"><input type="checkbox" style="accent-color:var(--primary);"></td>
                 <td>Meghan Jenkins</td>
                 <td class="text-[var(--slate)]">online</td>
@@ -352,13 +360,13 @@
                 <td class="num">03/21/2027</td>
                 <td class="num">08/28/2026</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">XQ82EERG5C</a></td>
-                <td>Kelly Tula</td>
+                <td>Kelly Tula <span class="dup-badge">Possible duplicate</span></td>
                 <td>Adelphi</td>
                 <td>Cancun</td>
                 <td class="text-right num">6</td>
                 <td class="text-right num font-semibold">$8,188.00</td>
               </tr>
-              <tr>
+              <tr class="is-duplicate">
                 <td class="sticky-col"><input type="checkbox" style="accent-color:var(--primary);"></td>
                 <td>Meghan Jenkins</td>
                 <td class="text-[var(--slate)]">online</td>
@@ -367,7 +375,7 @@
                 <td class="num">03/21/2027</td>
                 <td class="num">08/28/2026</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">V0XSJVPBID</a></td>
-                <td>Kelly Tula</td>
+                <td>Kelly Tula <span class="dup-badge">Possible duplicate</span></td>
                 <td>Adelphi</td>
                 <td>Cancun</td>
                 <td class="text-right num">6</td>
@@ -378,7 +386,7 @@
         </div>
 
         <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)]">
-          <p>Showing 1 to 5 of 5 entries</p>
+          <p id="proposals-count">Showing 1 to 5 of 5 entries</p>
           <div class="flex items-center gap-4">
             <span class="opacity-40 cursor-not-allowed">Previous</span>
             <span class="opacity-40 cursor-not-allowed">Next</span>
@@ -396,6 +404,75 @@
 <script>
   GoBlueSidebar.render('proposals');
   GoBlueTopBar.render();
+
+  // ---- Filter + search ----
+  (function () {
+    function parseMDY(str) {
+      const parts = str.trim().split('/');
+      if (parts.length !== 3) return null;
+      return new Date(+parts[2], +parts[0] - 1, +parts[1]).getTime();
+    }
+    function parseISO(str) {
+      if (!str) return null;
+      const parts = str.split('-');
+      return new Date(+parts[0], +parts[1] - 1, +parts[2]).getTime();
+    }
+
+    const departBegin = document.getElementById('depart-begin');
+    const departEnd = document.getElementById('depart-end');
+    const proposalBegin = document.getElementById('proposal-begin');
+    const proposalEnd = document.getElementById('proposal-end');
+    const salesPersonFilter = document.getElementById('sales-person-filter');
+    const originFilter = document.getElementById('origin-filter');
+    const search = document.getElementById('proposals-search');
+    const tbody = document.getElementById('proposals-tbody');
+    const countLabel = document.getElementById('proposals-count');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const totalCount = rows.length;
+
+    function applyFilters() {
+      const searchValue = search.value.trim().toLowerCase();
+      const departBeginVal = parseISO(departBegin.value);
+      const departEndVal = parseISO(departEnd.value);
+      const proposalBeginVal = parseISO(proposalBegin.value);
+      const proposalEndVal = parseISO(proposalEnd.value);
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const cells = row.children;
+        const salesPersonText = cells[1].textContent.trim().toLowerCase();
+        const originText = cells[2].textContent.trim().toLowerCase();
+        const proposalDateVal = parseMDY(cells[3].textContent);
+        const departDateVal = parseMDY(cells[4].textContent);
+        const rowText = row.textContent.toLowerCase();
+
+        let visible = true;
+        if (departBeginVal && departDateVal < departBeginVal) visible = false;
+        if (departEndVal && departDateVal > departEndVal) visible = false;
+        if (proposalBeginVal && proposalDateVal < proposalBeginVal) visible = false;
+        if (proposalEndVal && proposalDateVal > proposalEndVal) visible = false;
+        if (salesPersonFilter.value && salesPersonText !== salesPersonFilter.value.toLowerCase()) visible = false;
+        if (originFilter.value && originText !== originFilter.value.toLowerCase()) visible = false;
+        if (searchValue && !rowText.includes(searchValue)) visible = false;
+
+        row.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+      });
+
+      countLabel.textContent = visibleCount === 0
+        ? 'No matching proposals found'
+        : 'Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries';
+    }
+
+    document.getElementById('proposals-filter-btn').addEventListener('click', applyFilters);
+    document.getElementById('proposals-clear-btn').addEventListener('click', () => {
+      [departBegin, departEnd, proposalBegin, proposalEnd].forEach(el => el.value = '');
+      [salesPersonFilter, originFilter].forEach(el => el.value = '');
+      search.value = '';
+      applyFilters();
+    });
+    search.addEventListener('input', applyFilters);
+  })();
 </script>
 
 </body>
