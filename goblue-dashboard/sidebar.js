@@ -32,6 +32,7 @@
       children: [
         { id: 'bookings', label: 'Bookings', href: 'bookings.html' },
         { id: 'proposals', label: 'Proposals', href: 'proposals.html' },
+        { id: 'passengers', label: 'Passengers', href: 'passengers.html' },
         { id: 'itineraries', label: 'Itineraries', href: '#' },
         { id: 'vendors', label: 'Vendors', href: '#' },
         { id: 'rooming-lists', label: 'Rooming Lists', href: '#' }
@@ -99,9 +100,9 @@
       '<div id="sidebar-backdrop" class="sidebar-backdrop"></div>' +
       '<aside id="sidebar" class="sidebar flex-shrink-0 flex flex-col py-5">' +
         '<div class="flex items-center justify-between pl-5 pr-4 pb-5 mb-2 border-b border-white/10">' +
-          '<div class="sidebar-brand-text leading-none">' +
+          '<a href="index.html" class="sidebar-brand-text leading-none" title="Dashboard">' +
             '<img src="https://gobluetours.com/_next/image/?url=%2Flogo.webp&w=390&q=75" alt="Go Blue Tours" class="h-9 w-auto rounded">' +
-          '</div>' +
+          '</a>' +
           '<button id="sidebar-toggle" class="sidebar-toggle text-white/50 hover:text-white transition">' +
             '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>' +
           '</button>' +

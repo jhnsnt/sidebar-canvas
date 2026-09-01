@@ -131,9 +131,16 @@
   }
   .ledger-wave{ position:absolute; bottom:0; left:0; width:100%; height:36px; opacity:.55; pointer-events:none; }
   .ledger-cell{
-    position:relative; background:#fff; border:1px solid var(--line); border-radius:.75rem;
-    padding:1.15rem 1.35rem 1.35rem; overflow:hidden;
+    position:relative; display:block; background:#fff; border:1px solid var(--line); border-radius:.75rem;
+    padding:1.15rem 1.35rem 1.35rem; overflow:hidden; text-decoration:none; color:inherit;
   }
+  .ledger-cell.is-clickable{ cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease; }
+  .ledger-cell.is-clickable:hover{ border-color:var(--primary-light); box-shadow:0 6px 18px -6px rgba(11,26,51,.18); }
+  .panel-link{
+    display:inline-flex; align-items:center; gap:.3rem; font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:.8rem; font-weight:600; color:var(--primary); text-decoration:none; transition:gap .15s ease;
+  }
+  .panel-link:hover{ gap:.5rem; text-decoration:underline; }
   .ledger-tab{ position:absolute; top:0; left:0; width:100%; height:3px; }
   .ledger-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
   .ledger-icon{ width:34px; height:34px; border-radius:9999px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -247,7 +254,7 @@
       <!-- ---- KPI ledger strip ---- -->
       <div class="ledger">
 
-        <div class="ledger-cell">
+        <a href="#overdue-travelers-panel" class="ledger-cell is-clickable">
           <div class="ledger-tab" style="background:var(--brick);"></div>
           <div class="ledger-header">
             <div class="ledger-icon" style="background:var(--brick-tint); color:var(--brick);">
@@ -261,9 +268,9 @@
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Past due</span><span class="num font-semibold kpi-footer-value text-[var(--brick)]">$18,275</span></div>
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Revenue at risk</span><span class="num font-semibold kpi-footer-value">$123,124</span></div>
           </div>
-        </div>
+        </a>
 
-        <div class="ledger-cell">
+        <a href="booking-quotes-report.html" class="ledger-cell is-clickable">
           <div class="ledger-tab" style="background:var(--primary);"></div>
           <div class="ledger-header">
             <div class="ledger-icon" style="background:var(--sand); color:var(--primary);">
@@ -277,9 +284,9 @@
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Quoted value</span><span class="num font-semibold kpi-footer-value">$187,400</span></div>
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Awaiting first reply</span><span class="num font-semibold kpi-footer-value text-[var(--brick)]">11</span></div>
           </div>
-        </div>
+        </a>
 
-        <div class="ledger-cell">
+        <a href="proposals.html" class="ledger-cell is-clickable">
           <div class="ledger-tab" style="background:var(--amber);"></div>
           <div class="ledger-header">
             <div class="ledger-icon" style="background:var(--amber-tint); color:var(--amber);">
@@ -293,9 +300,9 @@
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Quoted revenue</span><span class="num font-semibold kpi-footer-value">$32,875</span></div>
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Avg. age</span><span class="num font-semibold kpi-footer-value">6 days</span></div>
           </div>
-        </div>
+        </a>
 
-        <div class="ledger-cell">
+        <a href="bookings.html" class="ledger-cell is-clickable">
           <div class="ledger-tab" style="background:var(--forest);"></div>
           <div class="ledger-header">
             <div class="ledger-icon" style="background:var(--forest-tint); color:var(--forest);">
@@ -309,7 +316,7 @@
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Booked revenue</span><span class="num font-semibold kpi-footer-value text-[var(--forest)]">$304,995</span></div>
             <div class="ledger-detail-row"><span class="text-[var(--slate)]">Travelers</span><span class="num font-semibold kpi-footer-value">255</span></div>
           </div>
-        </div>
+        </a>
 
         <div class="ledger-cell is-dark">
           <svg class="ledger-wave" viewBox="0 0 400 40" preserveAspectRatio="none">
@@ -372,7 +379,13 @@
               <span class="panel-title-bar" style="background:var(--forest);"></span>
               Proposals
             </h2>
-            <input type="text" class="search-input" placeholder="Search…">
+            <div class="flex items-center gap-3">
+              <input type="text" class="search-input" placeholder="Search…">
+              <a href="proposals.html" class="panel-link flex-shrink-0">
+                View all
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
           </div>
           <div class="overflow-x-auto w-full table-scroll">
             <table class="data-table" id="proposals-table">
@@ -398,7 +411,13 @@
             <span class="panel-title-bar" style="background:var(--primary);"></span>
             Bookings
           </h2>
-          <input type="text" class="search-input" placeholder="Search…">
+          <div class="flex items-center gap-3">
+            <input type="text" class="search-input" placeholder="Search…">
+            <a href="bookings.html" class="panel-link flex-shrink-0">
+              View all
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
         </div>
         <div class="overflow-x-auto w-full table-scroll">
           <table class="data-table" id="bookings-table">
@@ -428,7 +447,7 @@
       </div>
 
       <!-- ---- Overdue Travelers ---- -->
-      <div class="panel p-5 mt-5">
+      <div class="panel p-5 mt-5" id="overdue-travelers-panel" style="scroll-margin-top:5rem;">
         <h2 class="panel-title text-[var(--ink)] pb-4 border-b border-[var(--line)] flex items-center">
           <span class="panel-title-bar" style="background:var(--brick);"></span>
           Overdue Travelers
