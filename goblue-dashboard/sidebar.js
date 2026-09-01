@@ -30,7 +30,8 @@
       id: 'operations', label: 'Operations',
       icon: '<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
       children: [
-        { id: 'bookings', label: 'Bookings', href: '#' },
+        { id: 'bookings', label: 'Bookings', href: 'bookings.html' },
+        { id: 'proposals', label: 'Proposals', href: 'proposals.html' },
         { id: 'itineraries', label: 'Itineraries', href: '#' },
         { id: 'vendors', label: 'Vendors', href: '#' },
         { id: 'rooming-lists', label: 'Rooming Lists', href: '#' }
@@ -42,7 +43,8 @@
       children: [
         { id: 'revenue', label: 'Revenue', href: '#' },
         { id: 'sales-by-rep', label: 'Sales by Rep', href: '#' },
-        { id: 'enrollment', label: 'Enrollment', href: '#' }
+        { id: 'enrollment', label: 'Enrollment', href: '#' },
+        { id: 'booking-quotes-report', label: 'Booking Quotes Report', href: 'booking-quotes-report.html' }
       ]
     },
     {
