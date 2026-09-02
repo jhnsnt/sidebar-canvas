@@ -171,6 +171,10 @@
   .sort-caret::before, .sort-caret::after{ content:''; display:block; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; }
   .sort-caret::before{ border-bottom:3px solid var(--line); }
   .sort-caret::after{ border-top:3px solid var(--line); }
+  th.is-sortable{ cursor:pointer; user-select:none; }
+  th.is-sortable:hover{ color:var(--ink); }
+  th.sort-asc .sort-caret::before{ border-bottom-color:var(--primary); }
+  th.sort-desc .sort-caret::after{ border-top-color:var(--primary); }
 
   .exp-badge{
     display:inline-block; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700;
@@ -277,7 +281,7 @@
                 <th class="sticky-col">Passenger Name</th>
                 <th>Group ID <span class="sort-caret"></span></th>
                 <th>Sales Person</th>
-                <th class="text-center">Passengers <span class="sort-caret"></span></th>
+                <th class="text-center">Pax <span class="sort-caret"></span></th>
                 <th>Destination</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -407,6 +411,7 @@
 <script src="topbar.js"></script>
 <script src="table-scroll.js"></script>
 <script src="table-export.js"></script>
+<script src="table-sort.js"></script>
 <script>
   GoBlueSidebar.render('booking-quotes-report');
   GoBlueTopBar.render();
@@ -419,6 +424,7 @@
     pdfBtnId: 'quotes-pdf-btn',
     fileName: 'booking-quotes-report'
   });
+  GoBlueTableSort.wire('quotes-tbody');
 
   // ---- Expiry urgency badges ----
   (function () {
