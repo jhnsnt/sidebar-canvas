@@ -126,6 +126,8 @@
     text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
     font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Archivo',sans-serif; white-space:nowrap;
   }
+  .data-table th.text-right{ text-align:right; }
+  .data-table th.text-center{ text-align:center; }
   .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; line-height:1.4; }
   .data-table td.font-semibold{ font-weight:700; }
   .data-table td.font-mono, .data-table td.code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -136,6 +138,12 @@
   .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
   .data-table thead .sticky-col{ z-index:3; }
   .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
   @media (max-width:1023px){
     .table-scroll{
       background-repeat:no-repeat; background-color:#fff;
@@ -172,6 +180,15 @@
   .exp-badge.is-soon{ background:var(--amber-tint); color:var(--amber); }
   .exp-badge.is-expired{ background:var(--brick-tint); color:var(--brick); }
   .no-results-row td{ text-align:center; color:var(--slate); padding:2rem .75rem; }
+
+  @media print{
+    #sidebar-root, #topbar-root, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    main{ padding:0 !important; }
+    .panel{ border:none; }
+    .sticky-col{ position:static; }
+    .table-scroll{ overflow:visible !important; }
+  }
 </style>
 </head>
 <body class="antialiased">
@@ -199,7 +216,7 @@
           <span class="text-[var(--slate)]">/</span>
           <h1 class="page-title text-[var(--ink)] truncate">Booking Quotes Report</h1>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="flex items-center gap-2 flex-shrink-0 no-print">
           <button class="export-btn" onclick="window.location.href='index.html'">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Back
@@ -208,7 +225,7 @@
       </div>
 
       <!-- ================= FILTERS ================= -->
-      <div class="panel p-5 md:p-6">
+      <div class="panel p-5 md:p-6 no-print">
         <div class="flex flex-wrap items-end gap-4">
           <div class="flex-1 min-w-[220px]">
             <label class="field-label">Destination</label>
@@ -228,21 +245,21 @@
 
       <!-- ================= QUOTES TABLE ================= -->
       <div class="panel p-5 md:p-6 mt-5">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
           <div class="flex items-center gap-2">
-            <button class="export-btn">
+            <button class="export-btn" id="quotes-copy-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               Copy
             </button>
-            <button class="export-btn">
+            <button class="export-btn" id="quotes-csv-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               CSV
             </button>
-            <button class="export-btn">
+            <button class="export-btn" id="quotes-excel-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               Excel
             </button>
-            <button class="export-btn">
+            <button class="export-btn" id="quotes-pdf-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               PDF
             </button>
@@ -260,12 +277,12 @@
                 <th class="sticky-col">Passenger Name</th>
                 <th>Group ID <span class="sort-caret"></span></th>
                 <th>Sales Person</th>
+                <th class="text-center">Passengers <span class="sort-caret"></span></th>
                 <th>Destination</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Quote Date <span class="sort-caret"></span></th>
                 <th>Quote Exp Date</th>
-                <th class="text-right">Passengers <span class="sort-caret"></span></th>
               </tr>
             </thead>
             <tbody id="quotes-tbody">
@@ -273,106 +290,106 @@
                 <td class="sticky-col font-semibold">Bailey Thompson</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">Z3LZIGKN1H</a></td>
                 <td>Jacob Miller</td>
+                <td class="num text-center">4</td>
                 <td>Punta Cana</td>
                 <td class="num">03/20/2027</td>
                 <td class="num">03/25/2027</td>
                 <td class="num">2026-08-31</td>
                 <td class="num" data-exp-date="2026-09-21"><span class="exp-value">2026-09-21</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">4</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Connor Whitfield</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">D2PKXYP3IV</a></td>
                 <td>Jacob Miller</td>
+                <td class="num text-center">4</td>
                 <td>Punta Cana</td>
                 <td class="num">03/20/2027</td>
                 <td class="num">03/24/2027</td>
                 <td class="num">2026-08-31</td>
                 <td class="num" data-exp-date="2026-09-21"><span class="exp-value">2026-09-21</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">4</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Priya Chandrasekaran</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">XFLTS2E2ME</a></td>
                 <td>Ivy</td>
+                <td class="num text-center">40</td>
                 <td style="max-width:220px; white-space:normal;">Cancun, Freeport, Bahamas</td>
                 <td class="num">03/12/2027</td>
                 <td class="num">03/17/2027</td>
                 <td class="num">2026-08-31</td>
                 <td class="num" data-exp-date="2026-09-21"><span class="exp-value">2026-09-21</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">40</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Dakota Reyes</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">166MLWULQU</a></td>
                 <td>Meghan Jenkins</td>
+                <td class="num text-center">12</td>
                 <td>Cancun</td>
                 <td class="num">03/01/2027</td>
                 <td class="num">03/06/2027</td>
                 <td class="num">2026-08-31</td>
                 <td class="num" data-exp-date="2026-09-21"><span class="exp-value">2026-09-21</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">12</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Harrison Voss</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">2VFD0RBJVF</a></td>
                 <td>Jacob Miller</td>
+                <td class="num text-center">15</td>
                 <td>Cabo San Lucas</td>
                 <td class="num">03/14/2027</td>
                 <td class="num">03/19/2027</td>
                 <td class="num">2026-08-30</td>
                 <td class="num" data-exp-date="2026-09-20"><span class="exp-value">2026-09-20</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">15</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Simone Fairweather</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">1A9KQDB47F</a></td>
                 <td>Ivy</td>
+                <td class="num text-center">10</td>
                 <td>Punta Cana</td>
                 <td class="num">03/16/2027</td>
                 <td class="num">03/21/2027</td>
                 <td class="num">2026-08-28</td>
                 <td class="num" data-exp-date="2026-09-18"><span class="exp-value">2026-09-18</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">10</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Tyler Nakamura</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">XU3HSQK820</a></td>
                 <td>Edwin Yip</td>
+                <td class="num text-center">4</td>
                 <td>Cancun</td>
                 <td class="num">03/01/2027</td>
                 <td class="num">03/06/2027</td>
                 <td class="num">2026-08-28</td>
                 <td class="num" data-exp-date="2026-09-18"><span class="exp-value">2026-09-18</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">4</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Ariana Delgado</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">W0QBFO9WZP</a></td>
                 <td>Edwin Yip</td>
+                <td class="num text-center">4</td>
                 <td>Cancun</td>
                 <td class="num">03/01/2027</td>
                 <td class="num">03/06/2027</td>
                 <td class="num">2026-08-28</td>
                 <td class="num" data-exp-date="2026-09-18"><span class="exp-value">2026-09-18</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">4</td>
               </tr>
               <tr>
                 <td class="sticky-col font-semibold">Marcus Whitley</td>
                 <td><a href="#" class="code text-[var(--primary)] hover:underline">PKLY62UQCF</a></td>
                 <td>Edwin Yip</td>
+                <td class="num text-center">14</td>
                 <td>Cancun</td>
                 <td class="num">03/01/2027</td>
                 <td class="num">03/06/2027</td>
                 <td class="num">2026-08-28</td>
                 <td class="num" data-exp-date="2026-09-18"><span class="exp-value">2026-09-18</span> <span class="exp-badge"></span></td>
-                <td class="text-right num">14</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)]">
+        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
           <p id="quotes-count">Showing 1 to 9 of 9 entries</p>
           <div class="flex items-center gap-4">
             <span class="opacity-40 cursor-not-allowed">Previous</span>
@@ -381,16 +398,27 @@
         </div>
       </div>
 
-      <p class="text-xs text-[var(--slate)] mt-8 pb-6">GoBlue Tours CRM &middot; Internal use only</p>
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6 no-print">GoBlue Tours CRM &middot; Internal use only</p>
     </main>
   </div>
 </div>
 
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
+<script src="table-export.js"></script>
 <script>
   GoBlueSidebar.render('booking-quotes-report');
   GoBlueTopBar.render();
+
+  GoBlueTableExport.wire({
+    tbodyId: 'quotes-tbody',
+    copyBtnId: 'quotes-copy-btn',
+    csvBtnId: 'quotes-csv-btn',
+    excelBtnId: 'quotes-excel-btn',
+    pdfBtnId: 'quotes-pdf-btn',
+    fileName: 'booking-quotes-report'
+  });
 
   // ---- Expiry urgency badges ----
   (function () {
@@ -429,7 +457,7 @@
 
       rows.forEach(row => {
         const rowText = row.textContent.toLowerCase();
-        const destText = row.children[3].textContent.toLowerCase();
+        const destText = row.children[4].textContent.toLowerCase();
         const matchesDest = !destValue || destText.includes(destValue);
         const matchesSearch = !searchValue || rowText.includes(searchValue);
         const visible = matchesDest && matchesSearch;
@@ -450,6 +478,15 @@
     });
     search.addEventListener('input', applyFilters);
     destinationFilter.addEventListener('change', applyFilters);
+
+    // ---- Global (top bar) search mirrors into this page's search ----
+    const globalSearch = document.getElementById('global-search-input');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', () => {
+        search.value = globalSearch.value;
+        applyFilters();
+      });
+    }
   })();
 </script>
 

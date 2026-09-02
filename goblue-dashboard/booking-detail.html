@@ -126,6 +126,8 @@
     text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
     font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Archivo',sans-serif;
   }
+  .data-table th.text-right{ text-align:right; }
+  .data-table th.text-center{ text-align:center; }
   .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; line-height:1.4; }
   .data-table td.font-semibold, .data-table td.font-bold{ font-weight:700; }
   .data-table td.font-mono, .data-table td.code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -142,6 +144,12 @@
   .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
   .data-table .group-row .sticky-col{ background:var(--sand); }
   .data-table .total-row .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
   @media (max-width:1023px){
     .table-scroll{
       background-repeat:no-repeat; background-color:#fff;
@@ -737,6 +745,7 @@
 
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
 <script>
   GoBlueSidebar.render('bookings');
   GoBlueTopBar.render();

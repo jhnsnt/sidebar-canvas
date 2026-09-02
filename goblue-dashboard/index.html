@@ -188,6 +188,12 @@
   .data-table .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
   .data-table thead .sticky-col{ z-index:3; }
   .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
   @media (max-width:1023px){
     .table-scroll{
       background-repeat:no-repeat; background-color:#fff;
@@ -498,6 +504,7 @@
 
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
 <script>
   GoBlueSidebar.render('dashboard');
   GoBlueTopBar.render();
