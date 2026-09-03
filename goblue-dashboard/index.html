@@ -180,6 +180,8 @@
   .alert-card-title{ font-weight:700; font-size:13.5px; color:var(--ink); }
   .alert-card-desc{ font-size:12.5px; color:var(--slate); margin-top:.3rem; line-height:1.5; }
   .alert-card-time{ font-family:'Plus Jakarta Sans',sans-serif; font-size:11.5px; color:var(--slate); opacity:.8; margin-top:.55rem; }
+  .alert-row{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:.75rem; }
+  .alert-row .alert-card{ min-width:0; }
 
   #proposals-table tbody td:last-child{ color:var(--forest); }
   #bookings-table tbody td:last-child{ color:var(--primary); }
@@ -276,7 +278,7 @@
           </div>
         </a>
 
-        <a href="booking-quotes-report.html" class="ledger-cell is-clickable">
+        <a href="#open-quotes-panel" class="ledger-cell is-clickable">
           <div class="ledger-tab" style="background:var(--primary);"></div>
           <div class="ledger-header">
             <div class="ledger-icon" style="background:var(--sand); color:var(--primary);">
@@ -347,66 +349,94 @@
         </div>
       </div>
 
-      <!-- ---- Proposals / Alerts ---- -->
-      <div class="grid lg:grid-cols-2 gap-5 mt-6">
-
-        
-
-        <div class="panel p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="panel-title text-[var(--ink)] flex items-center">
-              <span class="panel-title-bar" style="background:var(--primary);"></span>
-              Alerts
-            </h2>
-            <a href="#" class="text-sm font-semibold text-[var(--primary)] hover:underline">Clear all</a>
-          </div>
-          <div class="space-y-3">
-            <div class="alert-card">
-              <div class="alert-card-bar" style="background:var(--brick);"></div>
-              <div>
-                <p class="alert-card-title">Achilles Heavin &mdash; 7 travelers 34 days past due</p>
-                <p class="alert-card-desc">$735 collectable. Group travels in 201 days; final payment window opens Nov 1.</p>
-                <p class="alert-card-time">Flagged 2 hours ago</p>
-              </div>
+      <!-- ---- Alerts ---- -->
+      <div class="panel p-5 mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="panel-title text-[var(--ink)] flex items-center">
+            <span class="panel-title-bar" style="background:var(--primary);"></span>
+            Alerts
+          </h2>
+          <a href="#" class="text-sm font-semibold text-[var(--primary)] hover:underline">Clear all</a>
+        </div>
+        <div class="alert-row">
+          <div class="alert-card">
+            <div class="alert-card-bar" style="background:var(--brick);"></div>
+            <div>
+              <p class="alert-card-title">Achilles Heavin &mdash; 7 travelers 34 days past due</p>
+              <p class="alert-card-desc">$735 collectable. Group travels in 201 days; final payment window opens Nov 1.</p>
+              <p class="alert-card-time">Flagged 2 hours ago</p>
             </div>
-            <div class="alert-card">
-              <div class="alert-card-bar" style="background:var(--amber);"></div>
-              <div>
-                <p class="alert-card-title">3 proposals hit day 7 with no reply</p>
-                <p class="alert-card-desc">Kelly Tula has three identical $8,188 proposals open &mdash; likely a duplicate to merge.</p>
-                <p class="alert-card-time">Flagged yesterday</p>
-              </div>
+          </div>
+          <div class="alert-card">
+            <div class="alert-card-bar" style="background:var(--amber);"></div>
+            <div>
+              <p class="alert-card-title">3 proposals hit day 7 with no reply</p>
+              <p class="alert-card-desc">Kelly Tula has three identical $8,188 proposals open &mdash; likely a duplicate to merge.</p>
+              <p class="alert-card-time">Flagged yesterday</p>
             </div>
           </div>
         </div>
-        <div class="panel p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="panel-title text-[var(--ink)] flex items-center">
-              <span class="panel-title-bar" style="background:var(--forest);"></span>
-              Proposals
-            </h2>
-            <div class="flex items-center gap-3">
-              <input type="text" class="search-input" placeholder="Search…">
-              <a href="proposals.html" class="panel-link flex-shrink-0">
-                View all
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-            </div>
+      </div>
+
+      <!-- ---- Proposals ---- -->
+      <div class="panel p-5 mt-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="panel-title text-[var(--ink)] flex items-center">
+            <span class="panel-title-bar" style="background:var(--forest);"></span>
+            Proposals
+          </h2>
+          <div class="flex items-center gap-3">
+            <input type="text" class="search-input" placeholder="Search…">
+            <a href="proposals.html" class="panel-link flex-shrink-0">
+              View all
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
           </div>
-          <div class="overflow-x-auto w-full table-scroll">
-            <table class="data-table" id="proposals-table">
-              <thead>
-                <tr><th class="sticky-col">Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
-              </thead>
-              <tbody>
-                <tr><td class="sticky-col">Elena Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">4NGY2LZK2M</td><td class="num">2</td><td class="text-right num font-semibold">$2,418.00</td></tr>
-                <tr><td class="sticky-col">Pedro Salvador</td><td>Meghan Jenkins</td><td class="font-mono text-xs">KR9RSHYOIC</td><td class="num">7</td><td class="text-right num font-semibold">$5,893.00</td></tr>
-                <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">YSCYCCP2IF</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
-                <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XQ82EERG5C</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
-                <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">V0XSJVPBID</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
-              </tbody>
-            </table>
+        </div>
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table" id="proposals-table">
+            <thead>
+              <tr><th class="sticky-col">Organizer</th><th>Rep</th><th>ID</th><th>Pax</th><th class="text-right">Revenue</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="sticky-col">Elena Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">4NGY2LZK2M</td><td class="num">2</td><td class="text-right num font-semibold">$2,418.00</td></tr>
+              <tr><td class="sticky-col">Pedro Salvador</td><td>Meghan Jenkins</td><td class="font-mono text-xs">KR9RSHYOIC</td><td class="num">7</td><td class="text-right num font-semibold">$5,893.00</td></tr>
+              <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">YSCYCCP2IF</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+              <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">XQ82EERG5C</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+              <tr><td class="sticky-col">Kelly Tula</td><td>Meghan Jenkins</td><td class="font-mono text-xs">V0XSJVPBID</td><td class="num">6</td><td class="text-right num font-semibold">$8,188.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ---- Open Quotes ---- -->
+      <div class="panel p-5 mt-5" id="open-quotes-panel" style="scroll-margin-top:5rem;">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="panel-title text-[var(--ink)] flex items-center">
+            <span class="panel-title-bar" style="background:var(--primary);"></span>
+            Open Quotes
+          </h2>
+          <div class="flex items-center gap-3">
+            <input type="text" class="search-input" placeholder="Search…">
+            <a href="booking-quotes-report.html" class="panel-link flex-shrink-0">
+              View all
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
           </div>
+        </div>
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table" id="open-quotes-table">
+            <thead>
+              <tr><th class="sticky-col">Passenger Name</th><th>Sales Person</th><th>Group ID</th><th>Pax</th><th>Destination</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="sticky-col">Bailey Thompson</td><td>Jacob Miller</td><td class="font-mono text-xs">Z3LZIGKN1H</td><td class="num">4</td><td>Punta Cana</td></tr>
+              <tr><td class="sticky-col">Connor Whitfield</td><td>Jacob Miller</td><td class="font-mono text-xs">D2PKXYP3IV</td><td class="num">4</td><td>Punta Cana</td></tr>
+              <tr><td class="sticky-col">Priya Chandrasekaran</td><td>Ivy</td><td class="font-mono text-xs">XFLTS2E2ME</td><td class="num">40</td><td>Cancun, Freeport, Bahamas</td></tr>
+              <tr><td class="sticky-col">Dakota Reyes</td><td>Meghan Jenkins</td><td class="font-mono text-xs">166MLWULQU</td><td class="num">12</td><td>Cancun</td></tr>
+              <tr><td class="sticky-col">Harrison Voss</td><td>Jacob Miller</td><td class="font-mono text-xs">2VFD0RBJVF</td><td class="num">15</td><td>Cabo San Lucas</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
