@@ -30,31 +30,61 @@
       id: 'operations', label: 'Operations',
       icon: '<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
       children: [
-        { id: 'bookings', label: 'Bookings', href: 'bookings.html' },
-        { id: 'proposals', label: 'Proposals', href: 'proposals.html' },
-        { id: 'passengers', label: 'Passengers', href: 'passengers.html' },
-        { id: 'itineraries', label: 'Itineraries', href: '#' },
-        { id: 'vendors', label: 'Vendors', href: '#' },
-        { id: 'rooming-lists', label: 'Rooming Lists', href: '#' }
+        { id: 'vendors', label: 'Vendors', href: 'vendors.html' },
+        { id: 'flight-pickup', label: 'Flight Pickup', href: '#' },
+        { id: 'passenger-dump', label: 'Passenger Dump', href: 'passenger-dump.html' }
       ]
     },
     {
       id: 'reports', label: 'Reports',
       icon: '<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/>',
       children: [
-        { id: 'revenue', label: 'Revenue', href: '#' },
-        { id: 'sales-by-rep', label: 'Sales by Rep', href: '#' },
-        { id: 'enrollment', label: 'Enrollment', href: '#' },
-        { id: 'booking-quotes-report', label: 'Booking Quotes Report', href: 'booking-quotes-report.html' }
+        { id: 'travel-insurance-policies', label: 'Travel Insurance Policies', href: 'travel-insurance-policies.html' },
+        { id: 'battleface-travel-protection', label: 'Battleface Travel Protection', href: 'battleface-policies.html' },
+        { id: 'booking-quotes', label: 'Booking Quotes', href: 'booking-quotes-report.html' },
+        { id: 'voucher-status', label: 'Voucher Status', href: 'voucher-status-report.html' },
+        { id: 'room-manifest', label: 'Room Manifest', href: 'room-manifest.html' },
+        { id: 'oasis-manifest', label: 'Oasis Manifest', href: 'room-manifest.html?oasis=1' },
+        { id: 'flight-pickup-report', label: 'Flight Pickup', href: '#' },
+        { id: 'flight-update-24-hours', label: 'Flight Update 24 hours', href: 'last-movements-flight-pickup.html' },
+        { id: 'flight-manifest', label: 'Flight Manifest', href: 'flight-manifest.html' },
+        { id: 'flight-report', label: 'Flight Report', href: 'flight-report.html' },
+        { id: 'flight-mismatch', label: 'Flight Mismatch', href: 'flight-mismatch.html' },
+        { id: 'last-movements-flight-pickup', label: 'Last Movements Flight Pick up', href: 'last-movements-flight-pickup.html' },
+        { id: 'booze-cruise', label: 'Booze Cruise', href: 'booze-cruise.html' },
+        { id: 'insurance-manifest', label: 'Insurance Manifest', href: 'insurance-manifest.html' },
+        { id: 'insurance-manifest-sbu', label: 'Insurance Manifest SBU', href: 'insurance-manifest.html?sbu=1' },
+        { id: 'ytd-report', label: 'YTD Report', href: 'ytd-report.html' },
+        { id: 'party-package', label: 'Party Package', href: '#' },
+        { id: 'booked-products', label: 'Booked Products', href: '#' },
+        { id: 'pax-count-by-day', label: 'Pax Count By Day', href: '#' },
+        { id: 'pax-count-by-arrival-date', label: 'Pax Count By Arrival Date', href: '#' },
+        { id: 'pax-count-by-departure-date', label: 'Pax Count By Departure Date', href: '#' },
+        { id: 'missing-info-pax', label: 'Missing Info Pax', href: '#' },
+        { id: 'payments', label: 'Payments', href: '#' },
+        { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: '#' },
+        { id: 'mark-for-deletion', label: 'Mark For Deletion', href: '#' },
+        { id: 'product-report', label: 'Product Report', href: '#' }
       ]
     },
     {
       id: 'settings', label: 'Settings',
       icon: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
       children: [
-        { id: 'users-roles', label: 'Users & Roles', href: '#' },
-        { id: 'integrations', label: 'Integrations', href: '#' },
-        { id: 'billing', label: 'Billing', href: '#' }
+        { id: 'two-factor-authentication', label: 'Two-Factor Authentication (2FA)', href: '#' },
+        { id: 'agreement-rules', label: 'Agreement Rules', href: '#' },
+        { id: 'payment-rules', label: 'Payment Rules', href: '#' },
+        { id: 'email-templates', label: 'Email Templates', href: '#' },
+        { id: 'voucher-texts', label: 'Voucher Texts', href: '#' },
+        { id: 'taxes-and-fees', label: 'Taxes and fees', href: '#' },
+        { id: 'foreign-exchange', label: 'Foreign Exchange', href: '#' },
+        { id: 'terms-and-conditions', label: 'Terms and Conditions', href: '#' },
+        { id: 'product-types', label: 'Product Types', href: '#' },
+        { id: 'destinations', label: 'Destinations', href: '#' },
+        { id: 'destination-settings', label: 'Destination Settings', href: '#' },
+        { id: 'users-management', label: 'Users Management', href: '#' },
+        { id: 'minimum-nights', label: 'Minimum Nights', href: '#' },
+        { id: 'proposal-text-templates', label: 'Proposal Text Templates', href: '#' }
       ]
     }
   ];

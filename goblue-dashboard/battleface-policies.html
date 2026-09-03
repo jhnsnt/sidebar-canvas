@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — Battleface Travel Protection</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Archivo',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-primary:disabled{ opacity:.6; cursor:not-allowed; }
+  .btn-outline{ background:#fff; color:var(--primary); border:1px solid var(--primary); transition:background .15s ease, color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); }
+
+  .field-label{ font-family:'Archivo',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
+
+  .text-field{
+    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.6rem .9rem; font-size:.85rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .data-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Archivo',sans-serif; white-space:nowrap;
+  }
+  .data-table th.text-right{ text-align:right; }
+  .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; line-height:1.4; white-space:nowrap; }
+  .data-table td.font-semibold{ font-weight:700; }
+  .data-table td.font-mono, .data-table td.code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .empty-row td{ text-align:center; color:var(--slate); padding:1.75rem .75rem; white-space:normal; }
+  .data-table .empty-row:hover{ background:transparent; }
+  .data-table .total-row td{ border-top:1.5px solid var(--ink); border-bottom:0; font-weight:700; padding-top:.85rem; }
+
+  .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .data-table .total-row .sticky-col{ background:#fff; }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .export-btn{
+    padding:.4rem .85rem; border-radius:.5rem; border:1px solid var(--line); background:#fff;
+    font-size:.78rem; font-weight:500; color:var(--ink); transition:background .15s ease, border-color .15s ease;
+    display:inline-flex; align-items:center; gap:.4rem;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .sort-caret{ display:inline-flex; flex-direction:column; margin-left:.3rem; vertical-align:middle; gap:1px; }
+  .sort-caret::before, .sort-caret::after{ content:''; display:block; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; }
+  .sort-caret::before{ border-bottom:3px solid var(--line); }
+  .sort-caret::after{ border-top:3px solid var(--line); }
+  th.is-sortable{ cursor:pointer; user-select:none; }
+  th.is-sortable:hover{ color:var(--ink); }
+  th.sort-asc .sort-caret::before{ border-bottom-color:var(--primary); }
+  th.sort-desc .sort-caret::after{ border-top-color:var(--primary); }
+
+  .status-pill{
+    display:inline-flex; align-items:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .status-pill.is-approved{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-pending{ background:var(--amber-tint); color:var(--amber); }
+  .status-pill.is-declined, .status-pill.is-canceled{ background:var(--brick-tint); color:var(--brick); }
+  .status-pill.is-active{ background:var(--forest-tint); color:var(--forest); }
+
+  .info-note{
+    display:flex; gap:.6rem; background:var(--sand); color:var(--ink); border-radius:.5rem; padding:.75rem .9rem;
+    font-size:.82rem; line-height:1.5; margin-top:1rem;
+  }
+  .info-note svg{ flex-shrink:0; margin-top:.15rem; color:var(--primary); }
+  .info-note em{ font-style:italic; }
+
+  @media print{
+    #sidebar-root, #topbar-root, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    main{ padding:0 !important; }
+    .panel{ border:none; }
+    .sticky-col{ position:static; }
+    .table-scroll{ overflow:visible !important; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate">Battleface Travel Protection</h1>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0 no-print">
+          <button class="export-btn" onclick="window.location.href='index.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= FILTERS ================= -->
+      <div class="panel p-5 md:p-6 no-print">
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <label class="field-label">Order Date Begin</label>
+            <input type="date" class="text-field" id="order-begin">
+          </div>
+          <div>
+            <label class="field-label">Order Date End</label>
+            <input type="date" class="text-field" id="order-end">
+          </div>
+          <div class="min-w-[160px]">
+            <label class="field-label">Plan Status</label>
+            <select class="text-field" id="plan-status-filter">
+              <option value="">All</option>
+              <option>Approved</option>
+              <option>Pending</option>
+              <option>Declined</option>
+              <option>Canceled</option>
+            </select>
+          </div>
+          <div class="min-w-[140px]">
+            <label class="field-label">Paid</label>
+            <select class="text-field" id="paid-filter">
+              <option value="">All</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 mt-5">
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="bf-filter-btn">Filter</button>
+          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="bf-clear-btn">Clear</button>
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="bf-refresh-btn">Refresh from Battleface</button>
+        </div>
+
+        <div class="info-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span>One row per Battleface plan order (Trip Cancellation / CFAR). POBO columns show the post-departure storage order sent automatically once the plan is approved after the deposit payment. Statuses are as last reported by Battleface &mdash; use <em>Refresh from Battleface</em> to pull the latest (cancellations/refunds made on their side).</span>
+        </div>
+      </div>
+
+      <!-- ================= PLAN ORDERS TABLE ================= -->
+      <div class="panel p-5 md:p-6 mt-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
+          <div class="flex items-center gap-2">
+            <button class="export-btn" id="bf-copy-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <button class="export-btn" id="bf-csv-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              CSV
+            </button>
+            <button class="export-btn" id="bf-excel-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              Excel
+            </button>
+            <button class="export-btn" id="bf-pdf-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              PDF
+            </button>
+          </div>
+          <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
+            Search:
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="bf-search">
+          </label>
+        </div>
+
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Order Date</th>
+                <th>Passenger</th>
+                <th>Id</th>
+                <th>School</th>
+                <th>Depart Date</th>
+                <th>Plan</th>
+                <th>Plan Order #</th>
+                <th>Plan Status <span class="sort-caret"></span></th>
+                <th>Approved Date</th>
+                <th class="text-right">Premium</th>
+                <th>POBO Order # <span class="sort-caret"></span></th>
+                <th>POBO Status</th>
+                <th class="text-right">POBO Premium</th>
+                <th>Paid</th>
+                <th class="text-right">Paid Amount</th>
+              </tr>
+            </thead>
+            <tbody id="bf-tbody">
+              <tr data-plan-status="Approved" data-paid="Yes" data-pobo="1">
+                <td class="sticky-col num">06/10/2026</td>
+                <td>Gerardo Barrera</td>
+                <td class="code">233907</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="num">03/01/2027</td>
+                <td>Trip Cancellation</td>
+                <td class="code">PLN-77234</td>
+                <td><span class="status-pill is-approved">Approved</span></td>
+                <td class="num">06/12/2026</td>
+                <td class="text-right num">$89.00</td>
+                <td class="code">POBO-55123</td>
+                <td><span class="status-pill is-active">Active</span></td>
+                <td class="text-right num">$25.00</td>
+                <td>Yes</td>
+                <td class="text-right num">$89.00</td>
+              </tr>
+              <tr data-plan-status="Approved" data-paid="Yes" data-pobo="1">
+                <td class="sticky-col num">06/15/2026</td>
+                <td>Mackenzie Frederick</td>
+                <td class="code">241102</td>
+                <td>University of South Carolina</td>
+                <td class="num">07/16/2026</td>
+                <td>CFAR</td>
+                <td class="code">PLN-77890</td>
+                <td><span class="status-pill is-approved">Approved</span></td>
+                <td class="num">06/17/2026</td>
+                <td class="text-right num">$145.00</td>
+                <td class="code">POBO-55240</td>
+                <td><span class="status-pill is-active">Active</span></td>
+                <td class="text-right num">$40.00</td>
+                <td>Yes</td>
+                <td class="text-right num">$145.00</td>
+              </tr>
+              <tr data-plan-status="Pending" data-paid="No" data-pobo="0">
+                <td class="sticky-col num">07/02/2026</td>
+                <td>Pheobe Stark</td>
+                <td class="code">255031</td>
+                <td>Michigan State</td>
+                <td class="num">03/06/2027</td>
+                <td>Trip Cancellation</td>
+                <td class="code">PLN-78341</td>
+                <td><span class="status-pill is-pending">Pending</span></td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$210.00</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$0.00</td>
+                <td>No</td>
+                <td class="text-right num">$0.00</td>
+              </tr>
+              <tr data-plan-status="Declined" data-paid="No" data-pobo="0">
+                <td class="sticky-col num">07/20/2026</td>
+                <td>Ege Alanoglu</td>
+                <td class="code">262210</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="num">03/06/2027</td>
+                <td>CFAR</td>
+                <td class="code">PLN-79002</td>
+                <td><span class="status-pill is-declined">Declined</span></td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$198.00</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$0.00</td>
+                <td>No</td>
+                <td class="text-right num">$0.00</td>
+              </tr>
+              <tr data-plan-status="Approved" data-paid="Yes" data-pobo="1">
+                <td class="sticky-col num">08/05/2026</td>
+                <td>Madeline Heil</td>
+                <td class="code">278847</td>
+                <td>Northwood University</td>
+                <td class="num">03/07/2027</td>
+                <td>Trip Cancellation</td>
+                <td class="code">PLN-79654</td>
+                <td><span class="status-pill is-approved">Approved</span></td>
+                <td class="num">08/07/2026</td>
+                <td class="text-right num">$52.00</td>
+                <td class="code">POBO-56011</td>
+                <td><span class="status-pill is-pending">Pending</span></td>
+                <td class="text-right num">$15.00</td>
+                <td>Yes</td>
+                <td class="text-right num">$52.00</td>
+              </tr>
+              <tr data-plan-status="Canceled" data-paid="No" data-pobo="0">
+                <td class="sticky-col num">08/25/2026</td>
+                <td>Juniper Barrera</td>
+                <td class="code">233909</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="num">03/01/2027</td>
+                <td>Trip Cancellation</td>
+                <td class="code">PLN-80112</td>
+                <td><span class="status-pill is-canceled">Canceled</span></td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$30.00</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-[var(--slate)]">&mdash;</td>
+                <td class="text-right num">$0.00</td>
+                <td>No</td>
+                <td class="text-right num">$0.00</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row" id="bf-total-row">
+                <td class="sticky-col">Total: <span id="bf-total-count">6</span></td>
+                <td colspan="6"></td>
+                <td>Approved: <span id="bf-approved-count">3</span></td>
+                <td class="text-right" id="bf-approved-premium">$286.00</td>
+                <td>With POBO: <span id="bf-pobo-count">3</span></td>
+                <td></td>
+                <td class="text-right" id="bf-pobo-premium">$80.00</td>
+                <td>Paid: <span id="bf-paid-count">3</span></td>
+                <td class="text-right" id="bf-paid-amount">$286.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
+          <p id="bf-count">Showing 1 to 6 of 6 entries</p>
+        </div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6 no-print">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
+<script src="table-export.js"></script>
+<script src="table-sort.js"></script>
+<script>
+  GoBlueSidebar.render('battleface-travel-protection');
+  GoBlueTopBar.render();
+
+  GoBlueTableExport.wire({
+    tbodyId: 'bf-tbody',
+    copyBtnId: 'bf-copy-btn',
+    csvBtnId: 'bf-csv-btn',
+    excelBtnId: 'bf-excel-btn',
+    pdfBtnId: 'bf-pdf-btn',
+    fileName: 'battleface-travel-protection'
+  });
+  GoBlueTableSort.wire('bf-tbody');
+
+  // ---- Default date range: fixed season start through today ----
+  (function () {
+    function toISO(d) { return d.toISOString().slice(0, 10); }
+    document.getElementById('order-begin').value = '2026-06-04';
+    document.getElementById('order-end').value = toISO(new Date());
+  })();
+
+  // ---- Filter + search ----
+  (function () {
+    function parseMDY(str) {
+      const parts = str.trim().split('/');
+      if (parts.length !== 3) return null;
+      return new Date(+parts[2], +parts[0] - 1, +parts[1]).getTime();
+    }
+    function parseISO(str) {
+      if (!str) return null;
+      const parts = str.split('-');
+      return new Date(+parts[0], +parts[1] - 1, +parts[2]).getTime();
+    }
+    function money(n) {
+      return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    const orderBegin = document.getElementById('order-begin');
+    const orderEnd = document.getElementById('order-end');
+    const planStatusFilter = document.getElementById('plan-status-filter');
+    const paidFilter = document.getElementById('paid-filter');
+    const search = document.getElementById('bf-search');
+    const tbody = document.getElementById('bf-tbody');
+    const countLabel = document.getElementById('bf-count');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const totalCount = rows.length;
+    let emptyRow = null;
+
+    function applyFilters() {
+      const searchValue = search.value.trim().toLowerCase();
+      const beginVal = parseISO(orderBegin.value);
+      const endVal = parseISO(orderEnd.value);
+      let visibleCount = 0;
+      let approvedCount = 0, approvedPremium = 0;
+      let poboCount = 0, poboPremium = 0;
+      let paidCount = 0, paidAmount = 0;
+
+      rows.forEach(row => {
+        const cells = row.children;
+        const orderDateVal = parseMDY(cells[0].textContent);
+        const rowText = row.textContent.toLowerCase();
+        const planStatus = row.dataset.planStatus;
+        const paid = row.dataset.paid;
+        const hasPobo = row.dataset.pobo === '1';
+        const premium = parseFloat(cells[9].textContent.replace(/[$,]/g, '')) || 0;
+        const poboPrem = parseFloat(cells[12].textContent.replace(/[$,]/g, '')) || 0;
+        const paidAmt = parseFloat(cells[14].textContent.replace(/[$,]/g, '')) || 0;
+
+        let visible = true;
+        if (beginVal && orderDateVal < beginVal) visible = false;
+        if (endVal && orderDateVal > endVal) visible = false;
+        if (planStatusFilter.value && planStatus !== planStatusFilter.value) visible = false;
+        if (paidFilter.value && paid !== paidFilter.value) visible = false;
+        if (searchValue && !rowText.includes(searchValue)) visible = false;
+
+        row.style.display = visible ? '' : 'none';
+        if (visible) {
+          visibleCount++;
+          if (planStatus === 'Approved') { approvedCount++; approvedPremium += premium; }
+          if (hasPobo) { poboCount++; poboPremium += poboPrem; }
+          if (paid === 'Yes') { paidCount++; paidAmount += paidAmt; }
+        }
+      });
+
+      if (visibleCount === 0) {
+        if (!emptyRow) {
+          emptyRow = document.createElement('tr');
+          emptyRow.className = 'empty-row';
+          emptyRow.innerHTML = '<td colspan="15">No data available in table</td>';
+        }
+        tbody.appendChild(emptyRow);
+      } else if (emptyRow && emptyRow.parentNode) {
+        emptyRow.parentNode.removeChild(emptyRow);
+      }
+
+      document.getElementById('bf-total-count').textContent = visibleCount;
+      document.getElementById('bf-approved-count').textContent = approvedCount;
+      document.getElementById('bf-approved-premium').textContent = money(approvedPremium);
+      document.getElementById('bf-pobo-count').textContent = poboCount;
+      document.getElementById('bf-pobo-premium').textContent = money(poboPremium);
+      document.getElementById('bf-paid-count').textContent = paidCount;
+      document.getElementById('bf-paid-amount').textContent = money(paidAmount);
+
+      countLabel.textContent = 'Showing ' + (visibleCount === 0 ? 0 : 1) + ' to ' + visibleCount + ' of ' + visibleCount + ' entries';
+    }
+
+    document.getElementById('bf-filter-btn').addEventListener('click', applyFilters);
+    document.getElementById('bf-clear-btn').addEventListener('click', () => {
+      orderBegin.value = '2026-06-04';
+      orderEnd.value = new Date().toISOString().slice(0, 10);
+      planStatusFilter.value = '';
+      paidFilter.value = '';
+      search.value = '';
+      applyFilters();
+    });
+    search.addEventListener('input', applyFilters);
+
+    const globalSearch = document.getElementById('global-search-input');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', () => {
+        search.value = globalSearch.value;
+        applyFilters();
+      });
+    }
+
+    document.getElementById('bf-refresh-btn').addEventListener('click', function () {
+      const btn = this;
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Refreshing…';
+      setTimeout(() => {
+        btn.textContent = 'Refreshed just now';
+        setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1500);
+      }, 700);
+    });
+
+    applyFilters();
+  })();
+</script>
+
+</body>
+</html>

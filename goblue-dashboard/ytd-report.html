@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — YTD Report</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Archivo',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--primary); border:1px solid var(--primary); transition:background .15s ease, color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); }
+
+  .field-label{ font-family:'Archivo',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
+
+  .text-field{
+    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.6rem .9rem; font-size:.85rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .data-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Archivo',sans-serif; white-space:nowrap;
+  }
+  .data-table th.text-right{ text-align:right; }
+  .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; line-height:1.4; }
+  .data-table td.font-semibold{ font-weight:700; }
+  .data-table td.font-mono, .data-table td.code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .empty-row td{ text-align:center; color:var(--slate); padding:1.75rem .75rem; }
+  .data-table .empty-row:hover{ background:transparent; }
+
+  .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .export-btn{
+    padding:.4rem .85rem; border-radius:.5rem; border:1px solid var(--line); background:#fff;
+    font-size:.78rem; font-weight:500; color:var(--ink); transition:background .15s ease, border-color .15s ease;
+    display:inline-flex; align-items:center; gap:.4rem;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .sort-caret{ display:inline-flex; flex-direction:column; margin-left:.3rem; vertical-align:middle; gap:1px; }
+  .sort-caret::before, .sort-caret::after{ content:''; display:block; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; }
+  .sort-caret::before{ border-bottom:3px solid var(--line); }
+  .sort-caret::after{ border-top:3px solid var(--line); }
+  th.is-sortable{ cursor:pointer; user-select:none; }
+  th.is-sortable:hover{ color:var(--ink); }
+  th.sort-asc .sort-caret::before{ border-bottom-color:var(--primary); }
+  th.sort-desc .sort-caret::after{ border-top-color:var(--primary); }
+
+  @media print{
+    #sidebar-root, #topbar-root, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    main{ padding:0 !important; }
+    .panel{ border:none; }
+    .sticky-col{ position:static; }
+    .table-scroll{ overflow:visible !important; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate">YTD Report</h1>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0 no-print">
+          <button class="export-btn" onclick="window.location.href='index.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= FILTERS ================= -->
+      <div class="panel p-5 md:p-6 no-print">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+          <div>
+            <label class="field-label">Depart Date Begin</label>
+            <input type="date" class="text-field" id="depart-begin">
+          </div>
+          <div>
+            <label class="field-label">Depart Date End</label>
+            <input type="date" class="text-field" id="depart-end">
+          </div>
+          <div>
+            <label class="field-label">Book Date Begin</label>
+            <input type="date" class="text-field" id="book-begin">
+          </div>
+          <div>
+            <label class="field-label">Book Date End</label>
+            <input type="date" class="text-field" id="book-end">
+          </div>
+          <div>
+            <label class="field-label">Status</label>
+            <select class="text-field" id="status-filter">
+              <option value="">All</option>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 mt-5">
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="ytd-filter-btn">Filter</button>
+          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="ytd-clear-btn">Clear</button>
+        </div>
+      </div>
+
+      <!-- ================= YTD TABLE ================= -->
+      <div class="panel p-5 md:p-6 mt-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
+          <div class="flex items-center gap-2">
+            <button class="export-btn" id="ytd-copy-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <button class="export-btn" id="ytd-csv-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              CSV
+            </button>
+            <button class="export-btn" id="ytd-excel-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              Excel
+            </button>
+            <button class="export-btn" id="ytd-pdf-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              PDF
+            </button>
+          </div>
+          <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
+            Search:
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="ytd-search">
+          </label>
+        </div>
+
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Accounts <span class="sort-caret"></span></th>
+                <th>Sales Person <span class="sort-caret"></span></th>
+                <th>Pax <span class="sort-caret"></span></th>
+                <th>Total <span class="sort-caret"></span></th>
+                <th>Margin Percentage <span class="sort-caret"></span></th>
+              </tr>
+            </thead>
+            <tbody id="ytd-tbody">
+              <tr data-status="Active">
+                <td class="sticky-col num">1</td>
+                <td><a href="#" class="text-[var(--primary)] hover:underline">Edwin Yip</a></td>
+                <td class="num">1</td>
+                <td class="num">$11.00</td>
+                <td class="num">95.91%</td>
+              </tr>
+              <tr data-status="Active">
+                <td class="sticky-col num">1</td>
+                <td><a href="#" class="text-[var(--primary)] hover:underline">Tori Robinson</a></td>
+                <td class="num">5</td>
+                <td class="num">$3,453.50</td>
+                <td class="num">28.48%</td>
+              </tr>
+              <tr data-status="Active">
+                <td class="sticky-col num">2</td>
+                <td><a href="#" class="text-[var(--primary)] hover:underline">Go Blue Tours</a></td>
+                <td class="num">5</td>
+                <td class="num">$3,197.00</td>
+                <td class="num">27.19%</td>
+              </tr>
+              <tr data-status="Active">
+                <td class="sticky-col num">2</td>
+                <td><a href="#" class="text-[var(--primary)] hover:underline">Gerardo Barrera</a></td>
+                <td class="num">20</td>
+                <td class="num">$38,440.20</td>
+                <td class="num">8.37%</td>
+              </tr>
+              <tr data-status="Active">
+                <td class="sticky-col num">16</td>
+                <td><a href="#" class="text-[var(--primary)] hover:underline">Alex Graves</a></td>
+                <td class="num">240</td>
+                <td class="num">$190,447.50</td>
+                <td class="num">20.64%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
+          <p id="ytd-count">Showing 1 to 5 of 5 entries</p>
+        </div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6 no-print">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
+<script src="table-export.js"></script>
+<script src="table-sort.js"></script>
+<script>
+  GoBlueSidebar.render('ytd-report');
+  GoBlueTopBar.render();
+
+  GoBlueTableExport.wire({
+    tbodyId: 'ytd-tbody',
+    copyBtnId: 'ytd-copy-btn',
+    csvBtnId: 'ytd-csv-btn',
+    excelBtnId: 'ytd-excel-btn',
+    pdfBtnId: 'ytd-pdf-btn',
+    fileName: 'ytd-report'
+  });
+  GoBlueTableSort.wire('ytd-tbody');
+
+  // ---- Filter + search ----
+  // This is a pre-aggregated rollup (one row per sales person, not per booking),
+  // so the date range fields don't have a single matching date to filter each
+  // row against — only Status and Search meaningfully apply here.
+  (function () {
+    const statusFilter = document.getElementById('status-filter');
+    const search = document.getElementById('ytd-search');
+    const tbody = document.getElementById('ytd-tbody');
+    const countLabel = document.getElementById('ytd-count');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const totalCount = rows.length;
+    let emptyRow = null;
+
+    function applyFilters() {
+      const searchValue = search.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const status = row.dataset.status;
+        const rowText = row.textContent.toLowerCase();
+
+        let visible = true;
+        if (statusFilter.value && status !== statusFilter.value) visible = false;
+        if (searchValue && !rowText.includes(searchValue)) visible = false;
+
+        row.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+      });
+
+      if (visibleCount === 0) {
+        if (!emptyRow) {
+          emptyRow = document.createElement('tr');
+          emptyRow.className = 'empty-row';
+          emptyRow.innerHTML = '<td colspan="5">No data available in table</td>';
+        }
+        tbody.appendChild(emptyRow);
+      } else if (emptyRow && emptyRow.parentNode) {
+        emptyRow.parentNode.removeChild(emptyRow);
+      }
+
+      countLabel.textContent = 'Showing ' + (visibleCount === 0 ? 0 : 1) + ' to ' + visibleCount + ' of ' + totalCount + ' entries';
+    }
+
+    document.getElementById('ytd-filter-btn').addEventListener('click', applyFilters);
+    document.getElementById('ytd-clear-btn').addEventListener('click', () => {
+      [document.getElementById('depart-begin'), document.getElementById('depart-end'), document.getElementById('book-begin'), document.getElementById('book-end')].forEach(el => el.value = '');
+      statusFilter.value = '';
+      search.value = '';
+      applyFilters();
+    });
+    search.addEventListener('input', applyFilters);
+
+    const globalSearch = document.getElementById('global-search-input');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', () => {
+        search.value = globalSearch.value;
+        applyFilters();
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
