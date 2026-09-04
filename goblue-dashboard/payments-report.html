@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoBlue Tours — Flight Report</title>
+<title>GoBlue Tours — Payments</title>
 <link rel="icon" href="https://gobluetours.com/favicon.ico">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,6 +54,9 @@
     color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
   }
   .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  .check-row{ display:flex; align-items:center; gap:.55rem; font-size:.85rem; color:var(--ink); cursor:pointer; }
+  .check-row input{ accent-color:var(--primary); width:16px; height:16px; }
 
   /* ---- Sidebar ---- */
   .sidebar{
@@ -133,6 +136,7 @@
   .data-table tbody tr:hover{ background:var(--paper); }
   .data-table .empty-row td{ text-align:center; color:var(--slate); padding:1.75rem .75rem; }
   .data-table .empty-row:hover{ background:transparent; }
+  .data-table tfoot td{ padding:.7rem .75rem; border-top:1px solid var(--line); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
 
   .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
   .data-table thead .sticky-col{ z-index:3; }
@@ -208,7 +212,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
           </a>
           <span class="text-[var(--slate)]">/</span>
-          <h1 class="page-title text-[var(--ink)] truncate">Flight Report</h1>
+          <h1 class="page-title text-[var(--ink)] truncate">Payments</h1>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0 no-print">
           <button class="export-btn" onclick="window.location.href='index.html'">
@@ -222,79 +226,90 @@
       <div class="panel p-5 md:p-6 no-print">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
           <div>
-            <label class="field-label">Depart Date Begin</label>
-            <input type="date" class="text-field" id="depart-begin">
+            <label class="field-label">School Name</label>
+            <input type="text" class="text-field" id="school-filter">
           </div>
           <div>
-            <label class="field-label">Depart Date End</label>
-            <input type="date" class="text-field" id="depart-end">
+            <label class="field-label">Pax Last Name</label>
+            <input type="text" class="text-field" id="pax-lastname-filter">
           </div>
           <div>
-            <label class="field-label">Book Date Begin</label>
-            <input type="date" class="text-field" id="book-begin">
+            <label class="field-label">Confirmation Code</label>
+            <input type="text" class="text-field" id="confirmation-filter">
           </div>
           <div>
-            <label class="field-label">Book Date End</label>
-            <input type="date" class="text-field" id="book-end">
-          </div>
-          <div>
-            <label class="field-label">Record Locator</label>
-            <select class="text-field" id="locator-filter">
+            <label class="field-label">Payment Type</label>
+            <select class="text-field" id="payment-type-filter">
               <option value="">All</option>
+              <option>Credit Card</option>
+              <option>Check</option>
+              <option>Cash</option>
+              <option>Bank Transfer</option>
             </select>
           </div>
           <div>
-            <label class="field-label">Passenger Status</label>
-            <select class="text-field" id="status-filter">
+            <label class="field-label">Travel Start Date Start</label>
+            <input type="date" class="text-field" id="travel-start-begin">
+          </div>
+          <div>
+            <label class="field-label">Travel Start Date End</label>
+            <input type="date" class="text-field" id="travel-start-end">
+          </div>
+          <div>
+            <label class="field-label">Transaction Date Start</label>
+            <input type="date" class="text-field" id="transaction-begin">
+          </div>
+          <div>
+            <label class="field-label">Transaction Date End</label>
+            <input type="date" class="text-field" id="transaction-end">
+          </div>
+          <div>
+            <label class="field-label">Sales Person</label>
+            <select class="text-field" id="salesperson-filter">
               <option value="">All</option>
-              <option>Active</option>
-              <option>Canceled</option>
+              <option>Jacob Miller</option>
+              <option>Ivy</option>
+              <option>Meghan Jenkins</option>
+              <option>Spiffy Darko</option>
+              <option>Go Blue Tours</option>
             </select>
           </div>
           <div>
-            <label class="field-label">Destination</label>
-            <select class="text-field" id="destination-filter">
-              <option value="">All</option>
-              <option>Cabo San Lucas</option>
-              <option>Cancun</option>
-              <option>Punta Cana</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Res ID</label>
-            <input type="text" class="text-field" id="resid-filter">
+            <label class="field-label">Null Only</label>
+            <input type="checkbox" class="text-field" style="width:auto; padding:.5rem;" id="null-only-filter">
           </div>
         </div>
-        <div class="flex items-center gap-2 mt-5">
-          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-filter-btn">Filter</button>
-          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-clear-btn">Clear</button>
+        <div class="flex flex-wrap items-center gap-2 mt-5">
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="pay-filter-btn">Filter</button>
+          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="pay-clear-btn">Clear</button>
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="pay-bulk-edit-btn">Bulk Edit</button>
         </div>
       </div>
 
-      <!-- ================= FLIGHTS TABLE ================= -->
+      <!-- ================= PAYMENTS TABLE ================= -->
       <div class="panel p-5 md:p-6 mt-5">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
           <div class="flex flex-wrap items-center gap-2">
-            <button class="export-btn" id="fr-copy-btn">
+            <button class="export-btn" id="pay-copy-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               Copy
             </button>
-            <button class="export-btn" id="fr-csv-btn">
+            <button class="export-btn" id="pay-csv-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               CSV
             </button>
-            <button class="export-btn" id="fr-excel-btn">
+            <button class="export-btn" id="pay-excel-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               Excel
             </button>
-            <button class="export-btn" id="fr-pdf-btn">
+            <button class="export-btn" id="pay-pdf-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               PDF
             </button>
           </div>
           <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
             Search:
-            <input type="text" class="text-field" style="width:auto;" placeholder="" id="fr-search">
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="pay-search">
           </label>
         </div>
 
@@ -302,91 +317,88 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th class="sticky-col">Destination <span class="sort-caret"></span></th>
-                <th>Departure <span class="sort-caret"></span></th>
-                <th>Airline <span class="sort-caret"></span></th>
-                <th>ID <span class="sort-caret"></span></th>
-                <th>Group Leader <span class="sort-caret"></span></th>
-                <th>Seats <span class="sort-caret"></span></th>
-                <th>Depart Date <span class="sort-caret"></span></th>
-                <th>Return Date <span class="sort-caret"></span></th>
-                <th>Record Locator <span class="sort-caret"></span></th>
-                <th class="text-right">Total Payments <span class="sort-caret"></span></th>
-                <th class="text-right">Balance</th>
+                <th class="sticky-col">Sales Person <span class="sort-caret"></span></th>
+                <th>Payment Type <span class="sort-caret"></span></th>
+                <th>Status <span class="sort-caret"></span></th>
+                <th>Amount <span class="sort-caret"></span></th>
+                <th>Confirmation Code <span class="sort-caret"></span></th>
+                <th>Customer ID <span class="sort-caret"></span></th>
+                <th>First Name <span class="sort-caret"></span></th>
+                <th>Last Name <span class="sort-caret"></span></th>
+                <th>Booking ID <span class="sort-caret"></span></th>
+                <th>School <span class="sort-caret"></span></th>
+                <th>Formatted Date <span class="sort-caret"></span></th>
+                <th>Transaction Time <span class="sort-caret"></span></th>
+                <th>Trip Start Date <span class="sort-caret"></span></th>
+                <th>Destination <span class="sort-caret"></span></th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody id="fr-tbody">
-              <tr data-book-date="2023-12-01" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Atlanta, GA (ATL)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QDCD7QXGTZ</a></td>
-                <td>Caroline Varelli</td>
-                <td class="num">12</td>
-                <td class="num">03/10/2024</td>
-                <td class="num">03/15/2024</td>
-                <td class="code">3C6A3Y</td>
-                <td class="text-right num">$22,248.00</td>
-                <td class="text-right num">$0.00</td>
+            <tbody id="pay-tbody">
+              <tr class="empty-row"><td colspan="15">No data available in table</td></tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td class="sticky-col font-semibold" style="background:#fff;">Total</td>
+                <td></td>
+                <td class="text-right num font-semibold">$0.00</td>
+                <td class="text-right num font-semibold">$0.00</td>
+                <td colspan="11"></td>
               </tr>
-              <tr data-book-date="2022-11-10" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">DJMKVH2374</a></td>
-                <td>Gabrielle Puchovsky</td>
-                <td class="num">36</td>
-                <td class="num">03/04/2023</td>
-                <td class="num">03/09/2023</td>
-                <td class="code">XKWGTS</td>
-                <td class="text-right num">$82,444.00</td>
-                <td class="text-right num" style="color:var(--brick);">-$342.00</td>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
+          <p id="pay-count">Showing 0 to 0 of 0 entries</p>
+        </div>
+      </div>
+
+      <!-- ================= PAYMENT SUMMARY ================= -->
+      <div class="panel p-5 md:p-6 mt-5">
+        <h2 class="panel-title text-[var(--ink)] mb-4">Payment Summary</h2>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="export-btn" id="sum-copy-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <button class="export-btn" id="sum-excel-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              Excel
+            </button>
+            <button class="export-btn" id="sum-csv-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              CSV
+            </button>
+            <button class="export-btn" id="sum-pdf-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              PDF
+            </button>
+          </div>
+          <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
+            Search:
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="sum-search">
+          </label>
+        </div>
+
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Payment Type <span class="sort-caret"></span></th>
+                <th>Count <span class="sort-caret"></span></th>
+                <th>Total Amount <span class="sort-caret"></span></th>
               </tr>
-              <tr data-book-date="2022-11-18" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QKVBZB2364</a></td>
-                <td>Jessica Gillis</td>
-                <td class="num">3</td>
-                <td class="num">03/12/2023</td>
-                <td class="num">03/17/2023</td>
-                <td class="code">H7A384</td>
-                <td class="text-right num">$7,206.00</td>
-                <td class="text-right num">$0.00</td>
-              </tr>
-              <tr data-book-date="2026-08-27" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Detroit, MI (DTW)</td>
-                <td>Delta</td>
-                <td><a href="booking-detail.html" class="code text-[var(--primary)] hover:underline">N2KDGS2P7M</a></td>
-                <td>Gerardo Barrera</td>
-                <td class="num">4</td>
-                <td class="num">03/01/2027</td>
-                <td class="num">03/06/2027</td>
-                <td class="code">K2NDGS</td>
-                <td class="text-right num">$3,196.00</td>
-                <td class="text-right num">$100.00</td>
-              </tr>
-              <tr data-book-date="2026-07-07" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Grand Rapids, MI (GRR)</td>
-                <td>Southwest</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">TJ3KQHETQ6</a></td>
-                <td>Madeline Heil</td>
-                <td class="num">8</td>
-                <td class="num">03/07/2027</td>
-                <td class="num">03/12/2027</td>
-                <td class="code">T3QHET</td>
-                <td class="text-right num">$7,765.00</td>
-                <td class="text-right num">$0.00</td>
-              </tr>
+            </thead>
+            <tbody id="sum-tbody">
+              <tr class="empty-row"><td colspan="3">No data available in table</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
-          <p id="fr-count">Showing 1 to 5 of 5 entries</p>
+          <p id="sum-count">Showing 0 to 0 of 0 entries</p>
         </div>
       </div>
 
@@ -401,121 +413,41 @@
 <script src="table-export.js"></script>
 <script src="table-sort.js"></script>
 <script>
-  GoBlueSidebar.render('flight-report');
+  GoBlueSidebar.render('payments');
   GoBlueTopBar.render();
 
   GoBlueTableExport.wire({
-    tbodyId: 'fr-tbody',
-    copyBtnId: 'fr-copy-btn',
-    csvBtnId: 'fr-csv-btn',
-    excelBtnId: 'fr-excel-btn',
-    pdfBtnId: 'fr-pdf-btn',
-    fileName: 'flight-report'
+    tbodyId: 'pay-tbody',
+    copyBtnId: 'pay-copy-btn',
+    csvBtnId: 'pay-csv-btn',
+    excelBtnId: 'pay-excel-btn',
+    pdfBtnId: 'pay-pdf-btn',
+    fileName: 'payments-report'
   });
-  GoBlueTableSort.wire('fr-tbody');
+  GoBlueTableSort.wire('pay-tbody');
 
-  // ---- Filter + search ----
-  (function () {
-    function parseISO(str) {
-      if (!str) return null;
-      const parts = str.split('-');
-      return new Date(+parts[0], +parts[1] - 1, +parts[2]).getTime();
-    }
-    function parseMDY(str) {
-      const parts = str.trim().split('/');
-      if (parts.length !== 3) return null;
-      return new Date(+parts[2], +parts[0] - 1, +parts[1]).getTime();
-    }
+  GoBlueTableExport.wire({
+    tbodyId: 'sum-tbody',
+    copyBtnId: 'sum-copy-btn',
+    csvBtnId: 'sum-csv-btn',
+    excelBtnId: 'sum-excel-btn',
+    pdfBtnId: 'sum-pdf-btn',
+    fileName: 'payment-summary'
+  });
+  GoBlueTableSort.wire('sum-tbody');
 
-    const departBegin = document.getElementById('depart-begin');
-    const departEnd = document.getElementById('depart-end');
-    const bookBegin = document.getElementById('book-begin');
-    const bookEnd = document.getElementById('book-end');
-    const locatorFilter = document.getElementById('locator-filter');
-    const statusFilter = document.getElementById('status-filter');
-    const destinationFilter = document.getElementById('destination-filter');
-    const residFilter = document.getElementById('resid-filter');
-    const search = document.getElementById('fr-search');
-    const tbody = document.getElementById('fr-tbody');
-    const countLabel = document.getElementById('fr-count');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const totalCount = rows.length;
-    let emptyRow = null;
-
-    // Populate Record Locator options from what's actually in the table
-    rows.forEach(row => {
-      const locator = row.children[8].textContent.trim();
-      const opt = document.createElement('option');
-      opt.textContent = locator;
-      locatorFilter.appendChild(opt);
-    });
-
-    function applyFilters() {
-      const searchValue = search.value.trim().toLowerCase();
-      const residValue = residFilter.value.trim().toLowerCase();
-      const departBeginVal = parseISO(departBegin.value);
-      const departEndVal = parseISO(departEnd.value);
-      const bookBeginVal = parseISO(bookBegin.value);
-      const bookEndVal = parseISO(bookEnd.value);
-      let visibleCount = 0;
-
-      rows.forEach(row => {
-        const cells = row.children;
-        const destText = cells[0].textContent.trim().toLowerCase();
-        const idText = cells[3].textContent.trim().toLowerCase();
-        const departDateVal = parseMDY(cells[6].textContent);
-        const locator = cells[8].textContent.trim();
-        const bookDateVal = parseISO(row.dataset.bookDate);
-        const status = row.dataset.status;
-        const rowText = row.textContent.toLowerCase();
-
-        let visible = true;
-        if (departBeginVal && departDateVal < departBeginVal) visible = false;
-        if (departEndVal && departDateVal > departEndVal) visible = false;
-        if (bookBeginVal && bookDateVal < bookBeginVal) visible = false;
-        if (bookEndVal && bookDateVal > bookEndVal) visible = false;
-        if (locatorFilter.value && locator !== locatorFilter.value) visible = false;
-        if (statusFilter.value && status !== statusFilter.value) visible = false;
-        if (destinationFilter.value && destText !== destinationFilter.value.toLowerCase()) visible = false;
-        if (residValue && !idText.includes(residValue)) visible = false;
-        if (searchValue && !rowText.includes(searchValue)) visible = false;
-
-        row.style.display = visible ? '' : 'none';
-        if (visible) visibleCount++;
-      });
-
-      if (visibleCount === 0) {
-        if (!emptyRow) {
-          emptyRow = document.createElement('tr');
-          emptyRow.className = 'empty-row';
-          emptyRow.innerHTML = '<td colspan="11">No data available in table</td>';
-        }
-        tbody.appendChild(emptyRow);
-      } else if (emptyRow && emptyRow.parentNode) {
-        emptyRow.parentNode.removeChild(emptyRow);
-      }
-
-      countLabel.textContent = 'Showing ' + (visibleCount === 0 ? 0 : 1) + ' to ' + visibleCount + ' of ' + totalCount + ' entries';
-    }
-
-    document.getElementById('fr-filter-btn').addEventListener('click', applyFilters);
-    document.getElementById('fr-clear-btn').addEventListener('click', () => {
-      [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.value = '');
-      [locatorFilter, statusFilter, destinationFilter].forEach(el => el.value = '');
-      residFilter.value = '';
-      search.value = '';
-      applyFilters();
-    });
-    search.addEventListener('input', applyFilters);
-
-    const globalSearch = document.getElementById('global-search-input');
-    if (globalSearch) {
-      globalSearch.addEventListener('input', () => {
-        search.value = globalSearch.value;
-        applyFilters();
-      });
-    }
-  })();
+  // No underlying payments data was captured in the source screenshot (the report
+  // was shown in its default empty state), so Filter/Clear/Search here just
+  // re-confirm the empty state rather than fabricate results.
+  document.getElementById('pay-filter-btn').addEventListener('click', () => {});
+  document.getElementById('pay-clear-btn').addEventListener('click', () => {
+    document.querySelectorAll('#school-filter, #pax-lastname-filter, #confirmation-filter, #travel-start-begin, #travel-start-end, #transaction-begin, #transaction-end')
+      .forEach(el => el.value = '');
+    document.getElementById('payment-type-filter').value = '';
+    document.getElementById('salesperson-filter').value = '';
+    document.getElementById('null-only-filter').checked = false;
+    document.getElementById('pay-search').value = '';
+  });
 </script>
 
 </body>

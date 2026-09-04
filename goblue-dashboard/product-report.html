@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoBlue Tours — Flight Report</title>
+<title>GoBlue Tours — Product Report</title>
 <link rel="icon" href="https://gobluetours.com/favicon.ico">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,6 +41,12 @@
 
   .field-label{ font-family:'Archivo',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
 
+  .text-field{
+    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.6rem .9rem; font-size:.85rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
   .search-input{
     border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
     font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
@@ -48,12 +54,6 @@
   }
   .search-input::placeholder{ color:var(--slate); }
   .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
-
-  .text-field{
-    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.6rem .9rem; font-size:.85rem;
-    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
 
   /* ---- Sidebar ---- */
   .sidebar{
@@ -175,6 +175,12 @@
   th.sort-asc .sort-caret::before{ border-bottom-color:var(--primary); }
   th.sort-desc .sort-caret::after{ border-top-color:var(--primary); }
 
+  .status-pill{
+    display:inline-flex; align-items:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .status-pill.is-active{ background:var(--forest-tint); color:var(--forest); }
+
   @media print{
     #sidebar-root, #topbar-root, .no-print{ display:none !important; }
     body{ background:#fff; }
@@ -208,7 +214,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
           </a>
           <span class="text-[var(--slate)]">/</span>
-          <h1 class="page-title text-[var(--ink)] truncate">Flight Report</h1>
+          <h1 class="page-title text-[var(--ink)] truncate">Product Report</h1>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0 no-print">
           <button class="export-btn" onclick="window.location.href='index.html'">
@@ -222,36 +228,6 @@
       <div class="panel p-5 md:p-6 no-print">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
           <div>
-            <label class="field-label">Depart Date Begin</label>
-            <input type="date" class="text-field" id="depart-begin">
-          </div>
-          <div>
-            <label class="field-label">Depart Date End</label>
-            <input type="date" class="text-field" id="depart-end">
-          </div>
-          <div>
-            <label class="field-label">Book Date Begin</label>
-            <input type="date" class="text-field" id="book-begin">
-          </div>
-          <div>
-            <label class="field-label">Book Date End</label>
-            <input type="date" class="text-field" id="book-end">
-          </div>
-          <div>
-            <label class="field-label">Record Locator</label>
-            <select class="text-field" id="locator-filter">
-              <option value="">All</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Passenger Status</label>
-            <select class="text-field" id="status-filter">
-              <option value="">All</option>
-              <option>Active</option>
-              <option>Canceled</option>
-            </select>
-          </div>
-          <div>
             <label class="field-label">Destination</label>
             <select class="text-field" id="destination-filter">
               <option value="">All</option>
@@ -261,40 +237,45 @@
             </select>
           </div>
           <div>
-            <label class="field-label">Res ID</label>
-            <input type="text" class="text-field" id="resid-filter">
+            <label class="field-label">Product Type</label>
+            <select class="text-field" id="product-type-filter">
+              <option value="">All</option>
+              <option>Party Package</option>
+              <option>Booze Cruise</option>
+              <option>Transfer</option>
+            </select>
           </div>
         </div>
-        <div class="flex items-center gap-2 mt-5">
-          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-filter-btn">Filter</button>
-          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-clear-btn">Clear</button>
+        <div class="flex flex-wrap items-center gap-2 mt-5">
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="pr-filter-btn">Filter</button>
+          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="pr-clear-btn">Clear</button>
         </div>
       </div>
 
-      <!-- ================= FLIGHTS TABLE ================= -->
+      <!-- ================= TABLE ================= -->
       <div class="panel p-5 md:p-6 mt-5">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
           <div class="flex flex-wrap items-center gap-2">
-            <button class="export-btn" id="fr-copy-btn">
+            <button class="export-btn" id="pr-copy-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               Copy
             </button>
-            <button class="export-btn" id="fr-csv-btn">
+            <button class="export-btn" id="pr-csv-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               CSV
             </button>
-            <button class="export-btn" id="fr-excel-btn">
+            <button class="export-btn" id="pr-excel-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               Excel
             </button>
-            <button class="export-btn" id="fr-pdf-btn">
+            <button class="export-btn" id="pr-pdf-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               PDF
             </button>
           </div>
           <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
             Search:
-            <input type="text" class="text-field" style="width:auto;" placeholder="" id="fr-search">
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="pr-search">
           </label>
         </div>
 
@@ -302,91 +283,20 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th class="sticky-col">Destination <span class="sort-caret"></span></th>
-                <th>Departure <span class="sort-caret"></span></th>
-                <th>Airline <span class="sort-caret"></span></th>
-                <th>ID <span class="sort-caret"></span></th>
-                <th>Group Leader <span class="sort-caret"></span></th>
-                <th>Seats <span class="sort-caret"></span></th>
-                <th>Depart Date <span class="sort-caret"></span></th>
-                <th>Return Date <span class="sort-caret"></span></th>
-                <th>Record Locator <span class="sort-caret"></span></th>
-                <th class="text-right">Total Payments <span class="sort-caret"></span></th>
-                <th class="text-right">Balance</th>
+                <th class="sticky-col">Destinations <span class="sort-caret"></span></th>
+                <th>Vendor <span class="sort-caret"></span></th>
+                <th>Product Name <span class="sort-caret"></span></th>
+                <th>Status <span class="sort-caret"></span></th>
               </tr>
             </thead>
-            <tbody id="fr-tbody">
-              <tr data-book-date="2023-12-01" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Atlanta, GA (ATL)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QDCD7QXGTZ</a></td>
-                <td>Caroline Varelli</td>
-                <td class="num">12</td>
-                <td class="num">03/10/2024</td>
-                <td class="num">03/15/2024</td>
-                <td class="code">3C6A3Y</td>
-                <td class="text-right num">$22,248.00</td>
-                <td class="text-right num">$0.00</td>
-              </tr>
-              <tr data-book-date="2022-11-10" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">DJMKVH2374</a></td>
-                <td>Gabrielle Puchovsky</td>
-                <td class="num">36</td>
-                <td class="num">03/04/2023</td>
-                <td class="num">03/09/2023</td>
-                <td class="code">XKWGTS</td>
-                <td class="text-right num">$82,444.00</td>
-                <td class="text-right num" style="color:var(--brick);">-$342.00</td>
-              </tr>
-              <tr data-book-date="2022-11-18" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QKVBZB2364</a></td>
-                <td>Jessica Gillis</td>
-                <td class="num">3</td>
-                <td class="num">03/12/2023</td>
-                <td class="num">03/17/2023</td>
-                <td class="code">H7A384</td>
-                <td class="text-right num">$7,206.00</td>
-                <td class="text-right num">$0.00</td>
-              </tr>
-              <tr data-book-date="2026-08-27" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Detroit, MI (DTW)</td>
-                <td>Delta</td>
-                <td><a href="booking-detail.html" class="code text-[var(--primary)] hover:underline">N2KDGS2P7M</a></td>
-                <td>Gerardo Barrera</td>
-                <td class="num">4</td>
-                <td class="num">03/01/2027</td>
-                <td class="num">03/06/2027</td>
-                <td class="code">K2NDGS</td>
-                <td class="text-right num">$3,196.00</td>
-                <td class="text-right num">$100.00</td>
-              </tr>
-              <tr data-book-date="2026-07-07" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Grand Rapids, MI (GRR)</td>
-                <td>Southwest</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">TJ3KQHETQ6</a></td>
-                <td>Madeline Heil</td>
-                <td class="num">8</td>
-                <td class="num">03/07/2027</td>
-                <td class="num">03/12/2027</td>
-                <td class="code">T3QHET</td>
-                <td class="text-right num">$7,765.00</td>
-                <td class="text-right num">$0.00</td>
-              </tr>
+            <tbody id="pr-tbody">
+              <tr class="empty-row"><td colspan="4">No data available in table</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
-          <p id="fr-count">Showing 1 to 5 of 5 entries</p>
+          <p id="pr-count">Showing 0 to 0 of 0 entries</p>
         </div>
       </div>
 
@@ -401,121 +311,35 @@
 <script src="table-export.js"></script>
 <script src="table-sort.js"></script>
 <script>
-  GoBlueSidebar.render('flight-report');
+  GoBlueSidebar.render('product-report');
   GoBlueTopBar.render();
 
   GoBlueTableExport.wire({
-    tbodyId: 'fr-tbody',
-    copyBtnId: 'fr-copy-btn',
-    csvBtnId: 'fr-csv-btn',
-    excelBtnId: 'fr-excel-btn',
-    pdfBtnId: 'fr-pdf-btn',
-    fileName: 'flight-report'
+    tbodyId: 'pr-tbody',
+    copyBtnId: 'pr-copy-btn',
+    csvBtnId: 'pr-csv-btn',
+    excelBtnId: 'pr-excel-btn',
+    pdfBtnId: 'pr-pdf-btn',
+    fileName: 'product-report'
   });
-  GoBlueTableSort.wire('fr-tbody');
+  GoBlueTableSort.wire('pr-tbody');
 
-  // ---- Filter + search ----
-  (function () {
-    function parseISO(str) {
-      if (!str) return null;
-      const parts = str.split('-');
-      return new Date(+parts[0], +parts[1] - 1, +parts[2]).getTime();
-    }
-    function parseMDY(str) {
-      const parts = str.trim().split('/');
-      if (parts.length !== 3) return null;
-      return new Date(+parts[2], +parts[0] - 1, +parts[1]).getTime();
-    }
+  // No underlying product data was captured in the source screenshot (the report
+  // was shown in its default empty state), so Filter/Clear/Search here just
+  // re-confirm the empty state rather than fabricate results.
+  document.getElementById('pr-filter-btn').addEventListener('click', () => {});
+  document.getElementById('pr-clear-btn').addEventListener('click', () => {
+    document.getElementById('destination-filter').value = '';
+    document.getElementById('product-type-filter').value = '';
+    document.getElementById('pr-search').value = '';
+  });
 
-    const departBegin = document.getElementById('depart-begin');
-    const departEnd = document.getElementById('depart-end');
-    const bookBegin = document.getElementById('book-begin');
-    const bookEnd = document.getElementById('book-end');
-    const locatorFilter = document.getElementById('locator-filter');
-    const statusFilter = document.getElementById('status-filter');
-    const destinationFilter = document.getElementById('destination-filter');
-    const residFilter = document.getElementById('resid-filter');
-    const search = document.getElementById('fr-search');
-    const tbody = document.getElementById('fr-tbody');
-    const countLabel = document.getElementById('fr-count');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const totalCount = rows.length;
-    let emptyRow = null;
-
-    // Populate Record Locator options from what's actually in the table
-    rows.forEach(row => {
-      const locator = row.children[8].textContent.trim();
-      const opt = document.createElement('option');
-      opt.textContent = locator;
-      locatorFilter.appendChild(opt);
+  const globalSearch = document.getElementById('global-search-input');
+  if (globalSearch) {
+    globalSearch.addEventListener('input', () => {
+      document.getElementById('pr-search').value = globalSearch.value;
     });
-
-    function applyFilters() {
-      const searchValue = search.value.trim().toLowerCase();
-      const residValue = residFilter.value.trim().toLowerCase();
-      const departBeginVal = parseISO(departBegin.value);
-      const departEndVal = parseISO(departEnd.value);
-      const bookBeginVal = parseISO(bookBegin.value);
-      const bookEndVal = parseISO(bookEnd.value);
-      let visibleCount = 0;
-
-      rows.forEach(row => {
-        const cells = row.children;
-        const destText = cells[0].textContent.trim().toLowerCase();
-        const idText = cells[3].textContent.trim().toLowerCase();
-        const departDateVal = parseMDY(cells[6].textContent);
-        const locator = cells[8].textContent.trim();
-        const bookDateVal = parseISO(row.dataset.bookDate);
-        const status = row.dataset.status;
-        const rowText = row.textContent.toLowerCase();
-
-        let visible = true;
-        if (departBeginVal && departDateVal < departBeginVal) visible = false;
-        if (departEndVal && departDateVal > departEndVal) visible = false;
-        if (bookBeginVal && bookDateVal < bookBeginVal) visible = false;
-        if (bookEndVal && bookDateVal > bookEndVal) visible = false;
-        if (locatorFilter.value && locator !== locatorFilter.value) visible = false;
-        if (statusFilter.value && status !== statusFilter.value) visible = false;
-        if (destinationFilter.value && destText !== destinationFilter.value.toLowerCase()) visible = false;
-        if (residValue && !idText.includes(residValue)) visible = false;
-        if (searchValue && !rowText.includes(searchValue)) visible = false;
-
-        row.style.display = visible ? '' : 'none';
-        if (visible) visibleCount++;
-      });
-
-      if (visibleCount === 0) {
-        if (!emptyRow) {
-          emptyRow = document.createElement('tr');
-          emptyRow.className = 'empty-row';
-          emptyRow.innerHTML = '<td colspan="11">No data available in table</td>';
-        }
-        tbody.appendChild(emptyRow);
-      } else if (emptyRow && emptyRow.parentNode) {
-        emptyRow.parentNode.removeChild(emptyRow);
-      }
-
-      countLabel.textContent = 'Showing ' + (visibleCount === 0 ? 0 : 1) + ' to ' + visibleCount + ' of ' + totalCount + ' entries';
-    }
-
-    document.getElementById('fr-filter-btn').addEventListener('click', applyFilters);
-    document.getElementById('fr-clear-btn').addEventListener('click', () => {
-      [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.value = '');
-      [locatorFilter, statusFilter, destinationFilter].forEach(el => el.value = '');
-      residFilter.value = '';
-      search.value = '';
-      applyFilters();
-    });
-    search.addEventListener('input', applyFilters);
-
-    const globalSearch = document.getElementById('global-search-input');
-    if (globalSearch) {
-      globalSearch.addEventListener('input', () => {
-        search.value = globalSearch.value;
-        applyFilters();
-      });
-    }
-  })();
+  }
 </script>
 
 </body>

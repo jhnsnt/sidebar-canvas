@@ -55,16 +55,16 @@
         { id: 'insurance-manifest', label: 'Insurance Manifest', href: 'insurance-manifest.html' },
         { id: 'insurance-manifest-sbu', label: 'Insurance Manifest SBU', href: 'insurance-manifest.html?sbu=1' },
         { id: 'ytd-report', label: 'YTD Report', href: 'ytd-report.html' },
-        { id: 'party-package', label: 'Party Package', href: '#' },
+        { id: 'party-package', label: 'Party Package', href: 'party-package-report.html' },
         { id: 'booked-products', label: 'Booked Products', href: '#' },
-        { id: 'pax-count-by-day', label: 'Pax Count By Day', href: '#' },
-        { id: 'pax-count-by-arrival-date', label: 'Pax Count By Arrival Date', href: '#' },
-        { id: 'pax-count-by-departure-date', label: 'Pax Count By Departure Date', href: '#' },
-        { id: 'missing-info-pax', label: 'Missing Info Pax', href: '#' },
-        { id: 'payments', label: 'Payments', href: '#' },
-        { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: '#' },
-        { id: 'mark-for-deletion', label: 'Mark For Deletion', href: '#' },
-        { id: 'product-report', label: 'Product Report', href: '#' }
+        { id: 'pax-count-by-day', label: 'Pax Count By Day', href: 'pax-count-report.html' },
+        { id: 'pax-count-by-arrival-date', label: 'Pax Count By Arrival Date', href: 'pax-count-report.html?arrival_date=1' },
+        { id: 'pax-count-by-departure-date', label: 'Pax Count By Departure Date', href: 'pax-count-report.html?departure_date=1' },
+        { id: 'missing-info-pax', label: 'Missing Info Pax', href: 'missing-info-pax.html' },
+        { id: 'payments', label: 'Payments', href: 'payments-report.html' },
+        { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: 'bookings-by-customer-payment.html' },
+        { id: 'mark-for-deletion', label: 'Mark For Deletion', href: 'mark-for-deletion.html' },
+        { id: 'product-report', label: 'Product Report', href: 'product-report.html' }
       ]
     },
     {

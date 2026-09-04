@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoBlue Tours — Flight Report</title>
+<title>GoBlue Tours — Missing Info Pax Report</title>
 <link rel="icon" href="https://gobluetours.com/favicon.ico">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,7 +208,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
           </a>
           <span class="text-[var(--slate)]">/</span>
-          <h1 class="page-title text-[var(--ink)] truncate">Flight Report</h1>
+          <h1 class="page-title text-[var(--ink)] truncate">Missing Info Pax Report</h1>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0 no-print">
           <button class="export-btn" onclick="window.location.href='index.html'">
@@ -218,83 +218,30 @@
         </div>
       </div>
 
-      <!-- ================= FILTERS ================= -->
-      <div class="panel p-5 md:p-6 no-print">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
-          <div>
-            <label class="field-label">Depart Date Begin</label>
-            <input type="date" class="text-field" id="depart-begin">
-          </div>
-          <div>
-            <label class="field-label">Depart Date End</label>
-            <input type="date" class="text-field" id="depart-end">
-          </div>
-          <div>
-            <label class="field-label">Book Date Begin</label>
-            <input type="date" class="text-field" id="book-begin">
-          </div>
-          <div>
-            <label class="field-label">Book Date End</label>
-            <input type="date" class="text-field" id="book-end">
-          </div>
-          <div>
-            <label class="field-label">Record Locator</label>
-            <select class="text-field" id="locator-filter">
-              <option value="">All</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Passenger Status</label>
-            <select class="text-field" id="status-filter">
-              <option value="">All</option>
-              <option>Active</option>
-              <option>Canceled</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Destination</label>
-            <select class="text-field" id="destination-filter">
-              <option value="">All</option>
-              <option>Cabo San Lucas</option>
-              <option>Cancun</option>
-              <option>Punta Cana</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Res ID</label>
-            <input type="text" class="text-field" id="resid-filter">
-          </div>
-        </div>
-        <div class="flex items-center gap-2 mt-5">
-          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-filter-btn">Filter</button>
-          <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="fr-clear-btn">Clear</button>
-        </div>
-      </div>
-
-      <!-- ================= FLIGHTS TABLE ================= -->
-      <div class="panel p-5 md:p-6 mt-5">
+      <!-- ================= MISSING INFO PAX TABLE ================= -->
+      <div class="panel p-5 md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4 no-print">
           <div class="flex flex-wrap items-center gap-2">
-            <button class="export-btn" id="fr-copy-btn">
+            <button class="export-btn" id="mip-copy-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               Copy
             </button>
-            <button class="export-btn" id="fr-csv-btn">
+            <button class="export-btn" id="mip-csv-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               CSV
             </button>
-            <button class="export-btn" id="fr-excel-btn">
+            <button class="export-btn" id="mip-excel-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               Excel
             </button>
-            <button class="export-btn" id="fr-pdf-btn">
+            <button class="export-btn" id="mip-pdf-btn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
               PDF
             </button>
           </div>
           <label class="flex items-center gap-2 text-sm text-[var(--ink)]">
             Search:
-            <input type="text" class="text-field" style="width:auto;" placeholder="" id="fr-search">
+            <input type="text" class="text-field" style="width:auto;" placeholder="" id="mip-search">
           </label>
         </div>
 
@@ -302,91 +249,143 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th class="sticky-col">Destination <span class="sort-caret"></span></th>
-                <th>Departure <span class="sort-caret"></span></th>
-                <th>Airline <span class="sort-caret"></span></th>
-                <th>ID <span class="sort-caret"></span></th>
-                <th>Group Leader <span class="sort-caret"></span></th>
-                <th>Seats <span class="sort-caret"></span></th>
-                <th>Depart Date <span class="sort-caret"></span></th>
-                <th>Return Date <span class="sort-caret"></span></th>
-                <th>Record Locator <span class="sort-caret"></span></th>
-                <th class="text-right">Total Payments <span class="sort-caret"></span></th>
-                <th class="text-right">Balance</th>
+                <th class="sticky-col">Last Name <span class="sort-caret"></span></th>
+                <th>First Name <span class="sort-caret"></span></th>
+                <th>Rep <span class="sort-caret"></span></th>
+                <th>Booking <span class="sort-caret"></span></th>
+                <th>Email <span class="sort-caret"></span></th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>DOB <span class="sort-caret"></span></th>
               </tr>
             </thead>
-            <tbody id="fr-tbody">
-              <tr data-book-date="2023-12-01" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Atlanta, GA (ATL)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QDCD7QXGTZ</a></td>
-                <td>Caroline Varelli</td>
-                <td class="num">12</td>
-                <td class="num">03/10/2024</td>
-                <td class="num">03/15/2024</td>
-                <td class="code">3C6A3Y</td>
-                <td class="text-right num">$22,248.00</td>
-                <td class="text-right num">$0.00</td>
+            <tbody id="mip-tbody">
+              <tr>
+                <td class="sticky-col">Alexandra</td>
+                <td>Breitenbach</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114186</a></td>
+                <td>arbreitenbach50@gmail.com</td>
+                <td class="num">+15166628975</td>
+                <td></td>
+                <td class="num">2005-03-05</td>
               </tr>
-              <tr data-book-date="2022-11-10" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">DJMKVH2374</a></td>
-                <td>Gabrielle Puchovsky</td>
-                <td class="num">36</td>
-                <td class="num">03/04/2023</td>
-                <td class="num">03/09/2023</td>
-                <td class="code">XKWGTS</td>
-                <td class="text-right num">$82,444.00</td>
-                <td class="text-right num" style="color:var(--brick);">-$342.00</td>
+              <tr>
+                <td class="sticky-col">Amanda</td>
+                <td>Logcher</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114187</a></td>
+                <td>amanda@logcher.com</td>
+                <td class="num">+17818603930</td>
+                <td></td>
+                <td class="num">2005-08-16</td>
               </tr>
-              <tr data-book-date="2022-11-18" data-status="Active" data-destination="Cabo San Lucas">
-                <td class="sticky-col">Cabo San Lucas</td>
-                <td>Boston, MA (BOS)</td>
-                <td class="text-[var(--slate)]">&mdash;</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">QKVBZB2364</a></td>
-                <td>Jessica Gillis</td>
-                <td class="num">3</td>
-                <td class="num">03/12/2023</td>
-                <td class="num">03/17/2023</td>
-                <td class="code">H7A384</td>
-                <td class="text-right num">$7,206.00</td>
-                <td class="text-right num">$0.00</td>
+              <tr>
+                <td class="sticky-col">Brady</td>
+                <td>Hockenberry</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>bradyhock12@gmail.com</td>
+                <td class="num">+17178575352</td>
+                <td></td>
+                <td class="num">2007-03-01</td>
               </tr>
-              <tr data-book-date="2026-08-27" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Detroit, MI (DTW)</td>
-                <td>Delta</td>
-                <td><a href="booking-detail.html" class="code text-[var(--primary)] hover:underline">N2KDGS2P7M</a></td>
-                <td>Gerardo Barrera</td>
-                <td class="num">4</td>
-                <td class="num">03/01/2027</td>
-                <td class="num">03/06/2027</td>
-                <td class="code">K2NDGS</td>
-                <td class="text-right num">$3,196.00</td>
-                <td class="text-right num">$100.00</td>
+              <tr>
+                <td class="sticky-col">Brayden</td>
+                <td>Pearsall</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>brayden_pearsall2005@yahoo.com</td>
+                <td class="num">+18142038686</td>
+                <td></td>
+                <td class="num">2005-12-13</td>
               </tr>
-              <tr data-book-date="2026-07-07" data-status="Active" data-destination="Cancun">
-                <td class="sticky-col">Cancun</td>
-                <td>Grand Rapids, MI (GRR)</td>
-                <td>Southwest</td>
-                <td><a href="#" class="code text-[var(--primary)] hover:underline">TJ3KQHETQ6</a></td>
-                <td>Madeline Heil</td>
-                <td class="num">8</td>
-                <td class="num">03/07/2027</td>
-                <td class="num">03/12/2027</td>
-                <td class="code">T3QHET</td>
-                <td class="text-right num">$7,765.00</td>
-                <td class="text-right num">$0.00</td>
+              <tr>
+                <td class="sticky-col">Brenden</td>
+                <td>Endres</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114132</a></td>
+                <td>brenden.endres@icloud.com</td>
+                <td>TBA</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Daniel</td>
+                <td>Greenspan</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>daniel.greenspan@icloud.com</td>
+                <td class="num">+14843653222</td>
+                <td></td>
+                <td class="num">2005-03-15</td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Derek</td>
+                <td>Bray</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>derekmbray@gmail.com</td>
+                <td class="num">+14159348143</td>
+                <td></td>
+                <td class="num">2007-10-21</td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Dylan</td>
+                <td>Lacher</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>latch707@outlook.com</td>
+                <td class="num">+14126605994</td>
+                <td></td>
+                <td class="num">2005-12-13</td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Emily</td>
+                <td>Xu</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114187</a></td>
+                <td>xu.emily24@gmail.com</td>
+                <td class="num">+17816458738</td>
+                <td></td>
+                <td class="num">2004-10-24</td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Jackson</td>
+                <td>Hill</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114148</a></td>
+                <td>jacksonhill731@gmail.com</td>
+                <td>TBA</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Jackson</td>
+                <td>Mullen</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>mullenj367@gmail.com</td>
+                <td class="num">+12155124936</td>
+                <td></td>
+                <td class="num">2007-01-10</td>
+              </tr>
+              <tr>
+                <td class="sticky-col">Jett</td>
+                <td>Ruding</td>
+                <td>Meghan Jenkins</td>
+                <td><a href="#" class="code text-[var(--primary)] hover:underline">114184</a></td>
+                <td>jettaruding@gmail.com</td>
+                <td class="num">+18143313743</td>
+                <td></td>
+                <td class="num">2005-03-03</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
-          <p id="fr-count">Showing 1 to 5 of 5 entries</p>
+          <p id="mip-count">Showing 1 to 12 of 12 entries</p>
         </div>
       </div>
 
@@ -401,85 +400,35 @@
 <script src="table-export.js"></script>
 <script src="table-sort.js"></script>
 <script>
-  GoBlueSidebar.render('flight-report');
+  GoBlueSidebar.render('missing-info-pax');
   GoBlueTopBar.render();
 
   GoBlueTableExport.wire({
-    tbodyId: 'fr-tbody',
-    copyBtnId: 'fr-copy-btn',
-    csvBtnId: 'fr-csv-btn',
-    excelBtnId: 'fr-excel-btn',
-    pdfBtnId: 'fr-pdf-btn',
-    fileName: 'flight-report'
+    tbodyId: 'mip-tbody',
+    copyBtnId: 'mip-copy-btn',
+    csvBtnId: 'mip-csv-btn',
+    excelBtnId: 'mip-excel-btn',
+    pdfBtnId: 'mip-pdf-btn',
+    fileName: 'missing-info-pax-report'
   });
-  GoBlueTableSort.wire('fr-tbody');
+  GoBlueTableSort.wire('mip-tbody');
 
-  // ---- Filter + search ----
+  // ---- Search ----
   (function () {
-    function parseISO(str) {
-      if (!str) return null;
-      const parts = str.split('-');
-      return new Date(+parts[0], +parts[1] - 1, +parts[2]).getTime();
-    }
-    function parseMDY(str) {
-      const parts = str.trim().split('/');
-      if (parts.length !== 3) return null;
-      return new Date(+parts[2], +parts[0] - 1, +parts[1]).getTime();
-    }
-
-    const departBegin = document.getElementById('depart-begin');
-    const departEnd = document.getElementById('depart-end');
-    const bookBegin = document.getElementById('book-begin');
-    const bookEnd = document.getElementById('book-end');
-    const locatorFilter = document.getElementById('locator-filter');
-    const statusFilter = document.getElementById('status-filter');
-    const destinationFilter = document.getElementById('destination-filter');
-    const residFilter = document.getElementById('resid-filter');
-    const search = document.getElementById('fr-search');
-    const tbody = document.getElementById('fr-tbody');
-    const countLabel = document.getElementById('fr-count');
+    const search = document.getElementById('mip-search');
+    const tbody = document.getElementById('mip-tbody');
+    const countLabel = document.getElementById('mip-count');
     const rows = Array.from(tbody.querySelectorAll('tr'));
     const totalCount = rows.length;
     let emptyRow = null;
 
-    // Populate Record Locator options from what's actually in the table
-    rows.forEach(row => {
-      const locator = row.children[8].textContent.trim();
-      const opt = document.createElement('option');
-      opt.textContent = locator;
-      locatorFilter.appendChild(opt);
-    });
-
     function applyFilters() {
       const searchValue = search.value.trim().toLowerCase();
-      const residValue = residFilter.value.trim().toLowerCase();
-      const departBeginVal = parseISO(departBegin.value);
-      const departEndVal = parseISO(departEnd.value);
-      const bookBeginVal = parseISO(bookBegin.value);
-      const bookEndVal = parseISO(bookEnd.value);
       let visibleCount = 0;
 
       rows.forEach(row => {
-        const cells = row.children;
-        const destText = cells[0].textContent.trim().toLowerCase();
-        const idText = cells[3].textContent.trim().toLowerCase();
-        const departDateVal = parseMDY(cells[6].textContent);
-        const locator = cells[8].textContent.trim();
-        const bookDateVal = parseISO(row.dataset.bookDate);
-        const status = row.dataset.status;
         const rowText = row.textContent.toLowerCase();
-
-        let visible = true;
-        if (departBeginVal && departDateVal < departBeginVal) visible = false;
-        if (departEndVal && departDateVal > departEndVal) visible = false;
-        if (bookBeginVal && bookDateVal < bookBeginVal) visible = false;
-        if (bookEndVal && bookDateVal > bookEndVal) visible = false;
-        if (locatorFilter.value && locator !== locatorFilter.value) visible = false;
-        if (statusFilter.value && status !== statusFilter.value) visible = false;
-        if (destinationFilter.value && destText !== destinationFilter.value.toLowerCase()) visible = false;
-        if (residValue && !idText.includes(residValue)) visible = false;
-        if (searchValue && !rowText.includes(searchValue)) visible = false;
-
+        const visible = !searchValue || rowText.includes(searchValue);
         row.style.display = visible ? '' : 'none';
         if (visible) visibleCount++;
       });
@@ -488,7 +437,7 @@
         if (!emptyRow) {
           emptyRow = document.createElement('tr');
           emptyRow.className = 'empty-row';
-          emptyRow.innerHTML = '<td colspan="11">No data available in table</td>';
+          emptyRow.innerHTML = '<td colspan="8">No data available in table</td>';
         }
         tbody.appendChild(emptyRow);
       } else if (emptyRow && emptyRow.parentNode) {
@@ -498,14 +447,6 @@
       countLabel.textContent = 'Showing ' + (visibleCount === 0 ? 0 : 1) + ' to ' + visibleCount + ' of ' + totalCount + ' entries';
     }
 
-    document.getElementById('fr-filter-btn').addEventListener('click', applyFilters);
-    document.getElementById('fr-clear-btn').addEventListener('click', () => {
-      [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.value = '');
-      [locatorFilter, statusFilter, destinationFilter].forEach(el => el.value = '');
-      residFilter.value = '';
-      search.value = '';
-      applyFilters();
-    });
     search.addEventListener('input', applyFilters);
 
     const globalSearch = document.getElementById('global-search-input');
