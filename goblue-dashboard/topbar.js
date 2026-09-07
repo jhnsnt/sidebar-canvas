@@ -39,7 +39,7 @@
                 '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>' +
               '</button>' +
               '<span class="top-icon-divider"></span>' +
-              '<button class="top-icon-btn" title="Log out">' +
+              '<button class="top-icon-btn" title="Log out" onclick="window.location.href=\'login.html\'">' +
                 '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><path d="M12 2v10"/></svg>' +
               '</button>' +
             '</div>' +
