@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — Two Factor Authentication</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --slate-deep:#3d4d61;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+
+  .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .section-title{ font-family:'Archivo',sans-serif; font-size:24px; line-height:1.3; font-weight:800; letter-spacing:-0.02em; color:var(--ink); }
+  .card-title{ font-family:'Archivo',sans-serif; font-size:22px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; color:var(--ink); }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--primary); border:1px solid var(--primary); transition:background .15s ease, color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); }
+  .btn-slate{ background:var(--slate-deep); color:#fff; transition:background .15s ease; }
+  .btn-slate:hover{ background:#2b3846; }
+  .btn-danger{ background:var(--brick); color:#fff; transition:background .15s ease; }
+  .btn-danger:hover{ background:#8f3527; }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .recovery-codes{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:14px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:.6rem; padding:1.1rem 1.4rem;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:.6rem 1.5rem;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate">Two Factor Authentication (2FA)</h1>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button class="rounded-lg px-4 py-2 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition inline-flex items-center gap-2" onclick="window.location.href='index.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <h2 class="section-title mb-1.5">Two Factor Authentication</h2>
+        <p class="text-[var(--slate)] text-[15px]">Add additional security to your account using two factor authentication.</p>
+      </div>
+
+      <!-- ================= 2FA STATUS CARD ================= -->
+      <div class="panel p-6 md:p-8" id="tfa-panel">
+
+        <!-- Enabled state -->
+        <div id="tfa-enabled-state">
+          <h3 class="card-title mb-3">You have enabled two factor authentication.</h3>
+          <p class="text-[var(--ink)] text-[15px] leading-relaxed mb-6 max-w-3xl">
+            When two factor authentication is enabled, you will be prompted for a secure, random token during authentication.
+            You may retrieve this token from your phone's Google Authenticator application.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <button class="btn-slate rounded-lg px-5 py-2.5 text-sm font-semibold" id="show-codes-btn">Show Recovery Codes</button>
+            <button class="btn-danger rounded-lg px-5 py-2.5 text-sm font-semibold" id="disable-btn">Disable</button>
+          </div>
+
+          <div class="recovery-codes hidden" id="recovery-codes">
+            <span>4F2K-9XQ1</span>
+            <span>7B3M-QW82</span>
+            <span>D91L-EK47</span>
+            <span>P0X5-2NVA</span>
+            <span>H6T8-RC30</span>
+            <span>K2WY-5FL9</span>
+            <span>3ZQ7-M1BD</span>
+            <span>V85N-08JT</span>
+          </div>
+        </div>
+
+        <!-- Disabled state -->
+        <div id="tfa-disabled-state" class="hidden">
+          <h3 class="card-title mb-3">You have not enabled two factor authentication.</h3>
+          <p class="text-[var(--ink)] text-[15px] leading-relaxed mb-6 max-w-3xl">
+            When two factor authentication is enabled, you will be prompted for a secure, random token during authentication.
+            You may retrieve this token from your phone's Google Authenticator application.
+          </p>
+          <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="enable-btn">Enable</button>
+        </div>
+
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('two-factor-authentication');
+  GoBlueTopBar.render();
+
+  const enabledState = document.getElementById('tfa-enabled-state');
+  const disabledState = document.getElementById('tfa-disabled-state');
+  const recoveryCodes = document.getElementById('recovery-codes');
+
+  document.getElementById('show-codes-btn').addEventListener('click', () => {
+    recoveryCodes.classList.toggle('hidden');
+  });
+
+  document.getElementById('disable-btn').addEventListener('click', () => {
+    enabledState.classList.add('hidden');
+    disabledState.classList.remove('hidden');
+  });
+
+  document.getElementById('enable-btn').addEventListener('click', () => {
+    disabledState.classList.add('hidden');
+    recoveryCodes.classList.add('hidden');
+    enabledState.classList.remove('hidden');
+  });
+</script>
+
+</body>
+</html>

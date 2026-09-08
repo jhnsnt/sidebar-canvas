@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoBlue Tours — Voucher Texts</title>
+<link rel="icon" href="https://gobluetours.com/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1a33;
+    --paper:#eef1f5;
+    --primary:#0054a1;
+    --primary-deep:#003a73;
+    --primary-light:#4d8fc4;
+    --sidebar:#081426;
+    --sand:#e8f1fb;
+    --line:#d7dee6;
+    --line-soft:#e6eaef;
+    --slate:#5b6b7d;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#a83f2e;
+    --brick-tint:#f6e8e5;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+
+  .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+
+  .btn-success{ background:var(--forest); color:#fff; transition:background .15s ease; }
+  .btn-success:hover{ background:#175738; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+
+  .field-label{ font-family:'Archivo',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
+
+  .text-field{
+    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.6rem .9rem; font-size:.85rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+  .text-field::placeholder{ color:var(--slate); }
+
+  /* ---- Add Voucher Text modal ---- */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:60;
+    align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .modal-backdrop.is-open{ display:flex; }
+  .modal-panel{
+    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:640px;
+    max-height:90vh; overflow-y:auto; box-shadow:0 20px 50px -12px rgba(11,26,51,.35);
+  }
+  .modal-close-btn{
+    width:32px; height:32px; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+    color:var(--slate); transition:background .15s ease, color .15s ease; flex-shrink:0;
+  }
+  .modal-close-btn:hover{ background:var(--sand); color:var(--ink); }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .data-table{ width:100%; font-size:14.5px; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Archivo',sans-serif; white-space:nowrap;
+  }
+  .data-table td{ padding:1rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-weight:400; line-height:1.5; vertical-align:top; }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .empty-row td{ text-align:center; color:var(--slate); padding:1.75rem .75rem; }
+
+  .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .icon-action-btn{
+    width:30px; height:30px; border-radius:.4rem; display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink); transition:background .15s ease, color .15s ease;
+  }
+  .icon-action-btn:hover{ background:var(--sand); color:var(--primary); }
+  .icon-action-btn.is-delete:hover{ background:var(--brick-tint); color:var(--brick); }
+
+  .status-pill{
+    display:inline-flex; align-items:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .status-pill.is-active{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-inactive{ background:var(--line-soft); color:var(--slate); }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate">Voucher Texts</h1>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button class="rounded-lg px-4 py-2 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition inline-flex items-center gap-2" onclick="window.location.href='index.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 mb-5" id="add-new-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add New
+      </button>
+
+      <!-- ================= VOUCHER TEXTS TABLE ================= -->
+      <div class="panel p-5 md:p-6">
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Product Type</th>
+                <th>Destination</th>
+                <th>Status</th>
+                <th>Voucher Text</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vt-tbody">
+              <tr class="empty-row"><td colspan="5">No data available in table</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">GoBlue Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<!-- ================= ADD VOUCHER TEXT MODAL ================= -->
+<div class="modal-backdrop" id="vt-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="vt-modal-title">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="page-title" id="vt-modal-title" style="font-size:20px;">Add Voucher Text</h2>
+      <button class="modal-close-btn" id="vt-modal-close" title="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <form id="voucher-form">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-5 mb-5">
+        <div>
+          <label class="field-label">Product Type</label>
+          <select class="text-field" id="product-type-field" required>
+            <option value="">Select…</option>
+            <option>Party Package</option>
+            <option>Booze Cruise</option>
+            <option>Room</option>
+            <option>Flight</option>
+            <option>Travel Insurance</option>
+            <option>Transfer</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Destination</label>
+          <select class="text-field" id="destination-field" required>
+            <option value="">Select…</option>
+            <option>Cancun</option>
+            <option>Cabo San Lucas</option>
+            <option>Punta Cana</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Status</label>
+          <select class="text-field" id="status-field" required>
+            <option value="">Select…</option>
+            <option>Active</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="field-label">Voucher Text</label>
+        <input type="text" class="text-field" placeholder="Voucher text" id="voucher-text-field" required>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" class="rounded-lg px-5 py-2.5 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition" id="vt-modal-cancel">Cancel</button>
+        <button type="submit" class="btn-primary rounded-lg px-6 py-2.5 text-sm font-semibold">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('voucher-texts');
+  GoBlueTopBar.render();
+
+  const modalBackdrop = document.getElementById('vt-modal-backdrop');
+  const voucherForm = document.getElementById('voucher-form');
+  const tbody = document.getElementById('vt-tbody');
+
+  function openModal() {
+    modalBackdrop.classList.add('is-open');
+  }
+  function closeModal() {
+    modalBackdrop.classList.remove('is-open');
+    voucherForm.reset();
+  }
+
+  document.getElementById('add-new-btn').addEventListener('click', openModal);
+  document.getElementById('vt-modal-close').addEventListener('click', closeModal);
+  document.getElementById('vt-modal-cancel').addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) closeModal();
+  });
+
+  voucherForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const productType = document.getElementById('product-type-field').value;
+    const destination = document.getElementById('destination-field').value;
+    const status = document.getElementById('status-field').value;
+    const voucherText = document.getElementById('voucher-text-field').value;
+
+    const emptyRow = tbody.querySelector('.empty-row');
+    if (emptyRow) emptyRow.remove();
+
+    const row = document.createElement('tr');
+    row.innerHTML =
+      '<td class="sticky-col">' + productType + '</td>' +
+      '<td>' + destination + '</td>' +
+      '<td><span class="status-pill ' + (status === 'Active' ? 'is-active' : 'is-inactive') + '">' + status + '</span></td>' +
+      '<td>' + voucherText + '</td>' +
+      '<td>' +
+        '<div class="flex items-center gap-1">' +
+          '<button class="icon-action-btn" title="Edit">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>' +
+          '</button>' +
+          '<button class="icon-action-btn is-delete delete-btn" title="Delete">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16z"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</td>';
+
+    row.querySelector('.delete-btn').addEventListener('click', () => {
+      row.remove();
+      if (!tbody.querySelector('tr')) {
+        const empty = document.createElement('tr');
+        empty.className = 'empty-row';
+        empty.innerHTML = '<td colspan="5">No data available in table</td>';
+        tbody.appendChild(empty);
+      }
+    });
+
+    tbody.appendChild(row);
+    closeModal();
+  });
+</script>
+
+</body>
+</html>
