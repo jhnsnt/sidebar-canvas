@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GoBlue Tours — Taxes and Fees</title>
+<title>GoBlue Tours — Text Categories</title>
 <link rel="icon" href="https://gobluetours.com/favicon.ico">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +29,6 @@
   }
   body{ background:var(--paper); color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; }
   .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
-  .num{ font-variant-numeric:tabular-nums; }
 
   .page-title{ font-family:'Archivo',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
 
@@ -48,14 +47,14 @@
   .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
   .text-field::placeholder{ color:var(--slate); }
 
-  /* ---- Add Tax/Fee modal ---- */
+  /* ---- Add Text Category modal ---- */
   .modal-backdrop{
     display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:60;
     align-items:center; justify-content:center; padding:1.5rem;
   }
   .modal-backdrop.is-open{ display:flex; }
   .modal-panel{
-    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:640px;
+    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:560px;
     max-height:90vh; overflow-y:auto; box-shadow:0 20px 50px -12px rgba(11,26,51,.35);
   }
   .modal-close-btn{
@@ -212,43 +211,33 @@
     <!-- ================= PAGE CONTENT ================= -->
     <main class="p-4 md:p-6">
 
-      <!-- ---- Page header: breadcrumb + actions ---- -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <div class="flex items-center gap-2 min-w-0 text-sm">
-          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-          </a>
-          <span class="text-[var(--slate)]">/</span>
-          <h1 class="page-title text-[var(--ink)] truncate">Taxes and Fees</h1>
-        </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          <button class="rounded-lg px-4 py-2 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition inline-flex items-center gap-2" onclick="window.location.href='index.html'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Back
-          </button>
-        </div>
+      <!-- ---- Page header: breadcrumb ---- -->
+      <div class="flex flex-wrap items-center gap-2 min-w-0 text-sm mb-6">
+        <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </a>
+        <span class="text-[var(--slate)]">/</span>
+        <a href="text-templates.html" class="text-[var(--primary)] hover:underline font-semibold">Text Templates</a>
+        <span class="text-[var(--slate)]">/</span>
+        <h1 class="page-title text-[var(--ink)] truncate" style="font-size:20px;">Text Categories</h1>
       </div>
 
-      <button class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 mb-5" id="add-new-btn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        Add New
-      </button>
-
-      <!-- ================= TAXES AND FEES TABLE ================= -->
+      <!-- ================= TEXT CATEGORIES TABLE ================= -->
       <div class="panel p-5 md:p-6">
+        <div class="flex justify-end mb-5">
+          <button class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2" id="add-new-btn">
+            Add new
+          </button>
+        </div>
         <div class="overflow-x-auto w-full table-scroll">
           <table class="data-table">
             <thead>
               <tr>
-                <th class="sticky-col">Name</th>
-                <th>Amount</th>
-                <th>Amount Calculation Type</th>
-                <th>Calculation Type</th>
+                <th class="sticky-col">Category</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="tf-tbody">
-              <tr class="empty-row"><td colspan="5">No data available in table</td></tr>
+            <tbody id="tc-tbody">
             </tbody>
           </table>
         </div>
@@ -259,47 +248,24 @@
   </div>
 </div>
 
-<!-- ================= ADD TAX/FEE MODAL ================= -->
-<div class="modal-backdrop" id="tf-modal-backdrop">
-  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="tf-modal-title">
+<!-- ================= ADD TEXT CATEGORY MODAL ================= -->
+<div class="modal-backdrop" id="tc-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="tc-modal-title">
     <div class="flex items-center justify-between mb-6">
-      <h2 class="page-title" id="tf-modal-title" style="font-size:20px;">Taxes and fees</h2>
-      <button class="modal-close-btn" id="tf-modal-close" title="Close">
+      <h2 class="page-title" id="tc-modal-title" style="font-size:20px;">Text Category</h2>
+      <button class="modal-close-btn" id="tc-modal-close" title="Close">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <form id="tax-form">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5 mb-6">
-        <div>
-          <label class="field-label">Name</label>
-          <input type="text" class="text-field" placeholder="Name" id="tax-name-field" required>
-        </div>
-        <div>
-          <label class="field-label">Amount</label>
-          <input type="text" class="text-field" placeholder="Amount" id="tax-amount-field" required>
-        </div>
-        <div>
-          <label class="field-label">Amount calculation type</label>
-          <select class="text-field" id="tax-calc-type-field" required>
-            <option value="">Select…</option>
-            <option>Percent of price</option>
-            <option>Fixed amount</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">Calculation type</label>
-          <select class="text-field" id="tax-frequency-field" required>
-            <option value="">Select…</option>
-            <option>One time</option>
-            <option>Per night</option>
-            <option>Per person</option>
-          </select>
-        </div>
+    <form id="category-form">
+      <div class="mb-6" style="max-width:360px;">
+        <label class="field-label">Category</label>
+        <input type="text" class="text-field" placeholder="Category" id="tc-category-field" required>
       </div>
 
       <div class="flex justify-end gap-2">
-        <button type="button" class="rounded-lg px-5 py-2.5 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition" id="tf-modal-close-btn">Close</button>
+        <button type="button" class="rounded-lg px-5 py-2.5 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition" id="tc-modal-close-btn">Close</button>
         <button type="submit" class="btn-primary rounded-lg px-6 py-2.5 text-sm font-semibold">Submit</button>
       </div>
     </form>
@@ -309,48 +275,19 @@
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
 <script>
-  GoBlueSidebar.render('taxes-and-fees');
+  GoBlueSidebar.render('proposal-text-templates');
   GoBlueTopBar.render();
 
-  const modalBackdrop = document.getElementById('tf-modal-backdrop');
-  const taxForm = document.getElementById('tax-form');
-  const tbody = document.getElementById('tf-tbody');
+  // ---- Seed data (screenshot's category list was cut off after "Motorcoach",
+  // so additional categories may exist below it) ----
+  const seedCategories = ['Activity', 'Airport', 'Border', 'Driving', 'Home', 'Hotel', 'Meal', 'Misc', 'Motorcoach'];
 
-  function openModal() {
-    modalBackdrop.classList.add('is-open');
-  }
-  function closeModal() {
-    modalBackdrop.classList.remove('is-open');
-    taxForm.reset();
-  }
+  const tbody = document.getElementById('tc-tbody');
 
-  document.getElementById('add-new-btn').addEventListener('click', openModal);
-  document.getElementById('tf-modal-close').addEventListener('click', closeModal);
-  document.getElementById('tf-modal-close-btn').addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) closeModal();
-  });
-
-  taxForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('tax-name-field').value;
-    const amount = document.getElementById('tax-amount-field').value;
-    const calcType = document.getElementById('tax-calc-type-field').value;
-    const frequency = document.getElementById('tax-frequency-field').value;
-
-    const emptyRow = tbody.querySelector('.empty-row');
-    if (emptyRow) emptyRow.remove();
-
+  function buildRow(name) {
     const row = document.createElement('tr');
     row.innerHTML =
       '<td class="sticky-col font-semibold">' + name + '</td>' +
-      '<td class="num">' + amount + '</td>' +
-      '<td>' + calcType + '</td>' +
-      '<td>' + frequency + '</td>' +
       '<td>' +
         '<div class="flex items-center gap-1">' +
           '<button class="icon-action-btn" title="Edit">' +
@@ -367,12 +304,41 @@
       if (!tbody.querySelector('tr')) {
         const empty = document.createElement('tr');
         empty.className = 'empty-row';
-        empty.innerHTML = '<td colspan="5">No data available in table</td>';
+        empty.innerHTML = '<td colspan="2">No data available in table</td>';
         tbody.appendChild(empty);
       }
     });
 
-    tbody.appendChild(row);
+    return row;
+  }
+
+  seedCategories.forEach(name => tbody.appendChild(buildRow(name)));
+
+  const modalBackdrop = document.getElementById('tc-modal-backdrop');
+  const categoryForm = document.getElementById('category-form');
+
+  function openModal() {
+    modalBackdrop.classList.add('is-open');
+  }
+  function closeModal() {
+    modalBackdrop.classList.remove('is-open');
+    categoryForm.reset();
+  }
+
+  document.getElementById('add-new-btn').addEventListener('click', openModal);
+  document.getElementById('tc-modal-close').addEventListener('click', closeModal);
+  document.getElementById('tc-modal-close-btn').addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) closeModal();
+  });
+
+  categoryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('tc-category-field').value;
+    tbody.appendChild(buildRow(name));
     closeModal();
   });
 </script>

@@ -39,32 +39,47 @@
       id: 'reports', label: 'Reports',
       icon: '<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/>',
       children: [
-        { id: 'travel-insurance-policies', label: 'Travel Insurance Policies', href: 'travel-insurance-policies.html' },
-        { id: 'battleface-travel-protection', label: 'Battleface Travel Protection', href: 'battleface-policies.html' },
-        { id: 'booking-quotes', label: 'Booking Quotes', href: 'booking-quotes-report.html' },
-        { id: 'voucher-status', label: 'Voucher Status', href: 'voucher-status-report.html' },
-        { id: 'room-manifest', label: 'Room Manifest', href: 'room-manifest.html' },
-        { id: 'oasis-manifest', label: 'Oasis Manifest', href: 'room-manifest.html?oasis=1' },
-        { id: 'flight-pickup-report', label: 'Flight Pickup', href: '#' },
-        { id: 'flight-update-24-hours', label: 'Flight Update 24 hours', href: 'last-movements-flight-pickup.html' },
-        { id: 'flight-manifest', label: 'Flight Manifest', href: 'flight-manifest.html' },
-        { id: 'flight-report', label: 'Flight Report', href: 'flight-report.html' },
-        { id: 'flight-mismatch', label: 'Flight Mismatch', href: 'flight-mismatch.html' },
-        { id: 'last-movements-flight-pickup', label: 'Last Movements Flight Pick up', href: 'last-movements-flight-pickup.html' },
-        { id: 'booze-cruise', label: 'Booze Cruise', href: 'booze-cruise.html' },
-        { id: 'insurance-manifest', label: 'Insurance Manifest', href: 'insurance-manifest.html' },
-        { id: 'insurance-manifest-sbu', label: 'Insurance Manifest SBU', href: 'insurance-manifest.html?sbu=1' },
-        { id: 'ytd-report', label: 'YTD Report', href: 'ytd-report.html' },
-        { id: 'party-package', label: 'Party Package', href: 'party-package-report.html' },
-        { id: 'booked-products', label: 'Booked Products', href: '#' },
-        { id: 'pax-count-by-day', label: 'Pax Count By Day', href: 'pax-count-report.html' },
-        { id: 'pax-count-by-arrival-date', label: 'Pax Count By Arrival Date', href: 'pax-count-report.html?arrival_date=1' },
-        { id: 'pax-count-by-departure-date', label: 'Pax Count By Departure Date', href: 'pax-count-report.html?departure_date=1' },
-        { id: 'missing-info-pax', label: 'Missing Info Pax', href: 'missing-info-pax.html' },
-        { id: 'payments', label: 'Payments', href: 'payments-report.html' },
-        { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: 'bookings-by-customer-payment.html' },
-        { id: 'mark-for-deletion', label: 'Mark For Deletion', href: 'mark-for-deletion.html' },
-        { id: 'product-report', label: 'Product Report', href: 'product-report.html' }
+        {
+          id: 'reports-sales', label: 'Sales',
+          children: [
+            { id: 'travel-insurance-policies', label: 'Travel Insurance Policies', href: 'travel-insurance-policies.html' },
+            { id: 'battleface-travel-protection', label: 'Battleface Travel Protection', href: 'battleface-policies.html' },
+            { id: 'booking-quotes', label: 'Booking Quotes', href: 'booking-quotes-report.html' },
+            { id: 'party-package', label: 'Party Package', href: 'party-package-report.html' },
+            { id: 'booked-products', label: 'Booked Products', href: '#' },
+            { id: 'product-report', label: 'Product Report', href: 'product-report.html' }
+          ]
+        },
+        {
+          id: 'reports-operations', label: 'Operations',
+          children: [
+            { id: 'voucher-status', label: 'Voucher Status', href: 'voucher-status-report.html' },
+            { id: 'room-manifest', label: 'Room Manifest', href: 'room-manifest.html' },
+            { id: 'oasis-manifest', label: 'Oasis Manifest', href: 'room-manifest.html?oasis=1' },
+            { id: 'flight-pickup-report', label: 'Flight Pickup', href: '#' },
+            { id: 'flight-update-24-hours', label: 'Flight Update 24 hours', href: 'last-movements-flight-pickup.html' },
+            { id: 'flight-manifest', label: 'Flight Manifest', href: 'flight-manifest.html' },
+            { id: 'flight-report', label: 'Flight Report', href: 'flight-report.html' },
+            { id: 'flight-mismatch', label: 'Flight Mismatch', href: 'flight-mismatch.html' },
+            { id: 'last-movements-flight-pickup', label: 'Last Movements Flight Pick up', href: 'last-movements-flight-pickup.html' },
+            { id: 'booze-cruise', label: 'Booze Cruise', href: 'booze-cruise.html' },
+            { id: 'insurance-manifest', label: 'Insurance Manifest', href: 'insurance-manifest.html' },
+            { id: 'insurance-manifest-sbu', label: 'Insurance Manifest SBU', href: 'insurance-manifest.html?sbu=1' },
+            { id: 'pax-count-by-day', label: 'Pax Count By Day', href: 'pax-count-report.html' },
+            { id: 'pax-count-by-arrival-date', label: 'Pax Count By Arrival Date', href: 'pax-count-report.html?arrival_date=1' },
+            { id: 'pax-count-by-departure-date', label: 'Pax Count By Departure Date', href: 'pax-count-report.html?departure_date=1' },
+            { id: 'missing-info-pax', label: 'Missing Info Pax', href: 'missing-info-pax.html' },
+            { id: 'mark-for-deletion', label: 'Mark For Deletion', href: 'mark-for-deletion.html' }
+          ]
+        },
+        {
+          id: 'reports-finance', label: 'Finance',
+          children: [
+            { id: 'ytd-report', label: 'YTD Report', href: 'ytd-report.html' },
+            { id: 'payments', label: 'Payments', href: 'payments-report.html' },
+            { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: 'bookings-by-customer-payment.html' }
+          ]
+        }
       ]
     },
     {
@@ -81,10 +96,10 @@
         { id: 'terms-and-conditions', label: 'Terms and Conditions', href: 'terms-and-conditions.html' },
         { id: 'product-types', label: 'Product Types', href: 'product-types.html' },
         { id: 'destinations', label: 'Destinations', href: 'destinations.html' },
-        { id: 'destination-settings', label: 'Destination Settings', href: '#' },
-        { id: 'users-management', label: 'Users Management', href: '#' },
+        { id: 'destination-settings', label: 'Destination Settings', href: 'destination-settings.html' },
+        { id: 'users-management', label: 'Users Management', href: 'users-management.html' },
         { id: 'minimum-nights', label: 'Minimum Nights', href: '#' },
-        { id: 'proposal-text-templates', label: 'Proposal Text Templates', href: '#' }
+        { id: 'proposal-text-templates', label: 'Proposal Text Templates', href: 'text-templates.html' }
       ]
     }
   ];
@@ -93,8 +108,36 @@
     return '<svg class="' + cls + '" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
   }
 
+  // A group "contains" the active id if it IS the active id, or (recursively)
+  // one of its children does — lets a Reports > Sales > Payments path open
+  // both the Reports and Sales levels from a single activeId leaf.
+  function containsActive(item, activeId) {
+    if (item.id === activeId) return true;
+    if (item.children) return item.children.some(c => containsActive(c, activeId));
+    return false;
+  }
+
+  // Renders one entry inside a .sub-nav: either a plain link (leaf) or a
+  // nested, independently-collapsible group (used for the Reports
+  // department sub-menus: Sales / Operations / Finance).
+  function renderNavChild(item, activeId) {
+    if (!item.children) {
+      return '<a href="' + item.href + '"' + (item.id === activeId ? ' class="is-active"' : '') + '>' + item.label + '</a>';
+    }
+
+    const isOpen = containsActive(item, activeId);
+    return '<div id="nav-' + item.id + '" class="sub-nav-group' + (isOpen ? ' is-open is-active-group' : '') +
+      '" role="button" tabindex="0" aria-expanded="' + (isOpen ? 'true' : 'false') + '" aria-controls="subnav-' + item.id + '">' +
+      '<span>' + item.label + '</span>' +
+      chevronSvg('sidebar-chevron') +
+      '</div>' +
+      '<div id="subnav-' + item.id + '" class="sub-sub-nav' + (isOpen ? ' is-open' : '') + '" data-submenu-for="nav-' + item.id + '">' +
+        item.children.map(child => renderNavChild(child, activeId)).join('') +
+      '</div>';
+  }
+
   function renderItem(item, activeId) {
-    const isParentOfActive = item.children && item.children.some(c => c.id === activeId);
+    const isParentOfActive = item.children && item.children.some(c => containsActive(c, activeId));
     const isActive = item.id === activeId;
     const isOpen = isParentOfActive;
 
@@ -107,9 +150,7 @@
         '</' + tag + '>';
     }
 
-    const childrenHtml = item.children.map(child =>
-      '<a href="' + child.href + '"' + (child.id === activeId ? ' class="is-active"' : '') + '>' + child.label + '</a>'
-    ).join('');
+    const childrenHtml = item.children.map(child => renderNavChild(child, activeId)).join('');
 
     return '<div id="nav-' + item.id + '" class="nav-item' + (isActive || isParentOfActive ? ' is-active' : '') + (isOpen ? ' is-open' : '') +
       '" role="button" tabindex="0" aria-expanded="' + (isOpen ? 'true' : 'false') + '" aria-controls="subnav-' + item.id + '">' +
