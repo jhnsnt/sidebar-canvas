@@ -407,19 +407,37 @@
 
   const vendorStatusMap = {
     confirmed: 'Confirmation/Booking',
+    'confirmed-ticketed': 'Confirmed and Ticketed',
     pending: 'Requested',
     danger: 'To Be Requested'
   };
 
+  // ---- Kept in sync with the `groups` item data in booking-requests.html —
+  // productId here must match the ?item= links that page's rows build. ----
   const items = [
-    { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '09/28/2026 - 09/28/2026', type: 'Transportation', budget: 500, productId: 8261, pricingId: 8328, serviceType: 'Shuttle', estimatedMiles: 0, totalHours: 0, passengerCount: 15, coachCount: 1, coachCapacity: 55 },
-    { product: 'George Washington Monument', sub: 'Admission to the Monument', dest: 'Washington, D.C.', status: 'pending', dateRange: '09/29/2026 - 09/29/2026', type: 'Attraction', budget: 15, productId: 8262, pricingId: 8329 },
-    { product: 'United States Capitol Building', sub: 'Public Guided Tour', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '09/30/2026 - 09/30/2026', type: 'Attraction', budget: 0, productId: 8263, pricingId: 8330 },
-    { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '10/01/2026 - 10/01/2026', type: 'Transportation', budget: 2500, productId: 8264, pricingId: 8331, serviceType: 'Shuttle', estimatedMiles: 0, totalHours: 0, passengerCount: 15, coachCount: 1, coachCapacity: 55 },
-    { product: 'Landmark Swag', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Merchandise', budget: 250.05, productId: 8265, pricingId: 8332 },
-    { product: 'Landmark System Fee', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 32.10, productId: 8266, pricingId: 8333 },
-    { product: 'Landmark Convenience Fee', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 74.79, productId: 8267, pricingId: 8334 },
-    { product: 'Landmark Driver Gratuity', sub: null, dest: null, status: 'danger', dateRange: null, type: 'Fee', budget: 833.34, productId: 8268, pricingId: 8335 }
+    { product: 'Royal Transportation', sub: 'Motorcoach', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/05/2026 - 10/05/2026', type: 'Transportation', budget: 10500.00, productId: 8301, pricingId: 8401, serviceType: 'Motorcoach', estimatedMiles: 0, totalHours: 0, passengerCount: 41, coachCount: 1, coachCapacity: 55 },
+    { product: "Mary Mac's Tea Room", sub: 'Sit-down Dinner', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/05/2026 - 10/05/2026', type: 'Meal', budget: 1058.00, productId: 8302, pricingId: 8402 },
+    { product: 'Hilton Atlanta Northeast', sub: 'Hotel Accommodations', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/05/2026 - 10/05/2026', type: 'Hotel', budget: 5805.91, productId: 8303, pricingId: 8403 },
+    { product: 'Student Watchers', sub: 'ATLANTA Overnight', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/05/2026 - 10/05/2026', type: 'Fee', budget: 630.00, productId: 8304, pricingId: 8404 },
+    { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/06/2026 - 10/06/2026', type: 'Meal', budget: 0, productId: 8305, pricingId: 8405 },
+    { product: 'Emory University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/06/2026 - 10/06/2026', type: 'Attraction', budget: 0, productId: 8306, pricingId: 8406 },
+    { product: 'Emory University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/06/2026 - 10/06/2026', type: 'Meal', budget: 322.00, productId: 8307, pricingId: 8407 },
+    { product: 'Georgia Aquarium', sub: 'Visit the Georgia Aquarium', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/06/2026 - 10/06/2026', type: 'Attraction', budget: 414.00, productId: 8308, pricingId: 8408 },
+    { product: 'Ponce City Market', sub: '$25.00 Meal Allowance', dest: 'Atlanta, GA', status: 'danger', dateRange: '10/06/2026 - 10/06/2026', type: 'Meal', budget: 575.00, productId: 8309, pricingId: 8409 },
+    { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/07/2026 - 10/07/2026', type: 'Meal', budget: 0, productId: 8310, pricingId: 8410 },
+    { product: 'Georgia Tech University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/07/2026 - 10/07/2026', type: 'Attraction', budget: 69.00, productId: 8311, pricingId: 8411 },
+    { product: 'Georgia Tech University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/07/2026 - 10/07/2026', type: 'Meal', budget: 460.00, productId: 8312, pricingId: 8412 },
+    { product: 'Martin Luther King, Jr. National Historical Park', sub: "Visit Martin Luther King Jr's Birth Home", dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/07/2026 - 10/07/2026', type: 'Attraction', budget: 0, productId: 8313, pricingId: 8413 },
+    { product: "Maggiano's Little Italy", sub: 'Family-style Sit-Down Dinner', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/07/2026 - 10/07/2026', type: 'Meal', budget: 920.00, productId: 8314, pricingId: 8414 },
+    { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/08/2026 - 10/08/2026', type: 'Meal', budget: 0, productId: 8315, pricingId: 8415 },
+    { product: 'Clark Atlanta University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', dateRange: '10/08/2026 - 10/08/2026', type: 'Attraction', budget: 0, productId: 8316, pricingId: 8416 },
+    { product: 'Clark Atlanta University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed', dateRange: '10/08/2026 - 10/08/2026', type: 'Meal', budget: 460.00, productId: 8317, pricingId: 8417 },
+    { product: 'Spelman College', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'danger', dateRange: null, type: 'Attraction', budget: 0, productId: 8318, pricingId: 8418 },
+    { product: 'Landmark', sub: 'Convenience Fee', dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 973.85, productId: 8319, pricingId: 8419 },
+    { product: 'Landmark', sub: 'System Fee', dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 417.94, productId: 8320, pricingId: 8420 },
+    { product: 'Landmark', sub: 'Landmark Leader', dest: 'Atlanta, GA', status: 'confirmed', dateRange: null, type: 'Fee', budget: 600.00, productId: 8321, pricingId: 8421 },
+    { product: 'Landmark', sub: 'Swag', dest: null, status: 'confirmed', dateRange: null, type: 'Merchandise', budget: 383.41, productId: 8322, pricingId: 8422 },
+    { product: 'Landmark', sub: 'Driver gratuity', dest: null, status: 'danger', dateRange: null, type: 'Fee', budget: 555.56, productId: 8323, pricingId: 8423 }
   ];
 
   const params = new URLSearchParams(window.location.search);

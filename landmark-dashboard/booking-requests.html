@@ -34,8 +34,20 @@
   .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
   .panel-title{ font-family:'Poppins',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
 
-  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease, box-shadow .15s ease; }
   .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-primary:active{ background:var(--primary-deep); }
+  .btn-primary:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(142,45,10,.45); }
+  .btn-primary.is-active{ background:var(--primary-deep); box-shadow:0 0 0 3px rgba(142,45,10,.35); }
+
+  .btn-action-pill{
+    background:#fff; color:var(--primary); border:1.5px solid var(--primary);
+    transition:background .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .btn-action-pill:hover{ background:var(--primary); color:#fff; }
+  .btn-action-pill:active{ background:var(--primary-deep); color:#fff; border-color:var(--primary-deep); }
+  .btn-action-pill:focus-visible{ outline:none; background:var(--primary); color:#fff; box-shadow:0 0 0 3px rgba(142,45,10,.25); }
+  .btn-action-pill.is-active{ background:var(--primary); color:#fff; }
   .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
   .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
 
@@ -171,8 +183,12 @@
     text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
   }
   .status-pill.is-confirmed{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-confirmed-ticketed{ background:var(--forest); color:#fff; }
   .status-pill.is-pending{ background:var(--amber-tint); color:var(--amber); }
   .status-pill.is-danger{ background:var(--brick-tint); color:var(--brick); }
+  .req-cost-variance{ display:block; font-size:10.5px; font-weight:700; color:var(--forest); }
+  .req-cost-variance.is-negative{ color:var(--brick); }
+  .req-request-action{ font-size:12.5px; font-weight:700; color:var(--primary); }
 
   /* ---- Request header ---- */
   .req-code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; color:var(--primary); }
@@ -191,8 +207,9 @@
   .metric-delta.is-bad{ background:var(--brick-tint); color:var(--brick); }
 
   /* ---- Request items table ---- */
-  .req-group-heading{ font-size:14px; font-weight:800; color:var(--primary); margin:1.5rem 0 .6rem; }
+  .req-group-heading{ font-size:17px; font-weight:800; color:var(--primary); margin:1.5rem 0 .6rem; }
   .req-group-heading:first-child{ margin-top:0; }
+  .req-total-heading{ font-family:'Poppins',sans-serif; font-size:28px; font-weight:800; letter-spacing:-0.01em; color:var(--primary); margin-bottom:1rem; }
   .req-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
   .req-table th{
     text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.1em; color:var(--slate);
@@ -202,6 +219,8 @@
   .req-table td{ padding:.75rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); vertical-align:top; }
   .req-table td.text-right{ text-align:right; }
   .req-table tbody tr:hover{ background:var(--paper); }
+  .req-table tbody tr.req-row-alt{ background:var(--paper); }
+  .req-table tbody tr.req-row-alt:hover{ background:var(--sand); }
   .req-product-name{ font-weight:700; }
   .req-product-sub{ font-size:12px; color:var(--slate); margin-top:.1rem; }
   .req-warning{
@@ -320,14 +339,13 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2 mt-5 pt-5 border-t border-[var(--line-soft)]">
-          <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold inline-flex items-center gap-2" id="add-product-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-            Add Product
-          </button>
-          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">All Payments</button>
-          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Details</button>
-          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Accepted Proposal</button>
+        <div class="flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--line-soft)]">
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="all-payments-btn">All payments</button>
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="add-product-btn">Add Product</button>
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="filter-product-type-btn">Filter by Product Type</button>
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="filter-dates-btn">Filter by Dates</button>
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="details-btn">Details</button>
+          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="accepted-proposal-btn">Accepted Proposal</button>
         </div>
       </div>
 
@@ -359,35 +377,9 @@
         </div>
       </div>
 
-      <!-- ---- Filters ---- -->
-      <div class="panel p-5 md:p-6 mb-6" id="req-filters-panel">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
-          <div>
-            <label class="field-label">Product Type</label>
-            <select class="text-field" id="req-type-filter">
-              <option value="">All Types</option>
-              <option value="Transportation">Transportation</option>
-              <option value="Attraction">Attraction</option>
-              <option value="Merchandise">Merchandise</option>
-              <option value="Fee">Fee</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Date Begin</label>
-            <input type="date" class="text-field" id="req-date-begin">
-          </div>
-          <div>
-            <label class="field-label">Date End</label>
-            <input type="date" class="text-field" id="req-date-end">
-          </div>
-          <div class="flex items-end">
-            <button class="btn-outline rounded-lg px-4 py-2.5 text-sm font-semibold w-full" id="req-clear-btn">Clear Filters</button>
-          </div>
-        </div>
-      </div>
-
       <!-- ---- Items ---- -->
       <div class="panel p-5 md:p-6">
+        <p class="req-total-heading" id="req-total-heading"></p>
         <div class="overflow-x-auto w-full table-scroll">
           <table class="req-table" id="req-table">
             <thead>
@@ -405,7 +397,6 @@
             <tbody id="req-tbody"></tbody>
           </table>
         </div>
-        <p class="text-sm text-[var(--slate)] text-center py-8 hidden" id="req-empty-state">No items match your filters.</p>
       </div>
 
       <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
@@ -445,49 +436,60 @@
   GoBlueSidebar.render('bookings');
   GoBlueTopBar.render();
 
-  // ---- Item data (faithfully preserved from the source screenshot; product
-  // subtitles were cut off there by column width and are written out here in
-  // full, and the second "arrow" action icon / ambiguous "+28.06%" cost badge
-  // were dropped as unclear, decorative clutter rather than guessed at) ----
-  // Note: "Cost" in the item detail popup reuses each item's budget figure
-  // where one exists (confirmed against the one item the client's screenshot
-  // showed — Shuttle Transportation, 500.00) since that's the only dollar
-  // amount that lined up between the two source screenshots; productId,
-  // pricingId, price and units are invented placeholders beyond that one
-  // confirmed item, kept plausible and sequential rather than left blank.
+  // ---- Item data (matches the "Filter by Product Type" reference screenshot:
+  // 23 items — 1 Hotel, 1 MotorCoach, 6 Attraction, 9 Meal, 6 Other/Fee. Product
+  // subtitles that screenshot truncated by column width are written out here in
+  // full; productId, pricingId, price and units beyond what the screenshot
+  // showed are invented placeholders, kept plausible and sequential.) ----
   const groups = [
     {
-      date: 'Monday, September 28, 2026', dateRange: '09/28/2026 - 09/28/2026', items: [
-        { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Sep 28, 2026 · 9:00 PM', type: 'Transportation', budget: 500, cost: 0, paid: 0, bal: 0, productId: 8261, pricingId: 8328, price: 694.44, units: 1 }
+      date: 'Monday, October 5, 2026', dateRange: '10/05/2026 - 10/05/2026', items: [
+        { product: 'Royal Transportation', sub: 'Motorcoach', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 5, 2026 · 6:00 AM', type: 'Transportation', budget: 10500.00, cost: 0, paid: 10410.00, bal: -10410.00, productId: 8301, pricingId: 8401, price: 0, units: 41 },
+        { product: "Mary Mac's Tea Room", sub: 'Sit-down Dinner', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 5, 2026 · 5:00 PM', type: 'Meal', budget: 1058.00, cost: 1058.00, costVariancePct: 28.00, paid: 0, bal: 0, productId: 8302, pricingId: 8402, price: 1058.00, units: 37 },
+        { product: 'Hilton Atlanta Northeast', sub: 'Hotel Accommodations', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 5, 2026 · 7:30 PM', type: 'Hotel', budget: 5805.91, cost: 0, paid: 2360.61, bal: -2360.61, productId: 8303, pricingId: 8403, price: 0, units: 3 },
+        { product: 'Student Watchers', sub: 'ATLANTA Overnight', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 5, 2026 · 10:00 PM', type: 'Fee', budget: 630.00, cost: 0, paid: 630.00, bal: -630.00, productId: 8304, pricingId: 8404, price: 0, units: 40 }
       ]
     },
     {
-      date: 'Tuesday, September 29, 2026', dateRange: '09/29/2026 - 09/29/2026', items: [
-        { product: 'George Washington Monument', sub: 'Admission to the Monument', dest: 'Washington, D.C.', status: 'pending', schedule: 'Sep 29, 2026 · 10:30 AM', type: 'Attraction', budget: 15, cost: 15, paid: 6, bal: 9, productId: 8262, pricingId: 8329, price: 21.00, units: 1 }
+      date: 'Tuesday, October 6, 2026', dateRange: '10/06/2026 - 10/06/2026', items: [
+        { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 6, 2026 · 7:00 AM', type: 'Meal', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8305, pricingId: 8405, price: 0, units: 35 },
+        { product: 'Emory University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 6, 2026 · 10:30 AM', type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8306, pricingId: 8406, price: 0, units: 5 },
+        { product: 'Emory University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 6, 2026 · 12:30 PM', type: 'Meal', budget: 322.00, cost: 322.00, costVariancePct: 27.98, paid: 0, bal: 0, productId: 8307, pricingId: 8407, price: 322.00, units: 36 },
+        { product: 'Georgia Aquarium', sub: 'Visit the Georgia Aquarium', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 6, 2026 · 2:00 PM', type: 'Attraction', budget: 414.00, cost: 414.00, costVariancePct: 39.04, paid: 401.94, bal: 12.06, productId: 8308, pricingId: 8408, price: 414.00, units: 5 },
+        { product: 'Ponce City Market', sub: '$25.00 Meal Allowance', dest: 'Atlanta, GA', status: 'danger', schedule: 'Oct 6, 2026 · 5:30 PM', type: 'Meal', budget: 575.00, cost: 0, costVariancePct: 100.00, paid: 0, bal: 0, productId: 8309, pricingId: 8409, price: 0, units: 37 }
       ]
     },
     {
-      date: 'Wednesday, September 30, 2026', dateRange: '09/30/2026 - 09/30/2026', items: [
-        { product: 'United States Capitol Building', sub: 'Public Guided Tour', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Sep 30, 2026 · 1:20 PM', type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8263, pricingId: 8330, price: 0, units: 1 }
+      date: 'Wednesday, October 7, 2026', dateRange: '10/07/2026 - 10/07/2026', items: [
+        { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 7, 2026 · 7:00 AM', type: 'Meal', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8310, pricingId: 8410, price: 0, units: 35 },
+        { product: 'Georgia Tech University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 7, 2026 · 10:00 AM', type: 'Attraction', budget: 69.00, cost: 69.00, costVariancePct: 28.06, paid: 0, bal: 0, productId: 8311, pricingId: 8411, price: 69.00, units: 5 },
+        { product: 'Georgia Tech University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 7, 2026 · 12:00 PM', type: 'Meal', budget: 460.00, cost: 460.00, costVariancePct: 28.01, paid: 334.21, bal: 125.79, productId: 8312, pricingId: 8412, price: 460.00, units: 36 },
+        { product: 'Martin Luther King, Jr. National Historical Park', sub: "Visit Martin Luther King Jr's Birth Home", dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 7, 2026 · 2:00 PM', type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8313, pricingId: 8413, price: 0, units: 5 },
+        { product: "Maggiano's Little Italy", sub: 'Family-style Sit-Down Dinner', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 7, 2026 · 5:00 PM', type: 'Meal', budget: 920.00, cost: 920.00, costVariancePct: 28.01, paid: 500.00, bal: 420.00, productId: 8314, pricingId: 8414, price: 920.00, units: 37 }
       ]
     },
     {
-      date: 'Thursday, October 1, 2026', dateRange: '10/01/2026 - 10/01/2026', items: [
-        { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Oct 1, 2026 · 7:00 AM', type: 'Transportation', budget: 2500, cost: 0, paid: 0, bal: 0, productId: 8264, pricingId: 8331, price: 3375.00, units: 1 }
+      date: 'Thursday, October 8, 2026', dateRange: '10/08/2026 - 10/08/2026', items: [
+        { product: 'Meal Allocation', sub: 'Breakfast Included', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 8, 2026 · 7:00 AM', type: 'Meal', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8315, pricingId: 8415, price: 0, units: 35 },
+        { product: 'Clark Atlanta University', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'confirmed-ticketed', schedule: 'Oct 8, 2026 · 10:00 AM', type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8316, pricingId: 8416, price: 0, units: 5 },
+        { product: 'Clark Atlanta University', sub: 'Sit-Down Lunch', dest: 'Atlanta, GA', status: 'confirmed', schedule: 'Oct 8, 2026 · 12:00 PM', type: 'Meal', budget: 460.00, cost: 460.00, costVariancePct: -2.88, paid: 0, bal: 0, productId: 8317, pricingId: 8417, price: 460.00, units: 36 }
       ]
     },
     {
       date: null, dateRange: null, items: [
-        { product: 'Landmark Swag', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Merchandise', budget: 180, cost: 250.05, paid: 0, bal: 0, productId: 8265, pricingId: 8332, price: 250.05, units: 1 },
-        { product: 'Landmark System Fee', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: null, cost: 32.10, paid: 0, bal: 0, productId: 8266, pricingId: 8333, price: 32.10, units: 1 },
-        { product: 'Landmark Convenience Fee', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: null, cost: 74.79, paid: 0, bal: 0, productId: 8267, pricingId: 8334, price: 74.79, units: 1 },
-        { product: 'Landmark Driver Gratuity', sub: null, dest: null, status: 'danger', schedule: null, type: 'Fee', budget: null, cost: 833.34, paid: 0, bal: 0, productId: 8268, pricingId: 8335, price: 833.34, units: 1 }
+        { product: 'Spelman College', sub: 'Guided Tour of Campus', dest: 'Atlanta, GA', status: 'danger', schedule: null, type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8318, pricingId: 8418, price: 0, units: 5 },
+        { product: 'Landmark', sub: 'Convenience Fee', dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: 0, cost: 973.85, paid: 0, bal: 0, productId: 8319, pricingId: 8419, price: 973.85, units: 1 },
+        { product: 'Landmark', sub: 'System Fee', dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: 0, cost: 417.94, paid: 0, bal: 0, productId: 8320, pricingId: 8420, price: 417.94, units: 1 },
+        { product: 'Landmark', sub: 'Landmark Leader', dest: 'Atlanta, GA', status: 'confirmed', schedule: null, type: 'Fee', budget: 600.00, cost: 0, paid: 0, bal: 0, productId: 8321, pricingId: 8421, price: 0, units: 2400 },
+        { product: 'Landmark', sub: 'Swag', dest: null, status: 'confirmed', schedule: null, type: 'Merchandise', budget: 276.00, cost: 383.41, paid: 0, bal: 0, productId: 8322, pricingId: 8422, price: 383.41, units: 1 },
+        { product: 'Landmark', sub: 'Driver gratuity', dest: null, status: 'danger', schedule: null, type: 'Fee', budget: 0, cost: 555.56, paid: 0, bal: 0, productId: 8323, pricingId: 8423, price: 555.56, units: 1 }
       ]
     }
   ];
 
   const statusMeta = {
     confirmed: { label: 'Confirmed', cls: 'is-confirmed' },
+    'confirmed-ticketed': { label: 'Confirmed and Ticketed', cls: 'is-confirmed-ticketed' },
     pending: { label: 'Requested', cls: 'is-pending' },
     danger: { label: 'TBR', cls: 'is-danger' }
   };
@@ -496,8 +498,9 @@
 
   const tbody = document.getElementById('req-tbody');
 
-  function buildItemRow(item, dateRange) {
+  function buildItemRow(item, dateRange, isAlt) {
     const tr = document.createElement('tr');
+    if (isAlt) tr.className = 'req-row-alt';
     tr.dataset.type = item.type;
     tr.dataset.date = item.schedule ? item.schedule : '';
     const meta = statusMeta[item.status];
@@ -507,6 +510,20 @@
       : '<span class="req-warning"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>No destination &mdash; <a href="#" class="hover:underline">update</a></span>';
 
     const dueClass = item.bal > 0 ? 'is-owed' : 'is-zero';
+    const costVarianceHtml = item.costVariancePct != null
+      ? '<span class="req-cost-variance' + (item.costVariancePct < 0 ? ' is-negative' : '') + '">' +
+          (item.costVariancePct < 0 ? '' : '+') + item.costVariancePct.toFixed(2) + '%</span>'
+      : '';
+    const actionHtml = item.status === 'danger'
+      ? '<button class="req-request-action request-item-btn">Request</button>'
+      : '<div class="flex items-center justify-center gap-1">' +
+          '<a href="request-item-detail.html?item=' + item.productId + '" class="icon-action-btn" title="Open item page">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
+          '</a>' +
+          '<button class="icon-action-btn view-item-btn" title="View item">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+          '</button>' +
+        '</div>';
 
     tr.innerHTML =
       '<td><p class="req-product-name">' + item.product + '</p>' + (item.sub ? '<p class="req-product-sub">' + item.sub + '</p>' : '') + '</td>' +
@@ -514,34 +531,89 @@
       '<td><span class="status-pill ' + meta.cls + '">' + meta.label + '</span></td>' +
       '<td>' + (item.schedule || '<span class="text-[var(--slate)]">No date set</span>') + '</td>' +
       '<td class="text-right num">' + money(item.budget) + '</td>' +
-      '<td class="text-right num font-semibold">' + money(item.cost) + '</td>' +
+      '<td class="text-right num font-semibold">' + costVarianceHtml + money(item.cost) + '</td>' +
       '<td class="text-right">' +
         '<p class="req-payment-paid num">Paid ' + money(item.paid) + '</p>' +
         '<p class="req-payment-due num ' + dueClass + '">' + (item.bal > 0 ? 'Due ' + money(item.bal) : 'Settled') + '</p>' +
       '</td>' +
-      '<td class="text-center"><div class="flex items-center justify-center gap-1">' +
-        '<a href="request-item-detail.html?item=' + item.productId + '" class="icon-action-btn" title="Open item page">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
-        '</a>' +
-        '<button class="icon-action-btn view-item-btn" title="View item">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
-        '</button>' +
-      '</div></td>';
+      '<td class="text-center">' + actionHtml + '</td>';
 
-    tr.querySelector('.view-item-btn').addEventListener('click', () => openItemModal(item, dateRange));
+    const viewBtn = tr.querySelector('.view-item-btn');
+    if (viewBtn) viewBtn.addEventListener('click', () => openItemModal(item, dateRange));
+    const requestBtn = tr.querySelector('.request-item-btn');
+    if (requestBtn) requestBtn.addEventListener('click', () => openItemModal(item, dateRange));
 
     return tr;
   }
 
-  groups.forEach(group => {
+  function appendGroupHeading(label, count, isAlt) {
     const heading = document.createElement('tr');
-    heading.className = 'req-group-row';
-    const count = group.items.length;
-    const label = group.date ? group.date : 'No start date';
+    heading.className = 'req-group-row' + (isAlt ? ' req-row-alt' : '');
     heading.innerHTML = '<td colspan="8" style="border-bottom:0; padding-bottom:0;"><p class="req-group-heading">' + label + ' &middot; ' + count + (count === 1 ? ' item' : ' items') + '</p></td>';
     tbody.appendChild(heading);
-    group.items.forEach(item => tbody.appendChild(buildItemRow(item, group.dateRange)));
-  });
+  }
+
+  // "Filter by Product Type" regroups the same rows under Hotel/MotorCoach/
+  // Attraction/Meal/Other headings (derived from each item's `type`) instead
+  // of by date; the underlying item rows and columns are unchanged.
+  const TYPE_GROUP_ORDER = ['Hotel Products', 'MotorCoach Products', 'Attraction Products', 'Meal Products', 'Other Products'];
+  function typeGroupLabel(type) {
+    if (type === 'Hotel') return 'Hotel Products';
+    if (type === 'Transportation') return 'MotorCoach Products';
+    if (type === 'Attraction') return 'Attraction Products';
+    if (type === 'Meal') return 'Meal Products';
+    return 'Other Products';
+  }
+
+  function renderByDate() {
+    tbody.innerHTML = '';
+    let groupIndex = 0;
+    groups.forEach(group => {
+      const isAlt = groupIndex++ % 2 === 1;
+      appendGroupHeading(group.date ? group.date : 'No start date', group.items.length, isAlt);
+      group.items.forEach(item => tbody.appendChild(buildItemRow(item, group.dateRange, isAlt)));
+    });
+  }
+
+  function renderByType() {
+    tbody.innerHTML = '';
+    const buckets = {};
+    groups.forEach(group => group.items.forEach(item => {
+      const label = typeGroupLabel(item.type);
+      (buckets[label] = buckets[label] || []).push({ item, dateRange: group.dateRange });
+    }));
+    let groupIndex = 0;
+    TYPE_GROUP_ORDER.forEach(label => {
+      const bucket = buckets[label];
+      if (!bucket || !bucket.length) return;
+      const isAlt = groupIndex++ % 2 === 1;
+      appendGroupHeading(label, bucket.length, isAlt);
+      bucket.forEach(entry => tbody.appendChild(buildItemRow(entry.item, entry.dateRange, isAlt)));
+    });
+  }
+
+  function setActiveFilterBtn(mode) {
+    filterProductTypeBtn.classList.toggle('is-active', mode === 'type');
+    filterDatesBtn.classList.toggle('is-active', mode === 'date');
+  }
+
+  const filterProductTypeBtn = document.getElementById('filter-product-type-btn');
+  const filterDatesBtn = document.getElementById('filter-dates-btn');
+  filterProductTypeBtn.addEventListener('click', () => { renderByType(); setActiveFilterBtn('type'); renderGrandTotal(true); });
+  filterDatesBtn.addEventListener('click', () => { renderByDate(); setActiveFilterBtn('date'); renderGrandTotal(false); });
+
+  // ---- Grand total across every item; only shown in the "Filter by Product Type" view ----
+  function renderGrandTotal(show) {
+    const heading = document.getElementById('req-total-heading');
+    if (!show) { heading.textContent = ''; return; }
+    let count = 0;
+    groups.forEach(group => { count += group.items.length; });
+    heading.textContent = 'Total: ' + count + (count === 1 ? ' item' : ' items');
+  }
+
+  renderByDate();
+  setActiveFilterBtn('date');
+  renderGrandTotal(false);
 
   // ---- Item detail popup ----
   const itemModalBackdrop = document.getElementById('item-modal-backdrop');
@@ -586,53 +658,6 @@
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && itemModalBackdrop.classList.contains('is-open')) closeItemModal();
-  });
-
-  // ---- Filters ----
-  const typeFilter = document.getElementById('req-type-filter');
-  const dateBegin = document.getElementById('req-date-begin');
-  const dateEnd = document.getElementById('req-date-end');
-  const emptyState = document.getElementById('req-empty-state');
-
-  function applyReqFilters() {
-    const type = typeFilter.value;
-    const begin = dateBegin.value ? new Date(dateBegin.value) : null;
-    const end = dateEnd.value ? new Date(dateEnd.value) : null;
-    let anyVisible = false;
-
-    tbody.querySelectorAll('tr:not(.req-group-row)').forEach(row => {
-      let visible = true;
-      if (type && row.dataset.type !== type) visible = false;
-      if ((begin || end) && row.dataset.date) {
-        const rowDate = new Date(row.dataset.date.split(' · ')[0]);
-        if (begin && rowDate < begin) visible = false;
-        if (end && rowDate > end) visible = false;
-      }
-      row.classList.toggle('hidden', !visible);
-      if (visible) anyVisible = true;
-    });
-
-    tbody.querySelectorAll('.req-group-row').forEach(headingRow => {
-      let sib = headingRow.nextElementSibling;
-      let groupVisible = false;
-      while (sib && !sib.classList.contains('req-group-row')) {
-        if (!sib.classList.contains('hidden')) groupVisible = true;
-        sib = sib.nextElementSibling;
-      }
-      headingRow.classList.toggle('hidden', !groupVisible);
-    });
-
-    emptyState.classList.toggle('hidden', anyVisible);
-  }
-
-  typeFilter.addEventListener('change', applyReqFilters);
-  dateBegin.addEventListener('change', applyReqFilters);
-  dateEnd.addEventListener('change', applyReqFilters);
-  document.getElementById('req-clear-btn').addEventListener('click', () => {
-    typeFilter.value = '';
-    dateBegin.value = '';
-    dateEnd.value = '';
-    applyReqFilters();
   });
 
   // ---- Scroll to top ----
