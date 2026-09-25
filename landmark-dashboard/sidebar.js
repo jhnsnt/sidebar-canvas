@@ -11,28 +11,53 @@
 (function () {
   const NAV = [
     {
-      id: 'dashboard', label: 'Dashboard', href: 'index.html',
-      icon: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'
+      id: 'proposals-pa', label: 'Proposals P&A',
+      icon: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>',
+      children: [
+        { id: 'proposals-pa-vendors', label: 'Vendors', href: '#' },
+        { id: 'proposals-pa-groups', label: 'Groups', href: '#' },
+        { id: 'proposals-pa-product-types', label: 'Product Types', href: '#' },
+        { id: 'proposals-pa-search-product', label: 'Search Product', href: '#' }
+      ]
     },
     {
-      id: 'helpdesk', label: 'Helpdesk',
-      icon: '<path d="M3 11a9 9 0 0 1 18 0v5a3 3 0 0 1-3 3h-1v-7h4"/><path d="M3 16v-5h4v7H6a3 3 0 0 1-3-3z"/>'
-    },
-    {
-      id: 'task', label: 'Task',
-      icon: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'
-    },
-    {
-      id: 'conversations', label: 'Conversations',
-      icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
+      id: 'bookings', label: 'Bookings',
+      icon: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+      children: [
+        { id: 'booking-requests', label: 'Booking Requests', href: 'booking-requests.html' },
+        { id: 'bookings-list', label: 'Bookings', href: 'bookings.html' },
+        {
+          id: 'quotes', label: 'Quotes',
+          children: [
+            { id: 'quotes-schools', label: 'Schools', href: '#' },
+            { id: 'quotes-vendors', label: 'Vendors', href: '#' },
+            { id: 'quotes-product-types', label: 'Product Types', href: '#' }
+          ]
+        }
+      ]
     },
     {
       id: 'operations', label: 'Operations',
-      icon: '<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
+      icon: '<circle cx="9" cy="8" r="4"/><path d="M2 20c0-3.9 3.1-7 7-7h1"/><circle cx="18" cy="17" r="3"/><path d="M18 12.5v1M18 20.5v1M22.1 14.75l-.87.5M14.77 19.75l-.87.5M14.77 14.75l.87.5M22.1 19.75l-.87.5"/>',
       children: [
-        { id: 'vendors', label: 'Vendors', href: 'vendors.html' },
-        { id: 'flight-pickup', label: 'Flight Pickup', href: '#' },
-        { id: 'passenger-dump', label: 'Passenger Dump', href: 'passenger-dump.html' }
+        {
+          id: 'motorcoach', label: 'Motorcoach', href: '#', badge: { count: 4, color: '#8e2d0a' },
+          icon: '<rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 12h18"/><path d="M7 6V4M17 6V4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>'
+        },
+        {
+          id: 'airlines', label: 'Airlines', href: '#', badge: { count: 0, color: '#6b7280' },
+          icon: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.3.5-.1 1.1.4 1.4l5.9 3.3-1.2 1.2c-.5.5-.8 1.1-.8 1.8v.3c0 .5-.2 1-.6 1.4l-1.9 1.9c-.4.4-.4 1 0 1.4l.6.6c.4.4 1 .4 1.4 0l1.9-1.9c.4-.4.9-.6 1.4-.6h.3c.7 0 1.3-.3 1.8-.8l1.2-1.2 3.3 5.9c.3.5.9.7 1.4.4l.5-.3c.4-.2.6-.6.5-1.1z"/>'
+        },
+        {
+          id: 'hotel', label: 'Hotel', href: '#', badge: { count: 6, color: '#7a9c4e' },
+          icon: '<path d="M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7"/><path d="M3 18h18"/><path d="M7 11V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/>'
+        },
+        { id: 'operations-vendors', label: 'Vendors', href: 'vendors.html' },
+        { id: 'proposals-by-school', label: 'Proposals by School', href: '#' },
+        { id: 'product-requests-needed', label: 'Product Requests Needed', href: '#' },
+        { id: 'all-requests', label: 'All Requests', href: '#' },
+        { id: 'passenger-dump', label: 'Passenger Dump', href: 'passenger-dump.html' },
+        { id: 'pdf-processor', label: 'PDF Processor', href: '#' }
       ]
     },
     {
@@ -79,33 +104,44 @@
             { id: 'payments', label: 'Payments', href: 'payments-report.html' },
             { id: 'bookings-by-customer-payment', label: 'Bookings By Customer Payment', href: 'bookings-by-customer-payment.html' }
           ]
+        },
+        {
+          id: 'reports-finance-accounting', label: 'Finance Accounting',
+          children: [
+            { id: 'ar-report', label: 'AR Report', href: '#' },
+            { id: 'ar-ap-combo-report', label: 'AR/AP Combo Report', href: '#' },
+            { id: 'booking-by-customer-payment', label: 'Booking By Customer Payment', href: '#' },
+            { id: 'customer-payments', label: 'Customer Payments', href: '#' },
+            { id: 'margin-report', label: 'Margin Report', href: '#' },
+            { id: 'stripe-refunds', label: 'Stripe Refunds', href: '#' },
+            { id: 'vendor-payment-report', label: 'Vendor Payment Report', href: '#' }
+          ]
         }
-      ]
-    },
-    {
-      id: 'settings', label: 'Settings',
-      icon: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
-      children: [
-        { id: 'two-factor-authentication', label: 'Two-Factor Authentication (2FA)', href: 'two-factor-authentication.html' },
-        { id: 'agreement-rules', label: 'Agreement Rules', href: 'agreement-rules.html' },
-        { id: 'payment-rules', label: 'Payment Rules', href: 'payment-rules.html' },
-        { id: 'email-templates', label: 'Email Templates', href: 'email-templates.html' },
-        { id: 'voucher-texts', label: 'Voucher Texts', href: 'voucher-texts.html' },
-        { id: 'taxes-and-fees', label: 'Taxes and fees', href: 'taxes-and-fees.html' },
-        { id: 'foreign-exchange', label: 'Foreign Exchange', href: 'foreign-exchange.html' },
-        { id: 'terms-and-conditions', label: 'Terms and Conditions', href: 'terms-and-conditions.html' },
-        { id: 'product-types', label: 'Product Types', href: 'product-types.html' },
-        { id: 'destinations', label: 'Destinations', href: 'destinations.html' },
-        { id: 'destination-settings', label: 'Destination Settings', href: 'destination-settings.html' },
-        { id: 'users-management', label: 'Users Management', href: 'users-management.html' },
-        { id: 'minimum-nights', label: 'Minimum Nights', href: '#' },
-        { id: 'proposal-text-templates', label: 'Proposal Text Templates', href: 'text-templates.html' }
       ]
     }
   ];
 
+  // Flat list rendered inside the footer's "Settings" flyout (see attachBehavior).
+  const SETTINGS_ITEMS = [
+    { id: 'two-factor-authentication', label: 'Two-Factor Authentication', href: '#' },
+    { id: 'agreement-rules', label: 'Agreement Rules', href: '#' },
+    { id: 'payment-rules', label: 'Payment Rules', href: '#' },
+    { id: 'email-templates', label: 'Email templates', href: '#' },
+    { id: 'taxes-and-fees', label: 'Taxes and fees', href: '#' },
+    { id: 'foreign-exchange', label: 'Foreign Exchange', href: '#' },
+    { id: 'terms-and-conditions', label: 'Terms and Conditions', href: '#' },
+    { id: 'product-types', label: 'Product Types', href: '#' },
+    { id: 'destinations', label: 'Destinations', href: '#' },
+    { id: 'destination-settings', label: 'Destination Settings', href: '#' },
+    { id: 'users-management', label: 'Users Management', href: '#' },
+    { id: 'consultant-profiles', label: 'Consultant Profiles', href: '#' },
+    { id: 'minimum-nights', label: 'Minimum Nights', href: '#' },
+    { id: 'credit-card-types', label: 'Credit Card Types', href: '#' },
+    { id: 'payment-types', label: 'Payment Types', href: '#' }
+  ];
+
   function chevronSvg(cls) {
-    return '<svg class="' + cls + '" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
+    return '<svg class="' + cls + '" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>';
   }
 
   // A group "contains" the active id if it IS the active id, or (recursively)
@@ -122,7 +158,9 @@
   // department sub-menus: Sales / Operations / Finance).
   function renderNavChild(item, activeId) {
     if (!item.children) {
-      return '<a href="' + item.href + '"' + (item.id === activeId ? ' class="is-active"' : '') + '>' + item.label + '</a>';
+      const badgeHtml = item.badge ? '<span class="sub-nav-badge" style="background:' + item.badge.color + '">' + item.badge.count + '</span>' : '';
+      const iconHtml = item.icon ? '<svg class="sub-nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + item.icon + '</svg>' : '';
+      return '<a href="' + item.href + '"' + (item.id === activeId ? ' class="is-active"' : '') + '>' + badgeHtml + iconHtml + '<span>' + item.label + '</span></a>';
     }
 
     const isOpen = containsActive(item, activeId);
@@ -172,15 +210,27 @@
       '<aside id="sidebar" class="sidebar flex-shrink-0 flex flex-col py-5">' +
         '<div class="flex items-center justify-between pl-5 pr-4 pb-5 mb-2 border-b border-white/10">' +
           '<a href="index.html" class="sidebar-brand-text leading-none flex-shrink-0" title="Dashboard">' +
-            '<img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-9 w-auto">' +
+            '<img src="https://landmarkeducationaltours.com/images/landmark-logo.png" alt="Landmark Educational Tours" class="h-9 w-auto sidebar-logo-white">' +
           '</a>' +
           '<button id="sidebar-toggle" class="sidebar-toggle text-white/50 hover:text-white transition">' +
             '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>' +
           '</button>' +
         '</div>' +
         '<nav class="flex-1 space-y-0.5">' + navHtml + '</nav>' +
-        '<div class="px-5 pt-4 mt-2 border-t border-white/10 sidebar-label">' +
-          '<p class="text-[11px] text-white/30">Landmark Educational Tours CRM</p>' +
+        '<div class="sidebar-footer">' +
+          '<div id="settings-flyout" class="settings-flyout">' +
+            SETTINGS_ITEMS.map(item => '<a href="' + item.href + '">' + item.label + '</a>').join('') +
+          '</div>' +
+          '<div class="sidebar-footer-row">' +
+            '<button id="settings-toggle" type="button" class="sidebar-footer-btn" aria-expanded="false" aria-controls="settings-flyout">' +
+              '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>' +
+              '<span class="sidebar-label">Settings</span>' +
+            '</button>' +
+            '<a href="#" class="sidebar-footer-btn">' +
+              '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+              '<span class="sidebar-label">Sign-out</span>' +
+            '</a>' +
+          '</div>' +
         '</div>' +
       '</aside>';
 
@@ -223,6 +273,26 @@
       trigger.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
       });
+    });
+
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsFlyout = document.getElementById('settings-flyout');
+    function closeSettingsFlyout() {
+      settingsFlyout.classList.remove('is-open');
+      settingsToggle.setAttribute('aria-expanded', 'false');
+    }
+    settingsToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = settingsFlyout.classList.toggle('is-open');
+      settingsToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (!settingsFlyout.classList.contains('is-open')) return;
+      if (e.target.closest('#settings-flyout') || e.target.closest('#settings-toggle')) return;
+      closeSettingsFlyout();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSettingsFlyout();
     });
   }
 
