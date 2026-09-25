@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Dashboard</title>
+<link rel="icon" href="https://landmarkeducationaltours.com/images/landmark-logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#242322;
+    --paper:#f7f6f5;
+    --primary:#8e2d0a;
+    --primary-deep:#6c2107;
+    --primary-light:#c9704d;
+    --sidebar:#241d1a;
+    --sand:#f6e9e3;
+    --line:#e2dfdc;
+    --line-soft:#edebe9;
+    --slate:#6f6a66;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#b3261e;
+    --brick-tint:#fbe9e7;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Poppins',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+  .kpi-footer-value{ font-family:'Poppins',sans-serif; font-size:14.5px; line-height:1.35; font-weight:800; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+
+  .section-eyebrow{ color:var(--primary); font-weight:700; font-size:10.5px; line-height:1.4; letter-spacing:.14em; text-transform:uppercase; font-family:'Poppins',sans-serif; }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,84,161,.12); }
+  @media (min-width:640px){ .search-input:focus{ min-width:220px; } }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  /* ---- Mobile: sidebar becomes an off-canvas drawer instead of squeezing the page ---- */
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  .sub-nav-group{
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer;
+    padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease;
+  }
+  .sub-nav-group:hover{ color:#fff; }
+  .sub-nav-group.is-active-group{ color:#fff; }
+  .sub-nav-group .sidebar-chevron{ width:12px; height:12px; flex-shrink:0; transition:transform .15s ease; }
+  .sub-nav-group.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-sub-nav{ padding-left:1rem; display:none; }
+  .sub-sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-sub-nav{ display:none !important; }
+  .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
+  .sub-sub-nav a:hover{ color:#fff; }
+  .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  /* ---- Greeting header + period tabs ---- */
+  .greeting-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .period-tabs{ display:inline-flex; align-items:center; gap:.25rem; background:#fff; border:1px solid var(--line); border-radius:.6rem; padding:.25rem; }
+  .period-tab{
+    font-family:'Poppins',sans-serif; font-size:.82rem; font-weight:600; color:var(--slate);
+    padding:.45rem .9rem; border-radius:.4rem; transition:background .15s ease, color .15s ease; cursor:pointer; white-space:nowrap;
+  }
+  .period-tab:hover{ color:var(--ink); }
+  .period-tab.is-active{ background:var(--sidebar); color:#fff; }
+
+  /* ---- KPI ledger strip: separate cards with top accent, icon badge, and comparison pill ---- */
+  .ledger{ display:grid; grid-template-columns:repeat(5, 1fr); gap:1rem; align-items:stretch; }
+  .ledger-avatar{
+    width:34px; height:34px; border-radius:9999px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    background:rgba(255,255,255,.12); color:#fff; font-family:'Poppins',sans-serif; font-size:.72rem; font-weight:700;
+  }
+  .ledger-wave{ position:absolute; bottom:0; left:0; width:100%; height:36px; opacity:.55; pointer-events:none; }
+  .ledger-cell{
+    position:relative; display:block; background:#fff; border:1px solid var(--line); border-radius:.75rem;
+    padding:1.15rem 1.35rem 1.35rem; overflow:hidden; text-decoration:none; color:inherit;
+  }
+  .ledger-cell.is-clickable{ cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease; }
+  .ledger-cell.is-clickable:hover{ border-color:var(--primary-light); box-shadow:0 6px 18px -6px rgba(11,26,51,.18); }
+  .panel-link{
+    display:inline-flex; align-items:center; gap:.3rem; font-family:'Poppins',sans-serif;
+    font-size:.8rem; font-weight:600; color:var(--primary); text-decoration:none; transition:gap .15s ease;
+  }
+  .panel-link:hover{ gap:.5rem; text-decoration:underline; }
+  .ledger-tab{ position:absolute; top:0; left:0; width:100%; height:3px; }
+  .ledger-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+  .ledger-icon{ width:34px; height:34px; border-radius:9999px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ledger-pill{ font-family:'Poppins',sans-serif; font-size:.68rem; font-weight:700; padding:.25rem .65rem; border-radius:9999px; white-space:nowrap; }
+  .ledger-figure{ font-family:'Poppins',sans-serif; font-size:32px; font-weight:800; letter-spacing:-0.025em; line-height:1.15; }
+  .ledger-sub{ font-size:.68rem; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); margin-top:.3rem; font-weight:600; }
+  .ledger-detail{ font-size:.78rem; color:var(--ink); margin-top:.7rem; padding-top:.7rem; border-top:1px solid var(--line-soft); }
+  .ledger-detail-row{ display:flex; align-items:baseline; justify-content:space-between; }
+  .ledger-detail-row + .ledger-detail-row{ margin-top:.45rem; }
+  .ledger-cell.is-dark{ background:var(--sidebar); border-color:var(--sidebar); }
+  .ledger-cell.is-dark .ledger-sub{ color:rgba(255,255,255,.6); }
+  .ledger-cell.is-dark .ledger-detail{ border-top-color:rgba(255,255,255,.14); }
+  @media (max-width:1023px){ .ledger{ grid-template-columns:repeat(2, 1fr); } .ledger-cell.is-dark{ grid-column:1 / -1; } }
+  @media (max-width:639px){ .ledger{ grid-template-columns:1fr; } .ledger-cell.is-dark{ grid-column:auto; } }
+
+  /* ---- Data tables ---- */
+  .data-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
+  .data-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); font-family:'Poppins',sans-serif;
+  }
+  .data-table td{ padding:.7rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); font-family:'Poppins',sans-serif; font-weight:400; line-height:1.4; }
+  .data-table td.font-semibold, .data-table td.font-bold{ font-weight:700; }
+  .data-table td.font-mono, .data-table td.code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .data-table tbody tr:last-child td{ border-bottom:0; }
+  .data-table tbody tr{ transition:background .15s ease; }
+  .data-table tbody tr:hover{ background:var(--paper); }
+  .data-table .empty-row td{ text-align:center; color:var(--slate); padding:2rem .75rem; }
+
+  /* ---- Alert feed cards ---- */
+  .panel-title-bar{ display:inline-block; width:3px; height:16px; border-radius:2px; margin-right:.6rem; vertical-align:-2px; }
+  .alert-card{
+    position:relative; display:flex; padding:.85rem 1rem .85rem 1.15rem;
+    border:1px solid var(--line); border-radius:.6rem; overflow:hidden;
+  }
+  .alert-card-bar{ position:absolute; top:0; left:0; width:3px; height:100%; }
+  .alert-card-title{ font-weight:700; font-size:13.5px; color:var(--ink); }
+  .alert-card-desc{ font-size:12.5px; color:var(--slate); margin-top:.3rem; line-height:1.5; }
+  .alert-card-time{ font-family:'Poppins',sans-serif; font-size:11.5px; color:var(--slate); opacity:.8; margin-top:.55rem; }
+  .alert-row{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:.75rem; }
+  .alert-row .alert-card{ min-width:0; }
+
+  #proposals-table tbody td:last-child{ color:var(--forest); }
+  #bookings-table tbody td:last-child{ color:var(--primary); }
+
+  /* ---- Sticky identity column + edge-fade hint for wide tables on mobile/tablet ---- */
+  .data-table .sticky-col{ position:sticky; left:0; z-index:2; background:#fff; }
+  .data-table thead .sticky-col{ z-index:3; }
+  .data-table tbody tr:hover .sticky-col{ background:var(--paper); }
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(11,26,51,.22), rgba(11,26,51,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(11,26,51,.22), rgba(11,26,51,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .page-btn{
+    width:30px; height:30px; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+    font-size:.8rem; font-weight:600; color:var(--slate); border:1px solid var(--line); background:#fff;
+    transition:background .15s ease, color .15s ease;
+  }
+  .page-btn:hover{ background:var(--sand); color:var(--primary); }
+  .page-btn.is-active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  .export-btn{
+    padding:.4rem .85rem; border-radius:.5rem; border:1px solid var(--line); background:#fff;
+    font-size:.78rem; font-weight:500; color:var(--ink); transition:background .15s ease, border-color .15s ease;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .sort-caret{ display:inline-flex; flex-direction:column; margin-left:.3rem; vertical-align:middle; gap:1px; }
+  .sort-caret::before, .sort-caret::after{ content:''; display:block; width:0; height:0; border-left:3px solid transparent; border-right:3px solid transparent; }
+  .sort-caret::before{ border-bottom:3px solid var(--line); }
+  .sort-caret::after{ border-top:3px solid var(--line); }
+
+  /* ---- Homepage: quick-search bar ---- */
+  .quick-search-wrap{ position:relative; margin-bottom:1.5rem; max-width:480px; }
+  .quick-search-input{
+    width:100%; border:1px solid var(--line); border-radius:.75rem; padding:.85rem 3.4rem .85rem 2.75rem; font-size:.92rem;
+    font-family:'Poppins',sans-serif; color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .quick-search-input::placeholder{ color:var(--slate); }
+  .quick-search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+  .quick-search-icon{ position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--slate); pointer-events:none; }
+  .quick-search-kbd{
+    position:absolute; right:.85rem; top:50%; transform:translateY(-50%); font-size:11px; font-weight:700; color:var(--slate);
+    border:1px solid var(--line); border-radius:.35rem; padding:.15rem .45rem; background:var(--paper); pointer-events:none;
+  }
+
+  /* ---- Homepage: recently used strip ---- */
+  .recent-strip{ display:none; align-items:center; gap:.55rem; flex-wrap:wrap; margin-bottom:1.75rem; }
+  .recent-strip.has-items{ display:flex; }
+  .recent-strip-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); margin-right:.2rem; }
+  .recent-chip{
+    display:inline-flex; align-items:center; gap:.5rem; padding:.4rem .8rem .4rem .6rem; border-radius:9999px; border:1px solid var(--line);
+    background:#fff; font-size:12.5px; font-weight:600; color:var(--ink); transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .recent-chip:hover{ border-color:var(--primary); color:var(--primary); background:var(--sand); }
+  .recent-chip svg{ flex-shrink:0; color:var(--slate); transition:color .15s ease; }
+  .recent-chip:hover svg{ color:var(--primary); }
+
+  /* ---- Homepage: shortcut cards ---- */
+  .dash-grid{ display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  @media (min-width:640px){ .dash-grid{ grid-template-columns:repeat(2, 1fr); } }
+  @media (min-width:1280px){ .dash-grid{ grid-template-columns:repeat(4, 1fr); } }
+  .dash-card{ position:relative; background:#fff; border:1px solid var(--line); border-radius:.85rem; padding:1.35rem 1.4rem 1.1rem; overflow:hidden; transition:box-shadow .15s ease; }
+  .dash-card:hover{ box-shadow:0 10px 26px -14px rgba(36,26,21,.22); }
+  .dash-card.is-hidden{ display:none; }
+  .dash-card-tab{ position:absolute; top:0; left:0; width:100%; height:3px; }
+  .dash-card-header{ display:flex; align-items:center; gap:.7rem; }
+  .dash-card-icon{ width:36px; height:36px; border-radius:.6rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .dash-card-title{ font-family:'Poppins',sans-serif; font-weight:800; font-size:16.5px; letter-spacing:-0.01em; color:var(--ink); flex:1; min-width:0; }
+  .dash-card-count{ font-size:11px; font-weight:700; color:var(--slate); background:var(--paper); border-radius:9999px; padding:.2rem .55rem; flex-shrink:0; }
+  .dash-card-list{ display:flex; flex-direction:column; margin-top:.6rem; }
+  .dash-item{
+    display:flex; align-items:center; gap:.7rem; padding:.55rem .35rem; margin:0 -.35rem; border-radius:.5rem;
+    color:var(--ink); font-weight:600; font-size:13.8px; transition:background .15s ease, color .15s ease;
+  }
+  .dash-item.is-hidden{ display:none; }
+  .dash-item:hover{ background:var(--paper); color:var(--primary); }
+  .dash-item-icon{ width:24px; height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:color .15s ease; }
+  .dash-item:hover .dash-item-icon{ color:var(--primary); }
+  .dash-item-label{ flex:1; min-width:0; }
+  .dash-item-arrow{ flex-shrink:0; opacity:0; transform:translateX(-4px); transition:opacity .15s ease, transform .15s ease; color:var(--primary); }
+  .dash-item:hover .dash-item-arrow{ opacity:1; transform:translateX(0); }
+  .dash-item-wrap.is-hidden{ display:none; }
+  .dash-item-tag{ color:var(--amber); font-size:10.5px; font-weight:700; font-style:italic; margin:.35rem 0 -.1rem .35rem; }
+  .dash-empty-state{ display:none; padding:2.5rem 0; text-align:center; color:var(--slate); font-size:.9rem; }
+  .dash-empty-state.is-visible{ display:block; }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <h1 class="page-title text-[var(--ink)]">Operations Dashboard</h1>
+        <a href="#" class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Finance Dashboard
+        </a>
+      </div>
+
+      <!-- ---- Quick search ---- -->
+      <div class="quick-search-wrap">
+        <svg class="quick-search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="quick-search-input" id="dash-search-input" placeholder="Search shortcuts…">
+        <span class="quick-search-kbd">/</span>
+      </div>
+
+      <!-- ---- Recently used (per-browser, remembered via localStorage) ---- -->
+      <div class="recent-strip" id="recent-strip"></div>
+
+      <!-- ---- Quick-access shortcut cards ---- -->
+      <div class="dash-grid" id="dash-grid">
+
+        <div class="dash-card">
+          <div class="dash-card-tab" style="background:var(--primary);"></div>
+          <div class="dash-card-header">
+            <div class="dash-card-icon" style="background:var(--sand); color:var(--primary);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+            </div>
+            <h2 class="dash-card-title">Proposal</h2>
+            <span class="dash-card-count">5</span>
+          </div>
+          <div class="dash-card-list">
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
+              <span class="dash-item-label">Proposal Tasks</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></span>
+              <span class="dash-item-label">Finance Tasks</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-4.53a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
+              <span class="dash-item-label">Proposals</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-4.53a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
+              <span class="dash-item-label">Proposal Hold Release</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <div class="dash-item-wrap">
+              <p class="dash-item-tag">(testing)</p>
+              <a href="#" class="dash-item">
+                <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M4.6 19a9 9 0 1 1 14.8 0"/><path d="m12 12 3-4"/></svg></span>
+                <span class="dash-item-label">Proposals In Recruitment Mode</span>
+                <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-tab" style="background:var(--amber);"></div>
+          <div class="dash-card-header">
+            <div class="dash-card-icon" style="background:var(--amber-tint); color:var(--amber);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 22V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v18Z"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></svg>
+            </div>
+            <h2 class="dash-card-title">Vendors</h2>
+            <span class="dash-card-count">2</span>
+          </div>
+          <div class="dash-card-list">
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9.5z"/><path d="M14.5 2v7.5H22"/><path d="m17 15 3 3-3 3"/><path d="M9 18h9"/></svg></span>
+              <span class="dash-item-label">Vendor P&amp;A Req</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6z"/><path d="M15 2v4h4"/><path d="M9 13h6M9 17h6"/></svg></span>
+              <span class="dash-item-label">Vendor Action Notifications</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-tab" style="background:var(--forest);"></div>
+          <div class="dash-card-header">
+            <div class="dash-card-icon" style="background:var(--forest-tint); color:var(--forest);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <h2 class="dash-card-title">Booking</h2>
+            <span class="dash-card-count">8</span>
+          </div>
+          <div class="dash-card-list">
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>
+              <span class="dash-item-label">Booking Tasks</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></span>
+              <span class="dash-item-label">Finance Tasks</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+              <span class="dash-item-label">Vendor Invoices</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg></span>
+              <span class="dash-item-label">Refund Requests</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 8"/></svg></span>
+              <span class="dash-item-label">Reimbursement</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg></span>
+              <span class="dash-item-label">Reimbursement Status Report</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+              <span class="dash-item-label">Company Card Expenses</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></span>
+              <span class="dash-item-label">Booking Messages Notes</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-tab" style="background:var(--brick);"></div>
+          <div class="dash-card-header">
+            <div class="dash-card-icon" style="background:var(--brick-tint); color:var(--brick);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h2 class="dash-card-title">Alerts</h2>
+            <span class="dash-card-count">6</span>
+          </div>
+          <div class="dash-card-list">
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
+              <span class="dash-item-label">Open Enrollments</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></span>
+              <span class="dash-item-label">Bookings</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></span>
+              <span class="dash-item-label">Release Date</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6z"/><path d="M15 2v4h4"/><path d="M9 15h1M9 12h6"/></svg></span>
+              <span class="dash-item-label">Deposit Due</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6z"/><path d="M15 2v4h4"/><path d="m8.5 14 2 2 4-4"/></svg></span>
+              <span class="dash-item-label">Final Pay Due</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="dash-item">
+              <span class="dash-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></span>
+              <span class="dash-item-label">Payments</span>
+              <svg class="dash-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="dash-empty-state" id="dash-empty-state">No shortcuts match your search.</p>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
+<script>
+  GoBlueSidebar.render('dashboard');
+  GoBlueTopBar.render();
+
+  // ---- Quick search: filters shortcut items live across all cards ----
+  const dashSearchInput = document.getElementById('dash-search-input');
+  const dashCards = document.querySelectorAll('.dash-card');
+  const dashEmptyState = document.getElementById('dash-empty-state');
+
+  function applyDashSearch() {
+    const query = dashSearchInput.value.trim().toLowerCase();
+    let anyVisible = false;
+
+    dashCards.forEach(card => {
+      let cardHasMatch = false;
+      card.querySelectorAll('.dash-item').forEach(item => {
+        const label = item.querySelector('.dash-item-label').textContent.toLowerCase();
+        const match = !query || label.includes(query);
+        const target = item.closest('.dash-item-wrap') || item;
+        target.classList.toggle('is-hidden', !match);
+        if (match) cardHasMatch = true;
+      });
+      card.classList.toggle('is-hidden', !cardHasMatch);
+      if (cardHasMatch) anyVisible = true;
+    });
+
+    dashEmptyState.classList.toggle('is-visible', !anyVisible);
+  }
+
+  dashSearchInput.addEventListener('input', applyDashSearch);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== dashSearchInput) {
+      e.preventDefault();
+      dashSearchInput.focus();
+    }
+  });
+
+  // ---- Recently used: remembers the last few shortcuts clicked, per browser ----
+  const RECENT_KEY = 'landmark_recent_shortcuts';
+  const recentStrip = document.getElementById('recent-strip');
+
+  function getRecentShortcuts() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (e) { return []; }
+  }
+
+  function renderRecentShortcuts() {
+    const recent = getRecentShortcuts();
+    if (!recent.length) { recentStrip.classList.remove('has-items'); return; }
+    recentStrip.innerHTML = '<span class="recent-strip-label">Recently used</span>' +
+      recent.map(r => '<a href="' + r.href + '" class="recent-chip">' + r.icon + '<span>' + r.label + '</span></a>').join('');
+    recentStrip.classList.add('has-items');
+  }
+
+  function recordRecentShortcut(label, href, iconHtml) {
+    let recent = getRecentShortcuts().filter(r => r.label !== label);
+    recent.unshift({ label: label, href: href, icon: iconHtml });
+    recent = recent.slice(0, 5);
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(recent)); } catch (e) {}
+  }
+
+  document.querySelectorAll('.dash-card .dash-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const label = item.querySelector('.dash-item-label').textContent;
+      const iconHtml = item.querySelector('.dash-item-icon').innerHTML;
+      recordRecentShortcut(label, item.getAttribute('href'), iconHtml);
+    });
+  });
+
+  renderRecentShortcuts();
+</script>
+
+</body>
+</html>

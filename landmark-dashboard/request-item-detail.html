@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Reply on Vendor Side</title>
+<link rel="icon" href="https://landmarkeducationaltours.com/images/landmark-logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#242322;
+    --paper:#f7f6f5;
+    --primary:#8e2d0a;
+    --primary-deep:#6c2107;
+    --primary-light:#c9704d;
+    --sidebar:#241d1a;
+    --sand:#f6e9e3;
+    --line:#e2dfdc;
+    --line-soft:#edebe9;
+    --slate:#6f6a66;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#b3261e;
+    --brick-tint:#fbe9e7;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Poppins',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-success{ background:var(--forest); color:#fff; transition:background .15s ease; }
+  .btn-success:hover{ background:#175738; }
+  .btn-danger{ background:var(--brick); color:#fff; transition:background .15s ease; }
+  .btn-danger:hover{ background:#8f1e18; }
+  .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .field-label{ font-family:'Poppins',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.4rem; display:block; }
+  .vendor-field-input{
+    width:100%; border:1px solid var(--line); border-radius:.45rem; padding:.55rem .8rem; font-size:.85rem;
+    color:var(--ink); background:var(--paper); transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .vendor-field-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); background:#fff; }
+  .vendor-field-input::placeholder{ color:var(--slate); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  .sub-nav-group{
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer;
+    padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease;
+  }
+  .sub-nav-group:hover{ color:#fff; }
+  .sub-nav-group.is-active-group{ color:#fff; }
+  .sub-nav-group .sidebar-chevron{ width:12px; height:12px; flex-shrink:0; transition:transform .15s ease; }
+  .sub-nav-group.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-sub-nav{ padding-left:1rem; display:none; }
+  .sub-sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-sub-nav{ display:none !important; }
+  .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
+  .sub-sub-nav a:hover{ color:#fff; }
+  .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .status-pill{
+    display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  }
+  .status-pill.is-confirmed{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-pending{ background:var(--amber-tint); color:var(--amber); }
+  .status-pill.is-danger{ background:var(--brick-tint); color:var(--brick); }
+
+  /* ---- Vendor reply page ---- */
+  .vendor-eyebrow{ font-size:13px; color:var(--slate); }
+  .vendor-title{ font-family:'Poppins',sans-serif; font-size:26px; font-weight:800; color:var(--primary); letter-spacing:-0.01em; margin-top:.15rem; }
+  .vendor-subtitle{ font-size:14.5px; color:var(--ink); margin-top:.1rem; }
+  .vendor-info-box{ border:1px solid var(--line); border-radius:.6rem; padding:.9rem 1.1rem; font-size:.85rem; }
+  .vendor-info-box div + div{ margin-top:.3rem; }
+  .vendor-section-title{ font-family:'Poppins',sans-serif; font-size:19px; font-weight:800; color:var(--primary); letter-spacing:-0.01em; }
+  .vendor-note{ font-size:.8rem; color:var(--slate); }
+  .vendor-note-warning{ font-size:.82rem; color:var(--slate); font-style:italic; }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <a href="booking-requests.html" class="text-[var(--primary)] hover:underline">Booking Requests</a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate" style="font-size:20px;">Reply on Vendor Side</h1>
+        </div>
+        <button class="rounded-lg px-4 py-2 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition inline-flex items-center gap-2" onclick="window.location.href='booking-requests.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+      </div>
+
+      <div id="item-page-content" class="hidden">
+
+        <!-- ---- Actions ---- -->
+        <div class="panel p-5 md:p-6 mb-6 text-center">
+          <h2 class="panel-title text-[var(--ink)] mb-4">Actions</h2>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button type="button" class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold">Finance Tasks</button>
+            <button type="button" class="btn-success rounded-lg px-4 py-2 text-sm font-semibold" id="save-data-btn">Save Data</button>
+            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Override</button>
+            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Override Cost/Budget</button>
+            <button type="button" class="btn-danger rounded-lg px-4 py-2 text-sm font-semibold" id="cancel-product-btn">Cancel Product</button>
+          </div>
+          <p class="vendor-note-warning mt-3" id="confirmed-note">Note: Confirmed products cannot be changed. They must be canceled.</p>
+        </div>
+
+        <!-- ---- Booking confirmation request ---- -->
+        <div class="panel p-5 md:p-6 mb-6">
+          <p class="vendor-eyebrow">Booking Confirmation Request &mdash;</p>
+          <h2 class="vendor-title" id="item-title">&nbsp;</h2>
+          <p class="vendor-subtitle" id="item-subtitle">&nbsp;</p>
+          <a href="#" class="text-sm text-[var(--primary)] hover:underline font-medium inline-block mt-1">Itinerary Link</a>
+
+          <hr class="my-5 border-[var(--line)]">
+
+          <div class="vendor-info-box mb-6">
+            <div><strong>Service Type:</strong> <span id="info-service-type">&mdash;</span></div>
+            <div><strong>Group Name:</strong> <span id="info-group-name">&mdash;</span></div>
+            <div><strong>Destination:</strong> <span id="info-destination">&mdash;</span></div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-x-6 gap-y-4" id="transport-fields">
+            <div>
+              <label class="field-label">Estimated Miles</label>
+              <input type="text" class="vendor-field-input" id="field-miles">
+            </div>
+            <div>
+              <label class="field-label">Total Hours</label>
+              <input type="text" class="vendor-field-input" id="field-hours">
+            </div>
+            <div>
+              <label class="field-label">Passenger Count</label>
+              <input type="text" class="vendor-field-input" id="field-pax">
+            </div>
+            <div>
+              <label class="field-label">Coach Count</label>
+              <input type="text" class="vendor-field-input" id="field-coach-count">
+            </div>
+            <div>
+              <label class="field-label">Coach Capacity Requested</label>
+              <input type="text" class="vendor-field-input" id="field-coach-capacity">
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-x-6 gap-y-4 mt-4">
+            <div>
+              <label class="field-label">Total Cost</label>
+              <input type="text" class="vendor-field-input" id="field-total-cost">
+            </div>
+            <div>
+              <label class="field-label">Status</label>
+              <input type="text" class="vendor-field-input" id="field-status">
+            </div>
+            <div>
+              <label class="field-label">Deposit Amount</label>
+              <input type="text" class="vendor-field-input" placeholder="Deposit amount" id="field-deposit-amount">
+            </div>
+            <div>
+              <label class="field-label">Deposit Due Date</label>
+              <input type="date" class="vendor-field-input" id="field-deposit-due">
+            </div>
+            <div>
+              <label class="field-label">Release Date w/o Penalty</label>
+              <input type="date" class="vendor-field-input" id="field-release-date">
+            </div>
+            <div>
+              <label class="field-label">Final Payment Date</label>
+              <input type="date" class="vendor-field-input" id="field-final-payment">
+            </div>
+          </div>
+
+          <p class="vendor-note mt-5">Modification or Cancellation Request Trigger Process needs to be accounted for and tracked</p>
+
+          <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold mt-4" id="drivers-info-btn">See Drivers Info</button>
+
+          <div class="mt-6">
+            <label class="field-label">Upload Document</label>
+            <input type="file" class="vendor-field-input" style="background:#fff;">
+          </div>
+          <button type="button" class="btn-success rounded-lg px-4 py-2 text-sm font-semibold mt-3">Upload File</button>
+
+          <div class="flex items-center justify-between mt-8 pt-5 border-t border-[var(--line-soft)]">
+            <button type="button" class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold">Edit</button>
+            <button type="button" class="btn-danger rounded-lg px-5 py-2.5 text-sm font-semibold">Cancel</button>
+          </div>
+        </div>
+
+        <!-- ---- Notes ---- -->
+        <div class="grid lg:grid-cols-2 gap-6 mb-6">
+          <div class="panel p-5 md:p-6">
+            <h3 class="vendor-section-title">Request Notes</h3>
+            <form id="note-form" class="mt-4">
+              <p class="vendor-section-title" style="font-size:15px;">Add note</p>
+              <label class="field-label mt-3">Note text</label>
+              <input type="text" class="vendor-field-input" style="background:#fff;" id="note-text-field" required>
+              <button type="submit" class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold mt-3">Add Note</button>
+            </form>
+          </div>
+          <div class="panel p-5 md:p-6">
+            <p class="vendor-section-title" id="notes-empty-label">No notes found</p>
+            <div id="notes-list" class="mt-3 space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- ---- Payments ---- -->
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="panel p-5 md:p-6">
+            <h3 class="vendor-section-title">Add payment</h3>
+            <form id="payment-form" class="mt-3 space-y-4">
+              <div>
+                <label class="field-label">Amount</label>
+                <input type="text" class="vendor-field-input" style="background:#fff;" id="payment-amount-field" required>
+              </div>
+              <div>
+                <label class="field-label">Currency</label>
+                <select class="vendor-field-input" style="background:#fff;" id="payment-currency-field">
+                  <option value="">Select…</option>
+                  <option>USD</option>
+                  <option>CAD</option>
+                  <option>EUR</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Payment For</label>
+                <select class="vendor-field-input" style="background:#fff;" id="payment-for-field">
+                  <option value="">Select…</option>
+                  <option>Deposit</option>
+                  <option>Final Payment</option>
+                  <option>Full Payment</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Payment Type</label>
+                <select class="vendor-field-input" style="background:#fff;" id="payment-type-field">
+                  <option value="">Select…</option>
+                  <option>Check</option>
+                  <option>ACH</option>
+                  <option>Credit Card</option>
+                  <option>Wire</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Due Date</label>
+                <input type="date" class="vendor-field-input" style="background:#fff;" id="payment-due-field">
+              </div>
+              <div>
+                <label class="field-label">Invoice Number</label>
+                <input type="text" class="vendor-field-input" style="background:#fff;" id="payment-invoice-field">
+              </div>
+              <button type="submit" class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold">Add Payment</button>
+            </form>
+          </div>
+          <div class="panel p-5 md:p-6">
+            <p class="vendor-section-title" id="payments-empty-label">No payments found</p>
+            <div id="payments-list" class="mt-3 space-y-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-sm text-[var(--slate)] text-center py-16 hidden" id="item-not-found">Item not found. <a href="booking-requests.html" class="text-[var(--primary)] hover:underline font-semibold">Back to Booking Requests</a></p>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('bookings');
+  GoBlueTopBar.render();
+
+  // ---- Same item roster as booking-requests.html, extended with the
+  // vendor-reply fields shown on this page. Only "Shuttle Transportation"
+  // (productId 8261) came with a confirmed reference screenshot — its
+  // passenger/coach/mileage figures are exact. Item 8264 is the same
+  // Transportation product on a different date, so it reuses that same
+  // passenger/coach structure (15 pax, 1 coach, 55 capacity) as a reasonable
+  // assumption, not a confirmed figure. Non-Transportation items hide the
+  // mileage/passenger/coach block entirely, since no reference exists for
+  // what that vendor form looks like for those product types. Deposit
+  // amount/dates are left blank for every item, matching the one example
+  // shown (a confirmed booking with no deposit terms entered yet). "Status"
+  // here is the vendor-form process stage, mapped from each item's existing
+  // request status rather than a new independent value. ----
+  const groupName = 'WFO Bolzano DC 2026';
+
+  const vendorStatusMap = {
+    confirmed: 'Confirmation/Booking',
+    pending: 'Requested',
+    danger: 'To Be Requested'
+  };
+
+  const items = [
+    { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '09/28/2026 - 09/28/2026', type: 'Transportation', budget: 500, productId: 8261, pricingId: 8328, serviceType: 'Shuttle', estimatedMiles: 0, totalHours: 0, passengerCount: 15, coachCount: 1, coachCapacity: 55 },
+    { product: 'George Washington Monument', sub: 'Admission to the Monument', dest: 'Washington, D.C.', status: 'pending', dateRange: '09/29/2026 - 09/29/2026', type: 'Attraction', budget: 15, productId: 8262, pricingId: 8329 },
+    { product: 'United States Capitol Building', sub: 'Public Guided Tour', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '09/30/2026 - 09/30/2026', type: 'Attraction', budget: 0, productId: 8263, pricingId: 8330 },
+    { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', dateRange: '10/01/2026 - 10/01/2026', type: 'Transportation', budget: 2500, productId: 8264, pricingId: 8331, serviceType: 'Shuttle', estimatedMiles: 0, totalHours: 0, passengerCount: 15, coachCount: 1, coachCapacity: 55 },
+    { product: 'Landmark Swag', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Merchandise', budget: 250.05, productId: 8265, pricingId: 8332 },
+    { product: 'Landmark System Fee', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 32.10, productId: 8266, pricingId: 8333 },
+    { product: 'Landmark Convenience Fee', sub: null, dest: null, status: 'confirmed', dateRange: null, type: 'Fee', budget: 74.79, productId: 8267, pricingId: 8334 },
+    { product: 'Landmark Driver Gratuity', sub: null, dest: null, status: 'danger', dateRange: null, type: 'Fee', budget: 833.34, productId: 8268, pricingId: 8335 }
+  ];
+
+  const params = new URLSearchParams(window.location.search);
+  const productId = Number(params.get('item'));
+  const item = items.find(i => i.productId === productId);
+
+  if (item) {
+    const title = item.sub || item.product;
+    document.title = 'Landmark Educational Tours — ' + title;
+
+    document.getElementById('item-title').textContent = title;
+    document.getElementById('item-subtitle').textContent = item.product;
+
+    document.getElementById('info-service-type').textContent = item.serviceType || item.type;
+    document.getElementById('info-group-name').textContent = groupName;
+    document.getElementById('info-destination').textContent = item.dest || 'No destination related';
+
+    if (item.type === 'Transportation') {
+      document.getElementById('field-miles').value = item.estimatedMiles;
+      document.getElementById('field-hours').value = item.totalHours;
+      document.getElementById('field-pax').value = item.passengerCount;
+      document.getElementById('field-coach-count').value = item.coachCount;
+      document.getElementById('field-coach-capacity').value = item.coachCapacity;
+    } else {
+      document.getElementById('transport-fields').classList.add('hidden');
+      document.getElementById('drivers-info-btn').classList.add('hidden');
+    }
+
+    document.getElementById('field-total-cost').value = item.budget;
+    document.getElementById('field-status').value = vendorStatusMap[item.status];
+    document.getElementById('confirmed-note').classList.toggle('hidden', item.status !== 'confirmed');
+
+    document.getElementById('item-page-content').classList.remove('hidden');
+  } else {
+    document.getElementById('item-not-found').classList.remove('hidden');
+  }
+
+  // ---- Save Data / Cancel Product: no-op placeholders (no backend to persist to) ----
+  document.getElementById('save-data-btn').addEventListener('click', () => {
+    alert('Data saved.');
+  });
+  document.getElementById('cancel-product-btn').addEventListener('click', () => {
+    if (confirm('Cancel this product? This cannot be undone.')) alert('Product canceled.');
+  });
+  document.getElementById('drivers-info-btn') && document.getElementById('drivers-info-btn').addEventListener('click', () => {
+    alert('No driver has been assigned yet.');
+  });
+
+  // ---- Request Notes: appends a note card, replacing the empty state ----
+  const notesList = document.getElementById('notes-list');
+  const notesEmptyLabel = document.getElementById('notes-empty-label');
+  document.getElementById('note-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const field = document.getElementById('note-text-field');
+    if (!field.value.trim()) return;
+    notesEmptyLabel.classList.add('hidden');
+    const note = document.createElement('div');
+    note.className = 'p-3 rounded-lg border border-[var(--line-soft)] text-sm';
+    note.innerHTML = '<p>' + field.value + '</p><p class="text-xs text-[var(--slate)] mt-1">Just now</p>';
+    notesList.prepend(note);
+    field.value = '';
+  });
+
+  // ---- Add payment: appends a payment card, replacing the empty state ----
+  const paymentsList = document.getElementById('payments-list');
+  const paymentsEmptyLabel = document.getElementById('payments-empty-label');
+  document.getElementById('payment-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const amount = document.getElementById('payment-amount-field').value;
+    const currency = document.getElementById('payment-currency-field').value || 'USD';
+    const paymentFor = document.getElementById('payment-for-field').value || '—';
+    const paymentType = document.getElementById('payment-type-field').value || '—';
+    if (!amount.trim()) return;
+    paymentsEmptyLabel.classList.add('hidden');
+    const card = document.createElement('div');
+    card.className = 'p-3 rounded-lg border border-[var(--line-soft)] text-sm';
+    card.innerHTML = '<p class="font-semibold">' + currency + ' ' + amount + ' &mdash; ' + paymentFor + '</p><p class="text-xs text-[var(--slate)] mt-1">' + paymentType + '</p>';
+    paymentsList.prepend(card);
+    e.target.reset();
+  });
+</script>
+
+</body>
+</html>

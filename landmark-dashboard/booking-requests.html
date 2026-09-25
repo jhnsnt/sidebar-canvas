@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Booking Requests</title>
+<link rel="icon" href="https://landmarkeducationaltours.com/images/landmark-logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#242322;
+    --paper:#f7f6f5;
+    --primary:#8e2d0a;
+    --primary-deep:#6c2107;
+    --primary-light:#c9704d;
+    --sidebar:#241d1a;
+    --sand:#f6e9e3;
+    --line:#e2dfdc;
+    --line-soft:#edebe9;
+    --slate:#6f6a66;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#b3261e;
+    --brick-tint:#fbe9e7;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .font-mono, .code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums; letter-spacing:0; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Poppins',sans-serif; font-size:16px; line-height:1.3; font-weight:800; letter-spacing:-0.01em; }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .field-label{ font-family:'Poppins',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
+  .text-field{
+    width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.55rem .8rem; font-size:.85rem;
+    color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-field:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.8rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink);
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:236px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-nav{ padding-left:2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:block; padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  .sub-nav-group{
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer;
+    padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease;
+  }
+  .sub-nav-group:hover{ color:#fff; }
+  .sub-nav-group.is-active-group{ color:#fff; }
+  .sub-nav-group .sidebar-chevron{ width:12px; height:12px; flex-shrink:0; transition:transform .15s ease; }
+  .sub-nav-group.is-open .sidebar-chevron{ transform:rotate(90deg); }
+
+  .sub-sub-nav{ padding-left:1rem; display:none; }
+  .sub-sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-sub-nav{ display:none !important; }
+  .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
+  .sub-sub-nav a:hover{ color:#fff; }
+  .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .icon-action-btn{
+    width:30px; height:30px; border-radius:.4rem; display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink); transition:background .15s ease, color .15s ease;
+  }
+  .icon-action-btn:hover{ background:var(--sand); color:var(--primary); }
+
+  .status-pill{
+    display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:.2rem .65rem; border-radius:9999px;
+    text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  }
+  .status-pill.is-confirmed{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-pending{ background:var(--amber-tint); color:var(--amber); }
+  .status-pill.is-danger{ background:var(--brick-tint); color:var(--brick); }
+
+  /* ---- Request header ---- */
+  .req-code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; color:var(--primary); }
+  .req-stat-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); font-weight:700; }
+  .req-stat-value{ font-family:'Poppins',sans-serif; font-size:19px; font-weight:800; color:var(--ink); }
+
+  /* ---- Metric cards ---- */
+  .metric-card{ background:#fff; border:1px solid var(--line); border-radius:.7rem; padding:1.1rem 1.2rem; }
+  .metric-card-label{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate); font-weight:700; }
+  .metric-card-actual{ font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; letter-spacing:-0.01em; margin-top:.3rem; }
+  .metric-card-expected{ font-size:12px; color:var(--slate); margin-top:.15rem; }
+  .metric-delta{
+    display:inline-flex; align-items:center; gap:.25rem; font-size:11.5px; font-weight:700; padding:.15rem .55rem; border-radius:9999px; margin-top:.55rem;
+  }
+  .metric-delta.is-good{ background:var(--forest-tint); color:var(--forest); }
+  .metric-delta.is-bad{ background:var(--brick-tint); color:var(--brick); }
+
+  /* ---- Request items table ---- */
+  .req-group-heading{ font-size:14px; font-weight:800; color:var(--primary); margin:1.5rem 0 .6rem; }
+  .req-group-heading:first-child{ margin-top:0; }
+  .req-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
+  .req-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.1em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .55rem; border-bottom:1px solid var(--ink); white-space:nowrap;
+  }
+  .req-table th.text-right{ text-align:right; }
+  .req-table td{ padding:.75rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); vertical-align:top; }
+  .req-table td.text-right{ text-align:right; }
+  .req-table tbody tr:hover{ background:var(--paper); }
+  .req-product-name{ font-weight:700; }
+  .req-product-sub{ font-size:12px; color:var(--slate); margin-top:.1rem; }
+  .req-warning{
+    display:inline-flex; align-items:center; gap:.35rem; font-size:12px; font-weight:600; color:var(--amber);
+  }
+  .req-payment-paid{ color:var(--slate); font-size:12px; }
+  .req-payment-due{ font-weight:700; margin-top:.1rem; }
+  .req-payment-due.is-zero{ color:var(--slate); font-weight:400; }
+  .req-payment-due.is-owed{ color:var(--brick); }
+
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  @media (max-width:1023px){
+    .table-scroll{
+      background-repeat:no-repeat; background-color:#fff;
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to left, #fff 30%, rgba(255,255,255,0)),
+        radial-gradient(farthest-side at 0 50%, rgba(36,26,21,.22), rgba(36,26,21,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(36,26,21,.22), rgba(36,26,21,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-size:32px 100%, 32px 100%, 12px 100%, 12px 100%;
+      background-attachment:local, local, scroll, scroll;
+    }
+  }
+
+  /* ---- Scroll to top ---- */
+  .scroll-top-btn{
+    position:fixed; right:1.5rem; bottom:1.5rem; width:46px; height:46px; border-radius:9999px; background:var(--primary);
+    color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px -8px rgba(142,45,10,.55);
+    opacity:0; visibility:hidden; transform:translateY(8px); transition:opacity .2s ease, transform .2s ease, visibility .2s;
+    z-index:30;
+  }
+  .scroll-top-btn.is-visible{ opacity:1; visibility:visible; transform:translateY(0); }
+  .scroll-top-btn:hover{ background:var(--primary-deep); }
+
+  /* ---- Item detail modal ---- */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(36,26,21,.5); z-index:60;
+    align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .modal-backdrop.is-open{ display:flex; }
+  .modal-panel{
+    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:520px;
+    max-height:90vh; overflow-y:auto; box-shadow:0 20px 50px -12px rgba(36,26,21,.35);
+  }
+  .modal-close-btn{
+    width:32px; height:32px; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+    color:var(--slate); transition:background .15s ease, color .15s ease;
+  }
+  .modal-close-btn:hover{ background:var(--sand); color:var(--ink); }
+  .item-field{ padding:.55rem 0; border-bottom:1px solid var(--line-soft); }
+  .item-field-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate); font-weight:700; }
+  .item-field-value{ font-size:14px; font-weight:600; color:var(--ink); margin-top:.2rem; }
+  .item-field-value a{ color:var(--primary); }
+  .item-field-value a:hover{ text-decoration:underline; }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + actions ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <a href="booking-detail.html" class="text-[var(--primary)] hover:underline">Booking</a>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate" style="font-size:20px;">Booking Requests</h1>
+        </div>
+        <button class="rounded-lg px-4 py-2 text-sm font-semibold border border-[var(--line)] bg-white hover:bg-[var(--sand)] transition inline-flex items-center gap-2" onclick="window.location.href='booking-detail.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+      </div>
+
+      <!-- ---- Trip summary ---- -->
+      <div class="panel p-5 md:p-6 mb-6">
+        <div class="flex flex-wrap items-start justify-between gap-5">
+          <div class="min-w-0">
+            <h2 class="text-xl font-extrabold text-[var(--ink)] truncate">WFO Bolzano DC 2026</h2>
+            <p class="req-code text-sm mt-1">DTWGCBPTMS</p>
+          </div>
+          <div class="flex items-center gap-6 flex-shrink-0">
+            <div>
+              <p class="req-stat-label">Items</p>
+              <p class="req-stat-value num">8</p>
+            </div>
+            <div>
+              <p class="req-stat-label">Total Cost</p>
+              <p class="req-stat-value num">$15.00</p>
+            </div>
+            <div>
+              <p class="req-stat-label">Total Paid</p>
+              <p class="req-stat-value num">$6.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 mt-5 pt-5 border-t border-[var(--line-soft)]">
+          <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold inline-flex items-center gap-2" id="add-product-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add Product
+          </button>
+          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">All Payments</button>
+          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Details</button>
+          <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Accepted Proposal</button>
+        </div>
+      </div>
+
+      <!-- ---- Performance vs. expected ---- -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="metric-card">
+          <p class="metric-card-label">Revenue</p>
+          <p class="metric-card-actual num">$2,604.00</p>
+          <p class="metric-card-expected">Expected <span class="num">$2,600.08</span></p>
+          <span class="metric-delta is-good">+$3.92</span>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card-label">Budget (Cost)</p>
+          <p class="metric-card-actual num">$6.00</p>
+          <p class="metric-card-expected">Expected <span class="num">$95.76</span></p>
+          <span class="metric-delta is-good">&minus;$89.76</span>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card-label">Profit</p>
+          <p class="metric-card-actual num">$2,598.00</p>
+          <p class="metric-card-expected">Expected <span class="num">$2,504.32</span></p>
+          <span class="metric-delta is-good">+$93.68</span>
+        </div>
+        <div class="metric-card">
+          <p class="metric-card-label">Margin</p>
+          <p class="metric-card-actual num">99.77%</p>
+          <p class="metric-card-expected">Expected <span class="num">96.32%</span></p>
+          <span class="metric-delta is-good">+3.45%</span>
+        </div>
+      </div>
+
+      <!-- ---- Filters ---- -->
+      <div class="panel p-5 md:p-6 mb-6" id="req-filters-panel">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+          <div>
+            <label class="field-label">Product Type</label>
+            <select class="text-field" id="req-type-filter">
+              <option value="">All Types</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Attraction">Attraction</option>
+              <option value="Merchandise">Merchandise</option>
+              <option value="Fee">Fee</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Date Begin</label>
+            <input type="date" class="text-field" id="req-date-begin">
+          </div>
+          <div>
+            <label class="field-label">Date End</label>
+            <input type="date" class="text-field" id="req-date-end">
+          </div>
+          <div class="flex items-end">
+            <button class="btn-outline rounded-lg px-4 py-2.5 text-sm font-semibold w-full" id="req-clear-btn">Clear Filters</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- Items ---- -->
+      <div class="panel p-5 md:p-6">
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="req-table" id="req-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Destination</th>
+                <th>Status</th>
+                <th>Schedule</th>
+                <th class="text-right">Budget</th>
+                <th class="text-right">Cost</th>
+                <th class="text-right">Payment</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="req-tbody"></tbody>
+          </table>
+        </div>
+        <p class="text-sm text-[var(--slate)] text-center py-8 hidden" id="req-empty-state">No items match your filters.</p>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<button class="scroll-top-btn" id="scroll-top-btn" title="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<!-- ================= ITEM DETAIL MODAL ================= -->
+<div class="modal-backdrop" id="item-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <h2 class="text-xl font-extrabold text-[var(--ink)]" id="item-modal-title">&nbsp;</h2>
+        <p class="text-sm text-[var(--slate)] mt-1" id="item-modal-dates">&nbsp;</p>
+      </div>
+      <button class="modal-close-btn flex-shrink-0" id="item-modal-close" title="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-x-6 mt-4" id="item-modal-fields"></div>
+
+    <div class="flex items-center justify-between gap-3 mt-5 pt-4 border-t border-[var(--line-soft)]">
+      <span class="status-pill is-confirmed" id="item-modal-status">Request Status</span>
+      <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="item-modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('bookings');
+  GoBlueTopBar.render();
+
+  // ---- Item data (faithfully preserved from the source screenshot; product
+  // subtitles were cut off there by column width and are written out here in
+  // full, and the second "arrow" action icon / ambiguous "+28.06%" cost badge
+  // were dropped as unclear, decorative clutter rather than guessed at) ----
+  // Note: "Cost" in the item detail popup reuses each item's budget figure
+  // where one exists (confirmed against the one item the client's screenshot
+  // showed — Shuttle Transportation, 500.00) since that's the only dollar
+  // amount that lined up between the two source screenshots; productId,
+  // pricingId, price and units are invented placeholders beyond that one
+  // confirmed item, kept plausible and sequential rather than left blank.
+  const groups = [
+    {
+      date: 'Monday, September 28, 2026', dateRange: '09/28/2026 - 09/28/2026', items: [
+        { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Sep 28, 2026 · 9:00 PM', type: 'Transportation', budget: 500, cost: 0, paid: 0, bal: 0, productId: 8261, pricingId: 8328, price: 694.44, units: 1 }
+      ]
+    },
+    {
+      date: 'Tuesday, September 29, 2026', dateRange: '09/29/2026 - 09/29/2026', items: [
+        { product: 'George Washington Monument', sub: 'Admission to the Monument', dest: 'Washington, D.C.', status: 'pending', schedule: 'Sep 29, 2026 · 10:30 AM', type: 'Attraction', budget: 15, cost: 15, paid: 6, bal: 9, productId: 8262, pricingId: 8329, price: 21.00, units: 1 }
+      ]
+    },
+    {
+      date: 'Wednesday, September 30, 2026', dateRange: '09/30/2026 - 09/30/2026', items: [
+        { product: 'United States Capitol Building', sub: 'Public Guided Tour', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Sep 30, 2026 · 1:20 PM', type: 'Attraction', budget: 0, cost: 0, paid: 0, bal: 0, productId: 8263, pricingId: 8330, price: 0, units: 1 }
+      ]
+    },
+    {
+      date: 'Thursday, October 1, 2026', dateRange: '10/01/2026 - 10/01/2026', items: [
+        { product: 'Motorcoach Transportation', sub: 'Shuttle Transportation', dest: 'Washington, D.C.', status: 'confirmed', schedule: 'Oct 1, 2026 · 7:00 AM', type: 'Transportation', budget: 2500, cost: 0, paid: 0, bal: 0, productId: 8264, pricingId: 8331, price: 3375.00, units: 1 }
+      ]
+    },
+    {
+      date: null, dateRange: null, items: [
+        { product: 'Landmark Swag', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Merchandise', budget: 180, cost: 250.05, paid: 0, bal: 0, productId: 8265, pricingId: 8332, price: 250.05, units: 1 },
+        { product: 'Landmark System Fee', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: null, cost: 32.10, paid: 0, bal: 0, productId: 8266, pricingId: 8333, price: 32.10, units: 1 },
+        { product: 'Landmark Convenience Fee', sub: null, dest: null, status: 'confirmed', schedule: null, type: 'Fee', budget: null, cost: 74.79, paid: 0, bal: 0, productId: 8267, pricingId: 8334, price: 74.79, units: 1 },
+        { product: 'Landmark Driver Gratuity', sub: null, dest: null, status: 'danger', schedule: null, type: 'Fee', budget: null, cost: 833.34, paid: 0, bal: 0, productId: 8268, pricingId: 8335, price: 833.34, units: 1 }
+      ]
+    }
+  ];
+
+  const statusMeta = {
+    confirmed: { label: 'Confirmed', cls: 'is-confirmed' },
+    pending: { label: 'Requested', cls: 'is-pending' },
+    danger: { label: 'TBR', cls: 'is-danger' }
+  };
+
+  const money = (n) => n == null ? '&mdash;' : '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const tbody = document.getElementById('req-tbody');
+
+  function buildItemRow(item, dateRange) {
+    const tr = document.createElement('tr');
+    tr.dataset.type = item.type;
+    tr.dataset.date = item.schedule ? item.schedule : '';
+    const meta = statusMeta[item.status];
+
+    const destCell = item.dest
+      ? item.dest
+      : '<span class="req-warning"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>No destination &mdash; <a href="#" class="hover:underline">update</a></span>';
+
+    const dueClass = item.bal > 0 ? 'is-owed' : 'is-zero';
+
+    tr.innerHTML =
+      '<td><p class="req-product-name">' + item.product + '</p>' + (item.sub ? '<p class="req-product-sub">' + item.sub + '</p>' : '') + '</td>' +
+      '<td>' + destCell + '</td>' +
+      '<td><span class="status-pill ' + meta.cls + '">' + meta.label + '</span></td>' +
+      '<td>' + (item.schedule || '<span class="text-[var(--slate)]">No date set</span>') + '</td>' +
+      '<td class="text-right num">' + money(item.budget) + '</td>' +
+      '<td class="text-right num font-semibold">' + money(item.cost) + '</td>' +
+      '<td class="text-right">' +
+        '<p class="req-payment-paid num">Paid ' + money(item.paid) + '</p>' +
+        '<p class="req-payment-due num ' + dueClass + '">' + (item.bal > 0 ? 'Due ' + money(item.bal) : 'Settled') + '</p>' +
+      '</td>' +
+      '<td class="text-center"><div class="flex items-center justify-center gap-1">' +
+        '<a href="request-item-detail.html?item=' + item.productId + '" class="icon-action-btn" title="Open item page">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
+        '</a>' +
+        '<button class="icon-action-btn view-item-btn" title="View item">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+        '</button>' +
+      '</div></td>';
+
+    tr.querySelector('.view-item-btn').addEventListener('click', () => openItemModal(item, dateRange));
+
+    return tr;
+  }
+
+  groups.forEach(group => {
+    const heading = document.createElement('tr');
+    heading.className = 'req-group-row';
+    const count = group.items.length;
+    const label = group.date ? group.date : 'No start date';
+    heading.innerHTML = '<td colspan="8" style="border-bottom:0; padding-bottom:0;"><p class="req-group-heading">' + label + ' &middot; ' + count + (count === 1 ? ' item' : ' items') + '</p></td>';
+    tbody.appendChild(heading);
+    group.items.forEach(item => tbody.appendChild(buildItemRow(item, group.dateRange)));
+  });
+
+  // ---- Item detail popup ----
+  const itemModalBackdrop = document.getElementById('item-modal-backdrop');
+  const itemModalTitle = document.getElementById('item-modal-title');
+  const itemModalDates = document.getElementById('item-modal-dates');
+  const itemModalFields = document.getElementById('item-modal-fields');
+  const itemModalStatus = document.getElementById('item-modal-status');
+
+  function field(label, value) {
+    return '<div class="item-field"><p class="item-field-label">' + label + '</p><p class="item-field-value">' + value + '</p></div>';
+  }
+
+  function openItemModal(item, dateRange) {
+    const modalCost = item.budget != null ? item.budget : item.cost;
+    const meta = statusMeta[item.status];
+
+    itemModalTitle.textContent = item.sub || item.product;
+    itemModalDates.textContent = dateRange || 'No date set';
+
+    itemModalFields.innerHTML =
+      field('Product ID', '<a href="#" class="hover:underline">' + item.productId + '</a>') +
+      field('Pricing ID', item.pricingId) +
+      field('Cost', money(modalCost)) +
+      field('Price', money(item.price)) +
+      field('Units', item.units) +
+      field('Requested', item.status === 'danger' ? 'No' : 'Yes');
+
+    itemModalStatus.textContent = 'Request Status: ' + meta.label;
+    itemModalStatus.className = 'status-pill ' + meta.cls;
+
+    itemModalBackdrop.classList.add('is-open');
+  }
+
+  function closeItemModal() {
+    itemModalBackdrop.classList.remove('is-open');
+  }
+
+  document.getElementById('item-modal-close').addEventListener('click', closeItemModal);
+  document.getElementById('item-modal-close-btn').addEventListener('click', closeItemModal);
+  itemModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === itemModalBackdrop) closeItemModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && itemModalBackdrop.classList.contains('is-open')) closeItemModal();
+  });
+
+  // ---- Filters ----
+  const typeFilter = document.getElementById('req-type-filter');
+  const dateBegin = document.getElementById('req-date-begin');
+  const dateEnd = document.getElementById('req-date-end');
+  const emptyState = document.getElementById('req-empty-state');
+
+  function applyReqFilters() {
+    const type = typeFilter.value;
+    const begin = dateBegin.value ? new Date(dateBegin.value) : null;
+    const end = dateEnd.value ? new Date(dateEnd.value) : null;
+    let anyVisible = false;
+
+    tbody.querySelectorAll('tr:not(.req-group-row)').forEach(row => {
+      let visible = true;
+      if (type && row.dataset.type !== type) visible = false;
+      if ((begin || end) && row.dataset.date) {
+        const rowDate = new Date(row.dataset.date.split(' · ')[0]);
+        if (begin && rowDate < begin) visible = false;
+        if (end && rowDate > end) visible = false;
+      }
+      row.classList.toggle('hidden', !visible);
+      if (visible) anyVisible = true;
+    });
+
+    tbody.querySelectorAll('.req-group-row').forEach(headingRow => {
+      let sib = headingRow.nextElementSibling;
+      let groupVisible = false;
+      while (sib && !sib.classList.contains('req-group-row')) {
+        if (!sib.classList.contains('hidden')) groupVisible = true;
+        sib = sib.nextElementSibling;
+      }
+      headingRow.classList.toggle('hidden', !groupVisible);
+    });
+
+    emptyState.classList.toggle('hidden', anyVisible);
+  }
+
+  typeFilter.addEventListener('change', applyReqFilters);
+  dateBegin.addEventListener('change', applyReqFilters);
+  dateEnd.addEventListener('change', applyReqFilters);
+  document.getElementById('req-clear-btn').addEventListener('click', () => {
+    typeFilter.value = '';
+    dateBegin.value = '';
+    dateEnd.value = '';
+    applyReqFilters();
+  });
+
+  // ---- Scroll to top ----
+  const scrollTopBtn = document.getElementById('scroll-top-btn');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('is-visible', window.scrollY > 400);
+  });
+  scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+
+</body>
+</html>
