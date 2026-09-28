@@ -39,6 +39,10 @@
   .btn-primary:active{ background:var(--primary-deep); }
   .btn-primary:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(142,45,10,.45); }
   .btn-primary.is-active{ background:var(--primary-deep); box-shadow:0 0 0 3px rgba(142,45,10,.35); }
+  .btn-success{ background:var(--forest); color:#fff; transition:background .15s ease; }
+  .btn-success:hover{ background:#175738; }
+  .btn-danger{ background:var(--brick); color:#fff; transition:background .15s ease; }
+  .btn-danger:hover{ background:#8f1e18; }
 
   .btn-action-pill{
     background:#fff; color:var(--primary); border:1.5px solid var(--primary);
@@ -223,9 +227,11 @@
   .req-table tbody tr.req-row-alt:hover{ background:var(--sand); }
   .req-product-name{ font-weight:700; }
   .req-product-sub{ font-size:12px; color:var(--slate); margin-top:.1rem; }
-  .req-warning{
-    display:inline-flex; align-items:center; gap:.35rem; font-size:12px; font-weight:600; color:var(--amber);
-  }
+  .req-warning{ display:flex; flex-direction:column; align-items:flex-start; gap:.25rem; }
+  .req-warning-label{ display:inline-flex; align-items:center; gap:.35rem; font-size:12px; font-weight:600; color:var(--amber); white-space:nowrap; }
+  .req-warning-label svg{ flex-shrink:0; }
+  .req-warning a{ font-size:11.5px; font-weight:600; color:var(--primary); }
+  .req-warning a:hover{ text-decoration:underline; }
   .req-payment-paid{ color:var(--slate); font-size:12px; }
   .req-payment-due{ font-weight:700; margin-top:.1rem; }
   .req-payment-due.is-zero{ color:var(--slate); font-weight:400; }
@@ -281,6 +287,13 @@
   .item-field-value{ font-size:14px; font-weight:600; color:var(--ink); margin-top:.2rem; }
   .item-field-value a{ color:var(--primary); }
   .item-field-value a:hover{ text-decoration:underline; }
+
+  .pay-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .pay-table th, .pay-table td{ border:1px solid var(--line); padding:.6rem .75rem; text-align:left; vertical-align:top; }
+  .pay-table th{ background:var(--paper); font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); }
+  .pay-table td.text-right{ text-align:right; }
+  .pay-table tr.pay-total-row td{ font-weight:800; }
+  .pay-table tr.pay-grand-total-row td{ font-weight:900; font-size:15px; background:var(--paper); }
 </style>
 </head>
 <body class="antialiased">
@@ -326,15 +339,15 @@
           <div class="flex items-center gap-6 flex-shrink-0">
             <div>
               <p class="req-stat-label">Items</p>
-              <p class="req-stat-value num">8</p>
+              <p class="req-stat-value num" id="req-items-count">23</p>
             </div>
             <div>
               <p class="req-stat-label">Total Cost</p>
-              <p class="req-stat-value num">$15.00</p>
+              <p class="req-stat-value num">$3,703.00</p>
             </div>
             <div>
               <p class="req-stat-label">Total Paid</p>
-              <p class="req-stat-value num">$6.00</p>
+              <p class="req-stat-value num">$14,636.76</p>
             </div>
           </div>
         </div>
@@ -346,6 +359,26 @@
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="filter-dates-btn">Filter by Dates</button>
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="details-btn">Details</button>
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="accepted-proposal-btn">Accepted Proposal</button>
+        </div>
+      </div>
+
+      <!-- ---- All payments (toggled by the "All payments" pill above) ---- -->
+      <div class="panel p-5 md:p-6 mb-6 hidden" id="all-payments-panel">
+        <div class="overflow-x-auto">
+          <table class="pay-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Payment For</th>
+                <th>Payment Type</th>
+                <th>Payment Date</th>
+                <th class="text-right">Payment Amount</th>
+              </tr>
+            </thead>
+            <tbody id="all-payments-tbody"></tbody>
+          </table>
         </div>
       </div>
 
@@ -430,6 +463,98 @@
   </div>
 </div>
 
+<!-- ================= ADD PRODUCT MODAL ================= -->
+<div class="modal-backdrop" id="add-product-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="add-product-modal-title">
+    <div class="flex items-start justify-between gap-3">
+      <h2 class="text-3xl font-extrabold text-[var(--ink)]" id="add-product-modal-title">Atlanta, GA</h2>
+      <button class="modal-close-btn flex-shrink-0" id="add-product-modal-close" title="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <form id="add-product-form" class="mt-5 space-y-4">
+      <div>
+        <label class="field-label" for="ap-product-type">Product Type</label>
+        <select class="text-field" id="ap-product-type">
+          <option value="Air">Air</option>
+          <option value="Transportation">Motorcoach</option>
+          <option value="Hotel">Hotel</option>
+          <option value="Attraction">Attraction</option>
+          <option value="Meal">Meal</option>
+          <option value="Fee">Fee</option>
+          <option value="Merchandise">Merchandise</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="ap-search">Search Product</label>
+        <input type="text" class="text-field" id="ap-search" placeholder="Type to search…">
+      </div>
+      <div>
+        <label class="field-label" id="ap-select-label" for="ap-product-select">Select Air Product</label>
+        <select class="text-field" id="ap-product-select"></select>
+      </div>
+      <button type="submit" class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold">Save</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= ACCEPTED PROPOSAL MODAL ================= -->
+<div class="modal-backdrop" id="accepted-proposal-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="accepted-proposal-modal-title">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-2xl font-semibold text-[var(--slate)]">Quote Price: <span class="num text-[var(--ink)] font-extrabold">$30,683.93</span></p>
+        <h2 class="text-2xl font-extrabold text-[var(--ink)] mt-2" id="accepted-proposal-modal-title">Youth proposal</h2>
+        <p class="italic text-[var(--slate)] mt-1">Without paying parents</p>
+      </div>
+      <button class="modal-close-btn flex-shrink-0" id="accepted-proposal-modal-close" title="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <table class="pay-table mt-5">
+      <thead>
+        <tr><th>Min</th><th class="text-right">Pax Price</th><th class="text-right">Margin</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>20</td><td class="text-right num">$1,534.20</td><td class="text-right num">18.81%</td></tr>
+        <tr><td>15</td><td class="text-right num">$1,909.13</td><td class="text-right num">19.00%</td></tr>
+        <tr><td>10</td><td class="text-right num">$2,659.01</td><td class="text-right num">19.22%</td></tr>
+        <tr><td>50</td><td class="text-right num">$892.67</td><td class="text-right num">17.95%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= EDIT DESTINATION MODAL ================= -->
+<div class="modal-backdrop" id="edit-destination-modal-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="edit-destination-modal-title" style="max-width:480px;">
+    <h2 class="text-3xl font-extrabold text-[var(--ink)]" id="edit-destination-modal-title">Edit Destination</h2>
+    <hr class="my-4 border-[var(--line)]">
+
+    <form id="edit-destination-form">
+      <label class="field-label" for="edit-destination-select">Destination</label>
+      <select class="text-field" id="edit-destination-select" required>
+        <option value="" disabled selected>Choose a destination…</option>
+        <option>Atlanta, GA</option>
+        <option>Washington, D.C.</option>
+        <option>Cancún</option>
+        <option>Cabo</option>
+        <option>Punta Cana</option>
+        <option>Freeport</option>
+        <option>Panama City</option>
+        <option>Nassau</option>
+      </select>
+
+      <div class="flex items-center gap-3 mt-6">
+        <button type="submit" class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold">Save</button>
+        <button type="button" class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="edit-destination-close-btn">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
 <script>
@@ -507,7 +632,10 @@
 
     const destCell = item.dest
       ? item.dest
-      : '<span class="req-warning"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>No destination &mdash; <a href="#" class="hover:underline">update</a></span>';
+      : '<span class="req-warning">' +
+          '<span class="req-warning-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>No destination</span>' +
+          '<a href="#" class="update-destination-link">Update destination</a>' +
+        '</span>';
 
     const dueClass = item.bal > 0 ? 'is-owed' : 'is-zero';
     const costVarianceHtml = item.costVariancePct != null
@@ -542,6 +670,8 @@
     if (viewBtn) viewBtn.addEventListener('click', () => openItemModal(item, dateRange));
     const requestBtn = tr.querySelector('.request-item-btn');
     if (requestBtn) requestBtn.addEventListener('click', () => openItemModal(item, dateRange));
+    const updateDestLink = tr.querySelector('.update-destination-link');
+    if (updateDestLink) updateDestLink.addEventListener('click', (e) => { e.preventDefault(); openEditDestinationModal(item); });
 
     return tr;
   }
@@ -611,6 +741,100 @@
     heading.textContent = 'Total: ' + count + (count === 1 ? ' item' : ' items');
   }
 
+  // ---- All payments: every payment made across the request, grouped by
+  // product. Only the 6 products with a nonzero `paid` on the item roster
+  // have a payment history here; their totals sum to the exact $14,636.76
+  // shown as "Total Paid" above. ----
+  const paymentGroups = [
+    {
+      product: 'Royal Transportation', startDate: '2026-10-05', endDate: '2026-10-08',
+      payments: [
+        { for: 'Deposit', type: 'Credit Card', date: '2026-06-02', amount: 3123.00 },
+        { for: 'Final Payment', type: 'Wire', date: '2026-09-15', amount: 7287.00 }
+      ]
+    },
+    {
+      product: 'Hilton Atlanta Northeast', startDate: '2026-10-05', endDate: '2026-10-08',
+      payments: [
+        { for: 'Deposit', type: 'Credit Card', date: '2026-08-06', amount: 2360.61 },
+        { for: 'Deposit', type: 'Credit Card', date: '2026-08-06', amount: 0.00 }
+      ]
+    },
+    {
+      product: 'Student Watchers', startDate: '2026-10-05', endDate: '2026-10-08',
+      payments: [
+        { for: 'Final Payment', type: 'Credit Card', date: '2026-09-04', amount: 630.00 }
+      ]
+    },
+    {
+      product: 'Georgia Aquarium', startDate: '2026-10-06', endDate: '2026-10-06',
+      payments: [
+        { for: 'Deposit', type: 'Credit Card', date: '2026-06-18', amount: 100.00 },
+        { for: 'Final Payment', type: 'Credit Card', date: '2026-09-08', amount: 269.26 },
+        { for: 'Final Payment', type: 'Credit Card', date: '2026-09-16', amount: 32.68 }
+      ]
+    },
+    {
+      product: 'Georgia Tech University — Sit-Down Lunch', startDate: '2026-10-07', endDate: '2026-10-07',
+      payments: [
+        { for: 'Final Payment', type: 'Credit Card', date: '2026-09-04', amount: 334.21 }
+      ]
+    },
+    {
+      product: "Maggiano's Little Italy", startDate: '2026-10-07', endDate: '2026-10-07',
+      payments: [
+        { for: 'Deposit', type: 'Credit Card', date: '2026-07-16', amount: 500.00 }
+      ]
+    }
+  ];
+
+  function renderAllPayments() {
+    const tbody = document.getElementById('all-payments-tbody');
+    tbody.innerHTML = '';
+    let grandTotal = 0;
+
+    paymentGroups.forEach(group => {
+      const groupTotal = group.payments.reduce((sum, p) => sum + p.amount, 0);
+      grandTotal += groupTotal;
+
+      group.payments.forEach((payment, i) => {
+        const tr = document.createElement('tr');
+        const leadCells = i === 0
+          ? '<td rowspan="' + group.payments.length + '">' + group.product + '</td>' +
+            '<td rowspan="' + group.payments.length + '">' + group.startDate + '</td>' +
+            '<td rowspan="' + group.payments.length + '">' + group.endDate + '</td>'
+          : '';
+        tr.innerHTML = leadCells +
+          '<td>' + payment.for + '</td>' +
+          '<td>' + payment.type + '</td>' +
+          '<td>' + payment.date + '</td>' +
+          '<td class="text-right num">' + money(payment.amount) + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      const totalRow = document.createElement('tr');
+      totalRow.className = 'pay-total-row';
+      totalRow.innerHTML = '<td></td><td></td><td></td><td></td><td></td><td></td>' +
+        '<td class="text-right num">' + money(groupTotal) + ' Total</td>';
+      tbody.appendChild(totalRow);
+    });
+
+    const grandTotalRow = document.createElement('tr');
+    grandTotalRow.className = 'pay-grand-total-row';
+    grandTotalRow.innerHTML = '<td></td><td></td><td></td><td></td><td></td><td></td>' +
+      '<td class="text-right num">' + money(grandTotal) + ' Total</td>';
+    tbody.appendChild(grandTotalRow);
+  }
+
+  const allPaymentsBtn = document.getElementById('all-payments-btn');
+  const allPaymentsPanel = document.getElementById('all-payments-panel');
+  let allPaymentsRendered = false;
+  allPaymentsBtn.addEventListener('click', () => {
+    const isOpen = allPaymentsPanel.classList.toggle('hidden') === false;
+    allPaymentsBtn.classList.toggle('is-active', isOpen);
+    if (isOpen && !allPaymentsRendered) { renderAllPayments(); allPaymentsRendered = true; }
+  });
+
   renderByDate();
   setActiveFilterBtn('date');
   renderGrandTotal(false);
@@ -658,6 +882,135 @@
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && itemModalBackdrop.classList.contains('is-open')) closeItemModal();
+  });
+
+  // ---- Add Product modal ----
+  const PRODUCT_TYPE_LABELS = {
+    Air: 'Air', Transportation: 'Motorcoach', Hotel: 'Hotel', Attraction: 'Attraction',
+    Meal: 'Meal', Fee: 'Fee', Merchandise: 'Merchandise'
+  };
+  const PRODUCT_CATALOG = {
+    Air: ['Delta Air Lines', 'American Airlines', 'Southwest Airlines', 'United Airlines'],
+    Transportation: ['Royal Transportation', 'Landmark Motorcoach Co.'],
+    Hotel: ['Hilton Atlanta Northeast', 'Marriott Atlanta Downtown', 'Embassy Suites Atlanta'],
+    Attraction: ['Georgia Aquarium', 'Emory University', 'Georgia Tech University', 'Clark Atlanta University', 'Spelman College', "Martin Luther King, Jr. National Historical Park"],
+    Meal: ["Mary Mac's Tea Room", "Maggiano's Little Italy", 'Ponce City Market', 'Meal Allocation'],
+    Fee: ['Landmark Convenience Fee', 'Landmark System Fee', 'Landmark Driver Gratuity', 'Landmark Leader'],
+    Merchandise: ['Landmark Swag']
+  };
+
+  const addProductBtn = document.getElementById('add-product-btn');
+  const addProductModalBackdrop = document.getElementById('add-product-modal-backdrop');
+  const addProductForm = document.getElementById('add-product-form');
+  const apProductType = document.getElementById('ap-product-type');
+  const apSearch = document.getElementById('ap-search');
+  const apSelectLabel = document.getElementById('ap-select-label');
+  const apProductSelect = document.getElementById('ap-product-select');
+
+  function refreshProductOptions() {
+    const type = apProductType.value;
+    apSelectLabel.textContent = 'Select ' + PRODUCT_TYPE_LABELS[type] + ' Product';
+    const query = apSearch.value.trim().toLowerCase();
+    const matches = PRODUCT_CATALOG[type].filter(name => name.toLowerCase().includes(query));
+    apProductSelect.innerHTML = matches.length
+      ? matches.map(name => '<option value="' + name + '">' + name + '</option>').join('')
+      : '<option value="">No matching products</option>';
+  }
+
+  function openAddProductModal() {
+    addProductForm.reset();
+    refreshProductOptions();
+    addProductModalBackdrop.classList.add('is-open');
+  }
+  function closeAddProductModal() {
+    addProductModalBackdrop.classList.remove('is-open');
+  }
+
+  addProductBtn.addEventListener('click', openAddProductModal);
+  document.getElementById('add-product-modal-close').addEventListener('click', closeAddProductModal);
+  addProductModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === addProductModalBackdrop) closeAddProductModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && addProductModalBackdrop.classList.contains('is-open')) closeAddProductModal();
+  });
+  apProductType.addEventListener('change', refreshProductOptions);
+  apSearch.addEventListener('input', refreshProductOptions);
+
+  let nextProductId = 8324;
+  addProductForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const productName = apProductSelect.value;
+    if (!productName) return;
+
+    const noDateGroup = groups.find(g => g.date === null);
+    noDateGroup.items.push({
+      product: productName, sub: null, dest: 'Atlanta, GA', status: 'confirmed', schedule: null,
+      type: apProductType.value, budget: 0, cost: 0, paid: 0, bal: 0,
+      productId: nextProductId, pricingId: nextProductId + 100, price: 0, units: 1
+    });
+    nextProductId++;
+
+    let itemCount = 0;
+    groups.forEach(g => { itemCount += g.items.length; });
+    document.getElementById('req-items-count').textContent = itemCount;
+
+    if (filterProductTypeBtn.classList.contains('is-active')) {
+      renderByType();
+      renderGrandTotal(true);
+    } else {
+      renderByDate();
+      renderGrandTotal(false);
+    }
+
+    closeAddProductModal();
+  });
+
+  // ---- Accepted Proposal modal ----
+  const acceptedProposalBtn = document.getElementById('accepted-proposal-btn');
+  const acceptedProposalModalBackdrop = document.getElementById('accepted-proposal-modal-backdrop');
+  acceptedProposalBtn.addEventListener('click', () => acceptedProposalModalBackdrop.classList.add('is-open'));
+  document.getElementById('accepted-proposal-modal-close').addEventListener('click', () => acceptedProposalModalBackdrop.classList.remove('is-open'));
+  acceptedProposalModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === acceptedProposalModalBackdrop) acceptedProposalModalBackdrop.classList.remove('is-open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && acceptedProposalModalBackdrop.classList.contains('is-open')) acceptedProposalModalBackdrop.classList.remove('is-open');
+  });
+
+  // ---- Edit Destination modal (opened from a row's "Update destination" link) ----
+  const editDestinationModalBackdrop = document.getElementById('edit-destination-modal-backdrop');
+  const editDestinationForm = document.getElementById('edit-destination-form');
+  const editDestinationSelect = document.getElementById('edit-destination-select');
+  let editDestinationItem = null;
+
+  function openEditDestinationModal(item) {
+    editDestinationItem = item;
+    editDestinationSelect.value = item.dest || '';
+    editDestinationModalBackdrop.classList.add('is-open');
+    editDestinationSelect.focus();
+  }
+  function closeEditDestinationModal() {
+    editDestinationModalBackdrop.classList.remove('is-open');
+    editDestinationItem = null;
+  }
+
+  editDestinationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!editDestinationItem || !editDestinationSelect.value) return;
+    editDestinationItem.dest = editDestinationSelect.value;
+
+    if (filterProductTypeBtn.classList.contains('is-active')) renderByType();
+    else renderByDate();
+
+    closeEditDestinationModal();
+  });
+  document.getElementById('edit-destination-close-btn').addEventListener('click', closeEditDestinationModal);
+  editDestinationModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === editDestinationModalBackdrop) closeEditDestinationModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && editDestinationModalBackdrop.classList.contains('is-open')) closeEditDestinationModal();
   });
 
   // ---- Scroll to top ----
