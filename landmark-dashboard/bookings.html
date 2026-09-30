@@ -121,6 +121,10 @@
   .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
   .sub-sub-nav a:hover{ color:#fff; }
   .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
 
   .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
   .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
@@ -225,6 +229,45 @@
   .check-row{ display:flex; align-items:center; gap:.55rem; font-size:.85rem; color:var(--ink); cursor:pointer; }
   .check-row input{ accent-color:var(--primary); width:16px; height:16px; }
 
+  /* ---- Pax Status: segmented pill-tabs (same pattern as Open Enrollments'
+     status filter), color-coded to match the table's status pills ---- */
+  .status-tabs{ display:flex; flex-wrap:wrap; gap:.55rem; }
+  .status-tab{
+    position:relative; display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 1.05rem;
+    border-radius:9999px; border:1.5px solid var(--line); background:#fff; cursor:pointer; user-select:none;
+    font-size:.83rem; font-weight:600; color:var(--slate); transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .status-tab input{ position:absolute; opacity:0; width:0; height:0; }
+  .status-tab .dot{ width:7px; height:7px; border-radius:9999px; flex-shrink:0; transition:background .15s ease; }
+  .status-tab.is-all .dot{ background:var(--slate); }
+  .status-tab.is-active-status .dot{ background:var(--forest); }
+  .status-tab.is-canceled .dot{ background:var(--brick); }
+  .status-tab:hover{ border-color:var(--primary-light); color:var(--ink); }
+  .status-tab:has(input:checked){ color:#fff; }
+  .status-tab:has(input:checked) .dot{ background:#fff; }
+  .status-tab.is-all:has(input:checked){ background:var(--sidebar); border-color:var(--sidebar); }
+  .status-tab.is-active-status:has(input:checked){ background:var(--forest); border-color:var(--forest); }
+  .status-tab.is-canceled:has(input:checked){ background:var(--brick); border-color:var(--brick); }
+
+  /* ---- Binary filters read better as toggle switches than bare checkboxes ---- */
+  .toggle-field{ display:flex; align-items:center; gap:.65rem; padding:.3rem 0; cursor:pointer; }
+  .toggle-switch{ position:relative; width:40px; height:23px; flex-shrink:0; }
+  .toggle-switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; z-index:1; }
+  .toggle-track{ position:absolute; inset:0; background:var(--line); border-radius:9999px; transition:background .15s ease; pointer-events:none; }
+  .toggle-track::after{ content:''; position:absolute; top:2.5px; left:3px; width:18px; height:18px; border-radius:9999px; background:#fff; box-shadow:0 1px 3px rgba(36,26,21,.3); transition:transform .15s ease; }
+  .toggle-switch input:checked ~ .toggle-track{ background:var(--primary); }
+  .toggle-switch input:checked ~ .toggle-track::after{ transform:translateX(17px); }
+  .toggle-field-text{ font-size:.85rem; color:var(--ink); font-weight:500; }
+
+  /* ---- Lead Source column: hidden unless "Show Lead Source" is on ---- */
+  .data-table:not(.show-lead-source) .lead-source-col{ display:none; }
+
+  /* ---- Empty state ---- */
+  .table-empty-state{ display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 1rem; color:var(--slate); }
+  .table-empty-state.is-visible{ display:flex; }
+  .table-empty-state svg{ opacity:.4; margin-bottom:.75rem; }
+  .table-empty-state p{ font-size:.9rem; }
+
   @media print{
     #sidebar-root, #topbar-root, .no-print{ display:none !important; }
     body{ background:#fff; }
@@ -269,8 +312,11 @@
       </div>
 
       <!-- ================= FILTERS ================= -->
+      <!-- Instant filtering: every field below re-renders the table immediately
+           on change/input — there's no reason to gate a client-side array
+           filter behind an explicit Filter/Clear step. -->
       <div class="panel p-5 md:p-6 no-print">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
           <div>
             <label class="field-label">Depart Date Begin</label>
             <input type="date" class="text-field" id="depart-begin">
@@ -287,7 +333,6 @@
             <label class="field-label">Book Date End</label>
             <input type="date" class="text-field" id="book-end">
           </div>
-
           <div>
             <label class="field-label">Filter By Sales Person</label>
             <select class="text-field" id="sales-person-filter">
@@ -306,30 +351,29 @@
               <option>Cabo San Lucas</option>
             </select>
           </div>
-          <div>
-            <label class="field-label">Pax Status</label>
-            <select class="text-field" id="pax-status-filter">
-              <option value="">All Statuses</option>
-              <option>Active</option>
-              <option>Canceled</option>
-            </select>
-          </div>
-          <div class="flex items-end pb-2.5">
-            <label class="check-row">
-              <input type="checkbox" id="show-lead-source">
-              Show Lead Source
-            </label>
-          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-4 mt-5 pt-5 border-t border-[var(--line-soft)]">
-          <label class="check-row">
-            <input type="checkbox" id="cancelled-with-money">
-            Cancelled Bookings with Money
-          </label>
-          <div class="flex items-center gap-2 ml-auto">
-            <button class="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold" id="bookings-filter-btn">Filter</button>
-            <button class="btn-outline rounded-lg px-5 py-2.5 text-sm font-semibold" id="bookings-clear-btn">Clear</button>
+        <div class="mt-5 pt-5 border-t border-[var(--line-soft)]">
+          <div class="flex flex-wrap items-start gap-8">
+            <div>
+              <p class="field-label mb-2">Pax Status</p>
+              <div class="status-tabs">
+                <label class="status-tab is-all"><input type="radio" name="pax-status" value="" checked><span class="dot"></span>All</label>
+                <label class="status-tab is-active-status"><input type="radio" name="pax-status" value="Active"><span class="dot"></span>Active</label>
+                <label class="status-tab is-canceled"><input type="radio" name="pax-status" value="Canceled"><span class="dot"></span>Canceled</label>
+              </div>
+            </div>
+            <div class="pl-8" style="border-left:1px solid var(--line-soft);">
+              <p class="field-label mb-2">Options</p>
+              <label class="toggle-field">
+                <span class="toggle-switch"><input type="checkbox" id="show-lead-source"><span class="toggle-track"></span></span>
+                <span class="toggle-field-text">Show Lead Source</span>
+              </label>
+              <label class="toggle-field">
+                <span class="toggle-switch"><input type="checkbox" id="cancelled-with-money"><span class="toggle-track"></span></span>
+                <span class="toggle-field-text">Cancelled Bookings with Money</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -362,10 +406,11 @@
         </div>
 
         <div class="overflow-x-auto w-full table-scroll">
-          <table class="data-table">
+          <table class="data-table" id="bookings-table">
             <thead>
               <tr>
                 <th class="sticky-col">Sales Person</th>
+                <th class="lead-source-col">Lead Source</th>
                 <th>Book Date</th>
                 <th>Depart Date</th>
                 <th>End Date</th>
@@ -379,9 +424,13 @@
                 <th class="text-right">Margin Percent</th>
               </tr>
             </thead>
+            <!-- Lead Source is not part of the reference data; it's a plausible
+                 invented field (per booking) so the "Show Lead Source" toggle,
+                 previously a dead control, has something real to reveal. -->
             <tbody id="bookings-tbody">
               <tr>
                 <td class="sticky-col">Spiffy Darko</td>
+                <td class="lead-source-col">Referral</td>
                 <td class="num">2025-11-19</td>
                 <td class="num">2026-07-16</td>
                 <td class="num">2026-07-21</td>
@@ -396,6 +445,7 @@
               </tr>
               <tr>
                 <td class="sticky-col">Go Blue Tours</td>
+                <td class="lead-source-col">Repeat Client</td>
                 <td class="num">2026-08-27</td>
                 <td class="num">2027-03-01</td>
                 <td class="num">2027-03-06</td>
@@ -410,6 +460,7 @@
               </tr>
               <tr>
                 <td class="sticky-col">Spiffy Darko</td>
+                <td class="lead-source-col">Website</td>
                 <td class="num">2026-06-29</td>
                 <td class="num">2027-03-06</td>
                 <td class="num">2027-03-12</td>
@@ -424,6 +475,7 @@
               </tr>
               <tr>
                 <td class="sticky-col">Meghan Jenkins</td>
+                <td class="lead-source-col">Trade Show</td>
                 <td class="num">2026-08-27</td>
                 <td class="num">2027-03-06</td>
                 <td class="num">2027-03-11</td>
@@ -438,6 +490,7 @@
               </tr>
               <tr>
                 <td class="sticky-col">Meghan Jenkins</td>
+                <td class="lead-source-col">Referral</td>
                 <td class="num">2026-07-07</td>
                 <td class="num">2027-03-07</td>
                 <td class="num">2027-03-12</td>
@@ -454,7 +507,12 @@
           </table>
         </div>
 
-        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print">
+        <div class="table-empty-state" id="bookings-empty">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <p>No bookings match your filters.</p>
+        </div>
+
+        <div class="flex items-center justify-between mt-4 pt-4 border-t border-[var(--line-soft)] text-sm text-[var(--slate)] no-print" id="bookings-pagination">
           <p id="bookings-count">Showing 1 to 5 of 5 entries</p>
           <div class="flex items-center gap-4">
             <span class="opacity-40 cursor-not-allowed">Previous</span>
@@ -487,7 +545,8 @@
   });
   GoBlueTableSort.wire('bookings-tbody');
 
-  // ---- Filter + search ----
+  // ---- Filter + search (instant — every field re-renders the table
+  // immediately on change/input, no Filter/Clear buttons) ----
   (function () {
     const departBegin = document.getElementById('depart-begin');
     const departEnd = document.getElementById('depart-end');
@@ -495,25 +554,28 @@
     const bookEnd = document.getElementById('book-end');
     const salesPersonFilter = document.getElementById('sales-person-filter');
     const destinationFilter = document.getElementById('destination-filter');
-    const paxStatusFilter = document.getElementById('pax-status-filter');
     const cancelledWithMoney = document.getElementById('cancelled-with-money');
+    const showLeadSource = document.getElementById('show-lead-source');
     const search = document.getElementById('bookings-search');
+    const table = document.getElementById('bookings-table');
     const tbody = document.getElementById('bookings-tbody');
     const countLabel = document.getElementById('bookings-count');
+    const emptyState = document.getElementById('bookings-empty');
     const rows = Array.from(tbody.querySelectorAll('tr'));
     const totalCount = rows.length;
 
     function applyFilters() {
       const searchValue = search.value.trim().toLowerCase();
+      const paxStatusValue = (document.querySelector('input[name="pax-status"]:checked') || {}).value || '';
       let visibleCount = 0;
 
       rows.forEach(row => {
         const cells = row.children;
-        const bookDate = cells[1].textContent.trim();
-        const departDate = cells[2].textContent.trim();
+        const bookDate = cells[2].textContent.trim();
+        const departDate = cells[3].textContent.trim();
         const salesPersonText = cells[0].textContent.trim().toLowerCase();
-        const destText = cells[7].textContent.trim().toLowerCase();
-        const statusText = cells[10].textContent.trim().toLowerCase();
+        const destText = cells[8].textContent.trim().toLowerCase();
+        const statusText = cells[11].textContent.trim().toLowerCase();
         const rowText = row.textContent.toLowerCase();
 
         let visible = true;
@@ -523,7 +585,7 @@
         if (bookEnd.value && bookDate > bookEnd.value) visible = false;
         if (salesPersonFilter.value && salesPersonText !== salesPersonFilter.value.toLowerCase()) visible = false;
         if (destinationFilter.value && destText !== destinationFilter.value.toLowerCase()) visible = false;
-        if (paxStatusFilter.value && statusText !== paxStatusFilter.value.toLowerCase()) visible = false;
+        if (paxStatusValue && statusText !== paxStatusValue.toLowerCase()) visible = false;
         if (cancelledWithMoney.checked && !statusText.includes('cancel')) visible = false;
         if (searchValue && !rowText.includes(searchValue)) visible = false;
 
@@ -534,17 +596,21 @@
       countLabel.textContent = visibleCount === 0
         ? 'No matching bookings found'
         : 'Showing 1 to ' + visibleCount + ' of ' + totalCount + ' entries';
+      emptyState.classList.toggle('is-visible', visibleCount === 0);
+      table.parentElement.classList.toggle('hidden', visibleCount === 0);
     }
 
-    document.getElementById('bookings-filter-btn').addEventListener('click', applyFilters);
-    document.getElementById('bookings-clear-btn').addEventListener('click', () => {
-      [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.value = '');
-      [salesPersonFilter, destinationFilter, paxStatusFilter].forEach(el => el.value = '');
-      cancelledWithMoney.checked = false;
-      search.value = '';
-      applyFilters();
-    });
+    [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.addEventListener('change', applyFilters));
+    [salesPersonFilter, destinationFilter].forEach(el => el.addEventListener('change', applyFilters));
+    document.querySelectorAll('input[name="pax-status"]').forEach(el => el.addEventListener('change', applyFilters));
+    cancelledWithMoney.addEventListener('change', applyFilters);
     search.addEventListener('input', applyFilters);
+
+    // ---- "Show Lead Source" reveals the Lead Source column instead of
+    // doing nothing (it previously had no effect at all). ----
+    showLeadSource.addEventListener('change', () => {
+      table.classList.toggle('show-lead-source', showLeadSource.checked);
+    });
 
     // ---- Global (top bar) search mirrors into this page's search ----
     const globalSearch = document.getElementById('global-search-input');
@@ -554,6 +620,8 @@
         applyFilters();
       });
     }
+
+    applyFilters();
   })();
 </script>
 

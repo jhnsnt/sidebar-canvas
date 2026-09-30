@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Open Enrollments</title>
+<link rel="icon" href="https://landmarkeducationaltours.com/images/landmark-logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#242322;
+    --paper:#f7f6f5;
+    --primary:#8e2d0a;
+    --primary-deep:#6c2107;
+    --primary-light:#c9704d;
+    --sidebar:#241d1a;
+    --sand:#f6e9e3;
+    --line:#e2dfdc;
+    --line-soft:#edebe9;
+    --slate:#6f6a66;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#b3261e;
+    --brick-tint:#fbe9e7;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Poppins',sans-serif; font-size:19px; font-weight:800; letter-spacing:-0.01em; color:var(--ink); }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .field-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--slate); font-weight:700; margin-bottom:.35rem; display:block; }
+  .field-input{
+    width:100%; border:1px solid var(--line); border-radius:.6rem; padding:.6rem .75rem; font-size:.85rem;
+    font-family:'Poppins',sans-serif; color:var(--ink); background:#fff; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field-input::placeholder{ color:var(--slate); }
+  .field-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+  select.field-input{ appearance:none; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236f6a66' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right .65rem center; padding-right:2.1rem; }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.85rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236f6a66' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink); width:240px;
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+
+  /* ---- Enrollment Status: segmented pill-tabs instead of stacked radios,
+     color-coded to match the table's status pills so the active filter
+     previews the same color language used in the data below ---- */
+  .status-tabs{ display:flex; flex-wrap:wrap; gap:.55rem; }
+  .status-tab{
+    position:relative; display:inline-flex; align-items:center; gap:.5rem; padding:.55rem 1.1rem;
+    border-radius:9999px; border:1.5px solid var(--line); background:#fff; cursor:pointer; user-select:none;
+    font-size:.83rem; font-weight:600; color:var(--slate); transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .status-tab input{ position:absolute; opacity:0; width:0; height:0; }
+  .status-tab .dot{ width:7px; height:7px; border-radius:9999px; flex-shrink:0; transition:background .15s ease; }
+  .status-tab.is-all .dot{ background:var(--slate); }
+  .status-tab.is-booked .dot{ background:var(--forest); }
+  .status-tab.is-open-enrollment .dot{ background:var(--amber); }
+  .status-tab.is-cancelled .dot{ background:var(--brick); }
+  .status-tab:hover{ border-color:var(--primary-light); color:var(--ink); }
+  .status-tab:has(input:checked){ color:#fff; }
+  .status-tab:has(input:checked) .dot{ background:#fff; }
+  .status-tab.is-all:has(input:checked){ background:var(--sidebar); border-color:var(--sidebar); }
+  .status-tab.is-booked:has(input:checked){ background:var(--forest); border-color:var(--forest); }
+  .status-tab.is-open-enrollment:has(input:checked){ background:var(--amber); border-color:var(--amber); }
+  .status-tab.is-cancelled:has(input:checked){ background:var(--brick); border-color:var(--brick); }
+
+  /* ---- Cancelled-payment filters: toggle switches read better than bare
+     checkboxes for an on/off include-in-results filter ---- */
+  .toggle-field{ display:flex; align-items:center; gap:.65rem; padding:.3rem 0; cursor:pointer; }
+  .toggle-switch{ position:relative; width:40px; height:23px; flex-shrink:0; }
+  .toggle-switch input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; z-index:1; }
+  .toggle-track{ position:absolute; inset:0; background:var(--line); border-radius:9999px; transition:background .15s ease; pointer-events:none; }
+  .toggle-track::after{ content:''; position:absolute; top:2.5px; left:3px; width:18px; height:18px; border-radius:9999px; background:#fff; box-shadow:0 1px 3px rgba(36,26,21,.3); transition:transform .15s ease; }
+  .toggle-switch input:checked ~ .toggle-track{ background:var(--brick); }
+  .toggle-switch input:checked ~ .toggle-track::after{ transform:translateX(17px); }
+  .toggle-field-text{ font-size:.85rem; color:var(--ink); font-weight:500; }
+  .toggle-field-hint{ font-size:11px; color:var(--slate); margin-top:.35rem; }
+
+  .export-btn{
+    display:inline-flex; align-items:center; gap:.4rem; font-size:12.5px; font-weight:600; padding:.4rem .75rem;
+    border-radius:.5rem; background:#fff; color:var(--ink); border:1px solid var(--line); cursor:pointer; transition:background .15s ease, border-color .15s ease;
+  }
+  .export-btn:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:268px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(180deg); }
+  .sidebar-logo-white{ filter:brightness(0) invert(1); }
+
+  .sub-nav{ padding:0 1.1rem 0 2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:flex; align-items:center; gap:.55rem; padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav-icon{ flex-shrink:0; opacity:.85; }
+  .sub-nav-badge{ display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; border-radius:9999px; color:#fff; font-size:11px; font-weight:700; padding:0 5px; flex-shrink:0; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  .sub-nav-group{
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer;
+    padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease;
+  }
+  .sub-nav-group:hover{ color:#fff; }
+  .sub-nav-group.is-active-group{ color:#fff; }
+  .sub-nav-group .sidebar-chevron{ width:12px; height:12px; flex-shrink:0; transition:transform .15s ease; }
+  .sub-nav-group.is-open .sidebar-chevron{ transform:rotate(180deg); }
+
+  .sub-sub-nav{ padding-left:1rem; display:none; }
+  .sub-sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-sub-nav{ display:none !important; }
+  .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
+  .sub-sub-nav a:hover{ color:#fff; }
+  .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
+
+  .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
+  .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
+  .sidebar-footer-btn{
+    display:flex; align-items:center; gap:.55rem; color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13px; font-weight:700;
+    background:none; border:none; cursor:pointer; padding:0; transition:color .15s ease;
+  }
+  .sidebar-footer-btn:hover{ color:#fff; }
+  .sidebar-footer-btn svg{ flex-shrink:0; }
+  .settings-flyout{
+    display:none; position:absolute; bottom:100%; left:12px; right:12px; margin-bottom:.6rem;
+    background:#fff; border-radius:.75rem; box-shadow:0 24px 48px -16px rgba(0,0,0,.45);
+    max-height:min(60vh, 420px); overflow-y:auto; padding:.4rem 0; z-index:60;
+  }
+  .settings-flyout.is-open{ display:block; }
+  .settings-flyout a{
+    display:block; padding:.7rem 1.1rem; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:700;
+    color:var(--ink); transition:background .15s ease;
+  }
+  .settings-flyout a:hover{ background:var(--paper); }
+  .sidebar.is-collapsed .settings-flyout{ display:none !important; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  /* ---- Enrollments table ---- */
+  .enroll-table{ width:100%; font-size:12.5px; border-collapse:collapse; }
+  .enroll-table th{
+    text-align:left; font-size:10px; line-height:1.4; text-transform:uppercase; letter-spacing:.08em; color:var(--slate);
+    font-weight:700; padding:0 .65rem .6rem; border-bottom:1px solid var(--ink); white-space:nowrap;
+  }
+  .enroll-table th.text-right{ text-align:right; }
+  .enroll-table td{ padding:.65rem .65rem; border-bottom:1px solid var(--line-soft); color:var(--ink); vertical-align:top; white-space:nowrap; }
+  .enroll-table td.wrap{ white-space:normal; max-width:220px; }
+  .enroll-table td.text-right{ text-align:right; }
+  .enroll-table tbody tr:hover{ background:var(--paper); }
+  .enroll-table tbody tr:last-child td{ border-bottom:0; }
+  /* ---- Id column: this dataset has no detail page to link to, so instead
+     of a fake "link" that goes nowhere, the id is a copy-to-clipboard
+     button — a real, cheap action instead of a dead end. ---- */
+  .enroll-id-btn{
+    display:inline-flex; align-items:center; gap:.4rem; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12.5px;
+    font-weight:600; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:.4rem;
+    padding:.3rem .55rem; cursor:pointer; transition:border-color .15s ease, background .15s ease, color .15s ease;
+  }
+  .enroll-id-btn:hover{ border-color:var(--primary-light); background:#fff; color:var(--primary); }
+  .enroll-id-btn svg{ flex-shrink:0; opacity:.6; }
+  .enroll-id-btn.is-copied{ border-color:var(--forest); color:var(--forest); background:var(--forest-tint); }
+
+  .status-pill{
+    display:inline-flex; align-items:center; gap:.35rem; font-size:11px; font-weight:700; padding:.25rem .65rem; border-radius:9999px;
+    white-space:nowrap;
+  }
+  .status-pill .dot{ width:6px; height:6px; border-radius:9999px; flex-shrink:0; }
+  .status-pill.is-booked{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-booked .dot{ background:var(--forest); }
+  .status-pill.is-open{ background:var(--amber-tint); color:var(--amber); }
+  .status-pill.is-open .dot{ background:var(--amber); }
+  .status-pill.is-cancelled{ background:var(--brick-tint); color:var(--brick); }
+  .status-pill.is-cancelled .dot{ background:var(--brick); }
+
+  .enroll-empty{ padding:2.75rem 0; text-align:center; color:var(--slate); font-size:.95rem; }
+
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  .foot-summary{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem .65rem 0; }
+  .foot-summary-left{ font-size:13px; font-weight:800; color:var(--ink); }
+  .foot-summary-right{ display:flex; align-items:center; gap:1.75rem; font-size:13px; }
+  .foot-summary-right .item{ display:flex; flex-direction:column; align-items:flex-end; }
+  .foot-summary-right .label{ font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate); font-weight:700; }
+  .foot-summary-right .value{ font-weight:800; color:var(--ink); font-size:14px; }
+  .entries-note{ font-size:.78rem; color:var(--slate); margin-top:.35rem; padding:0 .65rem; }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + Back ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <span class="text-[var(--primary)] font-semibold">Open Enrollments</span>
+        </div>
+        <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold inline-flex items-center gap-2" onclick="window.location.href='index.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+      </div>
+      <h1 class="page-title text-[var(--ink)] mb-5">Open Enrollments</h1>
+
+      <!-- ---- Filter panel ---- -->
+      <div class="panel p-5 md:p-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="field-label" for="oe-depart-begin">Depart Date Begin</label>
+            <input type="date" class="field-input" id="oe-depart-begin">
+          </div>
+          <div>
+            <label class="field-label" for="oe-depart-end">Depart Date End</label>
+            <input type="date" class="field-input" id="oe-depart-end">
+          </div>
+          <div>
+            <label class="field-label" for="oe-book-begin">Book Date Begin</label>
+            <input type="date" class="field-input" id="oe-book-begin">
+          </div>
+          <div>
+            <label class="field-label" for="oe-book-end">Book Date End</label>
+            <input type="date" class="field-input" id="oe-book-end">
+          </div>
+
+          <div>
+            <label class="field-label" for="oe-sales-person">Filter By Sales Person</label>
+            <select class="field-input" id="oe-sales-person"><option value="">All</option></select>
+          </div>
+          <div>
+            <label class="field-label" for="oe-destination">Destination</label>
+            <select class="field-input" id="oe-destination"><option value="">All</option></select>
+          </div>
+          <div>
+            <label class="field-label" for="oe-sale-type">Sale Type</label>
+            <select class="field-input" id="oe-sale-type"><option value="">All</option></select>
+          </div>
+          <div>
+            <label class="field-label" for="oe-pax-status">Pax Status</label>
+            <select class="field-input" id="oe-pax-status">
+              <option value="">All</option>
+              <option value="Paid in Full">Paid in Full</option>
+              <option value="Partial Payment">Partial Payment</option>
+              <option value="Unpaid">Unpaid</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-5" style="border-top:1px solid var(--line-soft);">
+          <div class="flex flex-wrap items-start gap-8">
+            <div>
+              <p class="field-label mb-2">Enrollment Status</p>
+              <div class="status-tabs">
+                <label class="status-tab is-all"><input type="radio" name="oe-status" value="" checked><span class="dot"></span>All</label>
+                <label class="status-tab is-booked"><input type="radio" name="oe-status" value="Booked"><span class="dot"></span>Booked</label>
+                <label class="status-tab is-open-enrollment"><input type="radio" name="oe-status" value="Open Enrollment"><span class="dot"></span>Open Enrollment</label>
+                <label class="status-tab is-cancelled"><input type="radio" name="oe-status" value="Cancelled"><span class="dot"></span>Cancelled</label>
+              </div>
+            </div>
+            <div class="pl-8" style="border-left:1px solid var(--line-soft);">
+              <p class="field-label mb-2">Cancelled Bookings</p>
+              <label class="toggle-field">
+                <span class="toggle-switch"><input type="checkbox" id="oe-cancel-with-payment"><span class="toggle-track"></span></span>
+                <span class="toggle-field-text">With payment</span>
+              </label>
+              <label class="toggle-field">
+                <span class="toggle-switch"><input type="checkbox" id="oe-cancel-without-payment"><span class="toggle-track"></span></span>
+                <span class="toggle-field-text">Without payment</span>
+              </label>
+              <p class="toggle-field-hint">Narrows results to cancelled bookings only</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- Data table ---- -->
+      <div class="panel p-5 md:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-2">
+            <button type="button" class="export-btn" id="oe-copy-btn" title="Copy to clipboard">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Copy
+            </button>
+            <button type="button" class="export-btn" id="oe-csv-btn" title="Download CSV">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              CSV
+            </button>
+            <button type="button" class="export-btn" id="oe-excel-btn" title="Export to Excel">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Excel
+            </button>
+            <button type="button" class="export-btn" id="oe-pdf-btn" title="Export to PDF">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PDF
+            </button>
+          </div>
+          <div>
+            <label class="field-label sr-only" for="oe-search">Search</label>
+            <span class="text-xs text-[var(--slate)] font-semibold mr-2">Search:</span>
+            <input type="text" class="search-input" id="oe-search" placeholder="Search name, school, or Id…" style="padding-left:.85rem; background-image:none;">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto w-full table-scroll">
+          <table class="enroll-table">
+            <thead>
+              <tr>
+                <th>Travel Consultant</th>
+                <th>Account Manager</th>
+                <th>OPS Rep</th>
+                <th>Sale Type</th>
+                <th>Enrollment End Date</th>
+                <th>Enrollment Status</th>
+                <th>Depart Date</th>
+                <th>End Date</th>
+                <th>Id</th>
+                <th>Group Leader Name</th>
+                <th>School</th>
+                <th>Destination Name</th>
+                <th class="text-right">Pax</th>
+                <th class="text-right">Payments Total</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="oe-tbody"></tbody>
+          </table>
+        </div>
+        <p class="enroll-empty hidden" id="oe-empty">No enrollments match your filters.</p>
+
+        <div class="foot-summary" id="oe-foot-summary"></div>
+        <p class="entries-note" id="oe-entries-note"></p>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script>
+  GoBlueSidebar.render('open-enrollments');
+  GoBlueTopBar.render();
+
+  // ---- Data transcribed row-for-row from the reference "Open Enrollments"
+  // screenshot (71 rows). Column order matches the reference exactly:
+  // Travel Consultant, Account Manager, OPS Rep, Sale Type, Enrollment End
+  // Date, Enrollment Status, Depart Date, End Date, Id, Group Leader Name,
+  // School, Destination Name, Pax, Payments Total, Total. Every row in the
+  // reference showed Enrollment Status = "Open Enrollment" (this report's
+  // default view); Booked/Cancelled options are wired into the filter for
+  // completeness even though no row currently carries those statuses.
+  // The reference had no separate "Book Date" column — "enrollEnd" (Enrollment
+  // End Date) doubles as the value the Book Date Begin/End filter checks
+  // against, since it's the only booking-adjacent timestamp the data provides. ----
+  const rows = [
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '10/09/2026', end: '10/11/2026', id: '73MFB3BGGR', leader: 'John Bellington', school: 'Christ The King High School- 11th Grade', destination: 'Philadelphia, PA', pax: 46, paid: 10505.00, total: 36200.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '08/21/2026', status: 'Open Enrollment', depart: '11/02/2026', end: '11/04/2026', id: 'YPKATSQMYT', leader: 'Risha Buntyn', school: 'ALLIANCE COLLEGE READY PUBLIC SCHOOLS', destination: 'Washington, D.C.', pax: 12, paid: 0.00, total: 24980.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '10/01/2026', status: 'Open Enrollment', depart: '12/02/2026', end: '12/03/2026', id: 'KUCSRR5EQB', leader: 'Kathy Westerlund', school: 'Derby Middle School', destination: 'Chicago, IL', pax: 192, paid: 20825.00, total: 126875.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '09/30/2026', status: 'Open Enrollment', depart: '12/10/2026', end: '12/11/2026', id: 'HTL8XS0OF0', leader: 'Nicholas Pezzote', school: 'Lexington High School 2026', destination: 'New York, NY', pax: 53, paid: 10316.00, total: 32736.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '09/29/2026', status: 'Open Enrollment', depart: '01/14/2027', end: '01/18/2027', id: 'GX8T5XE6G5', leader: 'Sean Bryan', school: 'Pace Academy', destination: 'Los Angeles, CA', pax: 45, paid: 4738.58, total: 155920.00 },
+    { consultant: 'Tara Marcucci', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/01/2026', status: 'Open Enrollment', depart: '01/14/2027', end: '01/17/2027', id: 'LSGCJKYKIQ', leader: 'Shannon Hipp', school: 'Marist School', destination: 'New York, NY', pax: 23, paid: 1050.00, total: 48840.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/02/2026', status: 'Open Enrollment', depart: '01/28/2027', end: '01/31/2027', id: 'XNKTGPTYMT', leader: 'Lisa Lilley', school: 'Webster Central Schools', destination: 'Quebec City, QC', pax: 27, paid: 2200.00, total: 38625.00 },
+    { consultant: 'Maggie Shelton', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '02/02/2027', end: '02/05/2027', id: 'BFDWCHKKUO', leader: 'Melissa Berrada', school: 'Creation Village (DC/PHL)', destination: 'Philadelphia, PA', pax: 35, paid: 0.00, total: 51300.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '02/03/2027', end: '02/07/2027', id: 'YAFH7O0ASL', leader: 'Rachel Ehrlich', school: 'Ethical Culture Fieldston School', destination: 'Montgomery, AL', pax: 36, paid: 0.00, total: 85830.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/14/2026', status: 'Open Enrollment', depart: '02/04/2027', end: '02/06/2027', id: 'J7PHMGKG5Y', leader: 'Valerie Lucas', school: 'Walpole School', destination: 'Quebec City, QC', pax: 38, paid: 1597.95, total: 34965.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/01/2026', status: 'Open Enrollment', depart: '02/06/2027', end: '02/10/2027', id: '24W5GO9DTQ', leader: 'Stacey Austin Williams', school: 'Cayman Prep - Toronto', destination: 'Toronto, ON', pax: 39, paid: 0.00, total: 80675.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '09/30/2026', status: 'Open Enrollment', depart: '02/07/2027', end: '02/11/2027', id: 'FJFSJR11GY', leader: 'Aly Mitchell', school: 'Black Pine Circle School', destination: 'Washington, D.C.', pax: 17, paid: 0.00, total: 49080.00 },
+    { consultant: 'Tara Marcucci', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/05/2026', status: 'Open Enrollment', depart: '02/24/2027', end: '02/26/2027', id: 'WCBC87FJCE', leader: 'Daniela Hernandez', school: 'Key Point Academy', destination: 'Boston, MA', pax: 36, paid: 4963.28, total: 67620.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '09/14/2026', status: 'Open Enrollment', depart: '02/25/2027', end: '02/27/2027', id: 'VJXRJWNFPD', leader: 'Michelle Areaux', school: 'East Jessamine Middle School', destination: 'Charleston, SC', pax: 96, paid: 10798.78, total: 64843.00 },
+    { consultant: 'Maya Slavkin', manager: null, ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '02/25/2027', end: '02/27/2027', id: '8PUZLQPWJN', leader: 'Kathleen Park', school: 'West Jessamine Middle School', destination: 'Charleston, SC', pax: 55, paid: 0.00, total: 34950.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '07/27/2026', status: 'Open Enrollment', depart: '03/01/2027', end: '03/04/2027', id: 'JQDYMPJ6MF', leader: 'Raychelle Fields', school: 'Equity Alliance Group, Inc.', destination: 'Washington, D.C.', pax: 37, paid: 0.00, total: 0.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '10/09/2026', status: 'Open Enrollment', depart: '03/08/2027', end: '03/10/2027', id: 'CRNN2GQ7SS', leader: 'Rabbi Edwards', school: "Temple B'nai Abraham Makom", destination: 'Washington, D.C.', pax: 38, paid: 1264.77, total: 42175.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '10/09/2026', status: 'Open Enrollment', depart: '03/08/2027', end: '03/11/2027', id: 'TFRMHCZGOG', leader: 'Arthur Dangelo', school: 'Franklin Road Academy', destination: 'Atlanta, GA', pax: 102, paid: 1824.00, total: 117208.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '10/21/2026', status: 'Open Enrollment', depart: '03/10/2027', end: '03/13/2027', id: 'WWMPNHZISX', leader: 'Alissa Jean', school: 'Wheeler High School', destination: 'Washington, D.C.', pax: 42, paid: 0.00, total: 41730.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '03/11/2027', end: '03/15/2027', id: 'TSGOHQHCTE', leader: 'Christina Morgan', school: 'John S. Burke Catholic High School & Academy', destination: 'Orlando, FL', pax: 44, paid: 10700.00, total: 96000.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '10/01/2026', status: 'Open Enrollment', depart: '03/12/2027', end: '03/14/2027', id: '4MAS6WIHLN', leader: 'Natalie Erwin', school: 'Memorial Park Middle School', destination: 'Washington, D.C.', pax: 52, paid: 3934.37, total: 42250.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '03/20/2027', end: '03/26/2027', id: 'ASES6UEAIQ', leader: 'Cami Saliba', school: 'PSUSD College + Culture Tour', destination: 'Washington, D.C.', pax: 42, paid: 0.00, total: 212040.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: '09/30/2026', status: 'Open Enrollment', depart: '03/21/2027', end: '03/24/2027', id: 'DHTKZZUFAO', leader: 'Patricia Sack', school: 'Merion Mercy Academy', destination: 'Boston, MA', pax: 21, paid: 1425.00, total: 30997.75 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '03/22/2027', end: '03/26/2027', id: 'NQHZGC4BPX', leader: 'Haedyn Herren', school: 'Upperman High School', destination: 'New York, NY', pax: 82, paid: 100.00, total: 145425.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '11/06/2026', status: 'Open Enrollment', depart: '03/29/2027', end: '04/01/2027', id: 'H0XYJWCI7E', leader: 'Kendra Paul', school: 'East Iberville High School: V2', destination: 'Atlanta, GA', pax: 50, paid: 0.00, total: 44910.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '09/08/2026', status: 'Open Enrollment', depart: '03/29/2027', end: '04/01/2027', id: 'Q3DXPUWCOA', leader: 'Selynthia Williams', school: 'Thrive Academy', destination: 'Atlanta, GA', pax: 18, paid: 0.00, total: 29444.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '04/04/2027', end: '04/07/2027', id: '1URRLKR0LR', leader: 'Lauren Murphy', school: 'Hebrew Public: 8th grade', destination: 'Washington, D.C.', pax: 55, paid: 0.00, total: 62955.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: '10/15/2026', status: 'Open Enrollment', depart: '04/05/2027', end: '04/07/2027', id: '5JKFZOU02Z', leader: 'Ami Hastings', school: 'YHALE - Boston', destination: 'Boston, MA', pax: 30, paid: 150.00, total: 70000.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: '09/23/2026', status: 'Open Enrollment', depart: '04/05/2027', end: '04/07/2027', id: 'OCDN1KIOC5', leader: 'Lisa Jackson', school: 'Bella Vista Christian Academy', destination: 'Los Angeles, CA', pax: 16, paid: 874.60, total: 28546.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '10/07/2026', status: 'Open Enrollment', depart: '04/06/2027', end: '04/09/2027', id: 'LTXPYLRHBO', leader: 'Daniel Whalley', school: 'Pathfinder Regional Tech High 2027', destination: 'Washington, D.C.', pax: 77, paid: 2210.00, total: 85750.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '09/30/2026', status: 'Open Enrollment', depart: '04/06/2027', end: '04/09/2027', id: 'MHPHZV6XXD', leader: 'Courtney Mora', school: 'Epping Middle School', destination: 'Washington, D.C.', pax: 80, paid: 9846.00, total: 113700.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '12/18/2026', status: 'Open Enrollment', depart: '04/08/2027', end: '04/09/2027', id: 'V4RC48BCWP', leader: 'Lauren Still', school: 'Pleasant Knoll Middle School', destination: 'Atlanta, GA', pax: 148, paid: 3327.69, total: 79515.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '11/30/2026', status: 'Open Enrollment', depart: '04/11/2027', end: '04/15/2027', id: 'KDDGGLASH9', leader: 'Joe Bell', school: 'Fort Bragg High School', destination: 'Washington, D.C.', pax: 29, paid: 1500.00, total: 71874.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '09/29/2026', status: 'Open Enrollment', depart: '04/12/2027', end: '04/14/2027', id: 'WB7VVUVWPU', leader: 'John Bailey', school: 'SKY Academy (Washington, D.C. ONLY)', destination: 'Washington, D.C.', pax: 41, paid: 5288.24, total: 56795.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '09/29/2026', status: 'Open Enrollment', depart: '04/12/2027', end: '04/16/2027', id: '6HAGURVP5Y', leader: 'John Bailey', school: 'SKY Academy (Washington D.C. and New York City)', destination: 'New York, NY', pax: 77, paid: 17074.88, total: 178500.00 },
+    { consultant: 'Maggie Shelton', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '11/20/2026', status: 'Open Enrollment', depart: '04/14/2027', end: '04/19/2027', id: '6ZGWS5KBL5', leader: 'Cheralyn Pinchem', school: 'Boston Latin 2027', destination: 'Atlanta, GA', pax: 32, paid: 0.00, total: 67200.00 },
+    { consultant: 'Michaela Ruffino', manager: null, ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '04/16/2027', end: '04/23/2027', id: 'GPBUY3NN0I', leader: 'Tarra Dayton', school: 'La Salle Academy (France April 2027)', destination: 'France, FR', pax: 20, paid: 0.00, total: 90000.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/23/2026', status: 'Open Enrollment', depart: '04/16/2027', end: '04/18/2027', id: 'MUPDS4C7ES', leader: 'Janice Clark', school: 'John S Burke Catholic High School & Academy', destination: 'Washington, D.C.', pax: 38, paid: 0.00, total: 33250.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '09/21/2026', status: 'Open Enrollment', depart: '04/16/2027', end: '04/19/2027', id: 'QDGMPXEQOV', leader: 'Lataurien Lewis', school: 'Lithonia Middle school', destination: 'Washington, D.C.', pax: 55, paid: 550.00, total: 49850.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '04/16/2027', end: '04/19/2027', id: 'PSXGYSL5QN', leader: 'Julia Auster-Hogan', school: 'The Rivers School', destination: 'Quebec City, QC', pax: 40, paid: 0.00, total: 61425.00 },
+    { consultant: 'Tara Marcucci', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/20/2026', status: 'Open Enrollment', depart: '04/22/2027', end: '04/24/2027', id: 'YEZWVAAYQR', leader: 'Ed Santoro', school: 'Burrillville High School', destination: 'Orlando, FL', pax: 49, paid: 7153.83, total: 92000.00 },
+    { consultant: 'Tara Marcucci', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/16/2026', status: 'Open Enrollment', depart: '04/22/2027', end: '04/24/2027', id: 'YJBRW8GOYS', leader: 'Eddie Adams', school: 'Millbrook High School', destination: 'Nashville, TN', pax: 30, paid: 0.00, total: 54346.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '09/30/2026', status: 'Open Enrollment', depart: '04/23/2027', end: '04/26/2027', id: 'JQLDJTINX6', leader: 'Heather Fortuna', school: 'Freeport High School', destination: 'New York, NY', pax: 50, paid: 20947.32, total: 78639.88 },
+    { consultant: 'Tara Marcucci', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '09/25/2026', status: 'Open Enrollment', depart: '04/23/2027', end: '04/25/2027', id: '1HPCQ4A6W0', leader: 'Dayana Blanco', school: 'Mid Cape Global Charter Academy', destination: 'Washington, D.C.', pax: 49, paid: 357.05, total: 75207.00 },
+    { consultant: 'Maggie Shelton', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/01/2026', status: 'Open Enrollment', depart: '04/30/2027', end: '05/03/2027', id: 'AFHT9A4XEX', leader: 'Erica Polk', school: 'Lutheran North Middle School 2027- Chicago', destination: 'Chicago, IL', pax: 44, paid: 595.84, total: 46600.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '05/05/2027', end: '05/07/2027', id: 'HSSMSM0FWH', leader: 'Kim Diaz', school: 'Wood-Ridge Jr/Sr High School', destination: 'Washington, D.C.', pax: 72, paid: 3384.00, total: 70422.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/23/2026', status: 'Open Enrollment', depart: '05/05/2027', end: '05/07/2027', id: 'TRHLDHLTT0', leader: 'Diane Freeborn', school: 'Quincy Catholic Academy 2027', destination: 'Washington, D.C.', pax: 25, paid: 0.00, total: 34936.00 },
+    { consultant: 'Maggie Shelton', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/14/2026', status: 'Open Enrollment', depart: '05/05/2027', end: '05/07/2027', id: 'IQPG2J11UU', leader: 'Virginia Fouche', school: 'East Jackson Middle School', destination: 'Savannah, GA', pax: 31, paid: 1483.13, total: 24795.00 },
+    { consultant: 'Tara Marcucci', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/26/2026', status: 'Open Enrollment', depart: '05/06/2027', end: '05/08/2027', id: '3HZZF96VOL', leader: 'Rhonda Farrand', school: 'Wellsville Central High School', destination: 'New York, NY', pax: 68, paid: 0.00, total: 64356.00 },
+    { consultant: 'Michaela Ruffino', manager: null, ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '05/06/2027', end: '05/08/2027', id: '1RBLIO8H7U', leader: 'Jennifer Hart', school: 'Bellows Free Academy Fairfax', destination: 'New York, NY', pax: 28, paid: 0.00, total: 31050.00 },
+    { consultant: 'Tara Marcucci', manager: null, ops: 'Martha Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '05/11/2027', end: '05/11/2027', id: 'AAPJSWH4EC', leader: 'Brianah Frazer', school: 'Icahn Charter School 3 -8th Grade', destination: 'Philadelphia, PA', pax: 39, paid: 0.00, total: 13125.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '05/11/2027', end: '05/12/2027', id: 'RXYVAUJ93H', leader: 'Christina Reyes', school: 'Inwood Academy for Leadership 2 day', destination: 'Washington, D.C.', pax: 54, paid: 0.00, total: 23100.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '05/12/2027', end: '05/14/2027', id: 'RJ4I5DOCZY', leader: 'Sally Buller', school: 'Salem School', destination: 'Washington, D.C.', pax: 55, paid: 7591.85, total: 44345.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Iliana Arista', saleType: 'Retention', enrollEnd: '10/09/2026', status: 'Open Enrollment', depart: '05/13/2027', end: '05/15/2027', id: 'CDIR321MQM', leader: 'Clint Depew', school: 'Allegany-Limestone 8th Grade Trip 2027', destination: 'Washington, D.C.', pax: 93, paid: 7850.00, total: 84065.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '05/15/2027', end: '05/18/2027', id: 'IKRLYAOKV8', leader: 'Joshua Holtcamp', school: 'Whitwell Middle School', destination: 'Williamsburg, VA', pax: 49, paid: 143.46, total: 53325.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '05/15/2027', end: '05/17/2027', id: 'YCSTKFXLQ9', leader: 'Megan Curry', school: 'Middlesboro Independent Schools', destination: 'Washington, D.C.', pax: 39, paid: 0.00, total: 31376.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: null, status: 'Open Enrollment', depart: '05/16/2027', end: '05/19/2027', id: 'IU63NG9DOD', leader: 'Lauren Murphy', school: 'Hebrew Public: 7th grade', destination: 'Washington, D.C.', pax: 55, paid: 0.00, total: 62055.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '10/23/2026', status: 'Open Enrollment', depart: '05/18/2027', end: '05/21/2027', id: 'TFPSH9E826', leader: 'Ashley Murray', school: 'Sale Creek Middle High', destination: 'Washington, D.C.', pax: 43, paid: 499.33, total: 56560.00 },
+    { consultant: 'Maggie Shelton', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '11/24/2026', status: 'Open Enrollment', depart: '05/19/2027', end: '05/21/2027', id: 'LMVKDYEGOV', leader: 'Anne Witte', school: 'York Middle School- OBX 2027', destination: 'North Carolina', pax: 53, paid: 4102.00, total: 38416.00 },
+    { consultant: 'Michaela Ruffino', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '12/11/2026', status: 'Open Enrollment', depart: '05/20/2027', end: '05/21/2027', id: 'TFHYX61X4O', leader: 'Raya Soberal', school: 'Cecelia Snyder Middle School', destination: 'Washington, D.C.', pax: 119, paid: 0.00, total: 57750.00 },
+    { consultant: 'Tara Marcucci', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '10/30/2026', status: 'Open Enrollment', depart: '05/23/2027', end: '05/25/2027', id: 'QA11J13J3O', leader: 'Takisha Anderson', school: 'Liberation Academy', destination: 'Washington, D.C.', pax: 49, paid: 0.00, total: 72045.00 },
+    { consultant: 'Tara Marcucci', manager: 'Emily Wilson', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/07/2026', status: 'Open Enrollment', depart: '05/25/2027', end: '05/28/2027', id: '8QWEJKFYQV', leader: 'Peter Cibula', school: 'Ayer Shirley Regional Middle School', destination: 'Washington, D.C.', pax: 126, paid: 6195.03, total: 168820.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'Retention', enrollEnd: '09/25/2026', status: 'Open Enrollment', depart: '05/26/2027', end: '05/27/2027', id: 'HPZGTF7J0S', leader: 'Joan Kennedy', school: 'Chapel School - Pennsylvania 2027', destination: 'Gettysburg, PA', pax: 33, paid: 0.00, total: 24300.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Iliana Arista', saleType: 'New Client', enrollEnd: '09/15/2026', status: 'Open Enrollment', depart: '05/27/2027', end: '05/30/2027', id: '2E7DCR5Q6A', leader: 'Mike Alford', school: "St. Monica-St. Michael, Good Shepherd & Saint Paul's Catholic School", destination: 'Washington, D.C.', pax: 71, paid: 3318.33, total: 102123.00 },
+    { consultant: 'Tara Marcucci', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: '10/20/2026', status: 'Open Enrollment', depart: '06/10/2027', end: '06/11/2027', id: '6AFTDQAOYO', leader: 'Joe & Tia Costello', school: 'Amesbury Middle School 2027', destination: 'Boston, MA', pax: 106, paid: 1410.47, total: 56145.00 },
+    { consultant: 'Tara Marcucci', manager: null, ops: 'Martha Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '06/16/2027', end: '06/16/2027', id: 'ZWW0JAYSUO', leader: 'Brianah Frazer', school: 'Icahn Charter School 3 -7th Grade', destination: 'Philadelphia, PA', pax: 40, paid: 0.00, total: 13500.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'New Client', enrollEnd: '10/08/2026', status: 'Open Enrollment', depart: '06/19/2027', end: '06/23/2027', id: 'ZTPZNJM08I', leader: 'Austin Evans', school: 'Apex Friendship High School', destination: 'Boston, MA', pax: 38, paid: 0.00, total: 96740.00 },
+    { consultant: 'Katherine Faucher', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '10/15/2026', status: 'Open Enrollment', depart: '06/30/2027', end: '07/03/2027', id: 'PZJNEGLCZS', leader: 'Naomi Barron', school: 'Harlandale High Jr. Historians Club', destination: 'Washington, D.C.', pax: 38, paid: 4528.26, total: 63000.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Ericka Montano', saleType: 'Retention', enrollEnd: null, status: 'Open Enrollment', depart: '04/10/2028', end: '04/13/2028', id: 'MYNFLYSWZF', leader: 'Zachary Morgan', school: 'Nash Community College', destination: 'Boston, MA', pax: 33, paid: 0.00, total: 47820.00 },
+    { consultant: 'Maya Slavkin', manager: 'Emily Wilson', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '12/16/2026', status: 'Open Enrollment', depart: '06/12/2028', end: '06/16/2028', id: 'KQMFLD53DH', leader: 'Miranda Tanner', school: 'Reynolds High School - Art Club', destination: 'Orlando, FL', pax: 39, paid: 0.00, total: 108000.00 },
+    { consultant: 'Maya Slavkin', manager: 'Angela Shellberg', ops: 'Martha Montano', saleType: 'New Client', enrollEnd: '02/01/2028', status: 'Open Enrollment', depart: '01/18/2029', end: '01/21/2029', id: 'JFXCLCDPW4', leader: 'Michael Schmeeckle', school: 'Weldon Valley Schools', destination: 'Washington, D.C.', pax: 23, paid: 200.00, total: 46024.00 }
+  ];
+
+  // ---- Derived per-row Pax Status: no such column exists in the reference,
+  // so it's computed here from payments vs. total so the "Pax Status" filter
+  // has real, meaningful data to act on. ----
+  rows.forEach(r => {
+    if (r.total <= 0) r.paxStatus = 'Paid in Full';
+    else if (r.paid <= 0) r.paxStatus = 'Unpaid';
+    else if (r.paid >= r.total - 0.005) r.paxStatus = 'Paid in Full';
+    else r.paxStatus = 'Partial Payment';
+  });
+
+  function parseMDY(str) {
+    if (!str) return null;
+    const [m, d, y] = str.split('/').map(Number);
+    return new Date(y, m - 1, d);
+  }
+  function toInputDate(d) {
+    if (!d) return '';
+    const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+  function fromInputDate(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  const money = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const statusMeta = {
+    'Booked': { cls: 'is-booked' },
+    'Open Enrollment': { cls: 'is-open' },
+    'Cancelled': { cls: 'is-cancelled' }
+  };
+
+  // ---- Populate Sales Person / Destination / Sale Type selects from the
+  // data itself, so the dropdown options can never drift out of sync with
+  // what's actually filterable. ----
+  function populateSelect(id, values) {
+    const select = document.getElementById(id);
+    Array.from(new Set(values)).sort().forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      select.appendChild(opt);
+    });
+  }
+  populateSelect('oe-sales-person', rows.map(r => r.consultant));
+  populateSelect('oe-destination', rows.map(r => r.destination));
+  populateSelect('oe-sale-type', rows.map(r => r.saleType));
+
+  const tbody = document.getElementById('oe-tbody');
+  const emptyState = document.getElementById('oe-empty');
+  const footSummary = document.getElementById('oe-foot-summary');
+  const entriesNote = document.getElementById('oe-entries-note');
+  const searchInput = document.getElementById('oe-search');
+
+  const departBegin = document.getElementById('oe-depart-begin');
+  const departEnd = document.getElementById('oe-depart-end');
+  const bookBegin = document.getElementById('oe-book-begin');
+  const bookEnd = document.getElementById('oe-book-end');
+  const salesPersonSelect = document.getElementById('oe-sales-person');
+  const destinationSelect = document.getElementById('oe-destination');
+  const saleTypeSelect = document.getElementById('oe-sale-type');
+  const paxStatusSelect = document.getElementById('oe-pax-status');
+  const cancelWithPayment = document.getElementById('oe-cancel-with-payment');
+  const cancelWithoutPayment = document.getElementById('oe-cancel-without-payment');
+
+  function readFiltersFromForm() {
+    return {
+      departBegin: fromInputDate(departBegin.value),
+      departEnd: fromInputDate(departEnd.value),
+      bookBegin: fromInputDate(bookBegin.value),
+      bookEnd: fromInputDate(bookEnd.value),
+      salesPerson: salesPersonSelect.value,
+      destination: destinationSelect.value,
+      saleType: saleTypeSelect.value,
+      paxStatus: paxStatusSelect.value,
+      status: (document.querySelector('input[name="oe-status"]:checked') || {}).value || '',
+      cancelWith: cancelWithPayment.checked,
+      cancelWithout: cancelWithoutPayment.checked
+    };
+  }
+
+  function getFiltered() {
+    const f = readFiltersFromForm();
+    const query = searchInput.value.trim().toLowerCase();
+    return rows.filter(r => {
+      if (f.salesPerson && r.consultant !== f.salesPerson) return false;
+      if (f.destination && r.destination !== f.destination) return false;
+      if (f.saleType && r.saleType !== f.saleType) return false;
+      if (f.paxStatus && r.paxStatus !== f.paxStatus) return false;
+      if (f.status && r.status !== f.status) return false;
+
+      if (f.departBegin || f.departEnd) {
+        const d = parseMDY(r.depart);
+        if (f.departBegin && d < f.departBegin) return false;
+        if (f.departEnd && d > f.departEnd) return false;
+      }
+      if (f.bookBegin || f.bookEnd) {
+        const b = parseMDY(r.enrollEnd);
+        if (!b) return false;
+        if (f.bookBegin && b < f.bookBegin) return false;
+        if (f.bookEnd && b > f.bookEnd) return false;
+      }
+
+      if (f.cancelWith || f.cancelWithout) {
+        if (r.status !== 'Cancelled') return false;
+        const matchesWith = f.cancelWith && r.paid > 0;
+        const matchesWithout = f.cancelWithout && r.paid <= 0;
+        if (!matchesWith && !matchesWithout) return false;
+      }
+
+      if (query && !r.leader.toLowerCase().includes(query) && !r.school.toLowerCase().includes(query) && !r.id.toLowerCase().includes(query)) return false;
+
+      return true;
+    });
+  }
+
+  function renderRow(r) {
+    const meta = statusMeta[r.status] || { cls: 'is-open' };
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>' + r.consultant + '</td>' +
+      '<td>' + (r.manager || '<span class="text-[var(--slate)]">No Set</span>') + '</td>' +
+      '<td>' + r.ops + '</td>' +
+      '<td>' + r.saleType + '</td>' +
+      '<td class="num">' + (r.enrollEnd || '<span class="text-[var(--slate)]">No Set</span>') + '</td>' +
+      '<td><span class="status-pill ' + meta.cls + '"><span class="dot"></span>' + r.status + '</span></td>' +
+      '<td class="num">' + r.depart + '</td>' +
+      '<td class="num">' + r.end + '</td>' +
+      '<td><button type="button" class="enroll-id-btn" data-copy="' + r.id + '" title="Copy Id">' + r.id +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+      '</button></td>' +
+      '<td class="wrap">' + r.leader + '</td>' +
+      '<td class="wrap">' + r.school + '</td>' +
+      '<td class="wrap">' + r.destination + '</td>' +
+      '<td class="text-right num">' + r.pax + '</td>' +
+      '<td class="text-right num">' + money(r.paid) + '</td>' +
+      '<td class="text-right num">' + money(r.total) + '</td>';
+    return tr;
+  }
+
+  function renderAll() {
+    const filtered = getFiltered();
+
+    tbody.innerHTML = '';
+    filtered.forEach(r => tbody.appendChild(renderRow(r)));
+    emptyState.classList.toggle('hidden', filtered.length > 0);
+
+    const paxSum = filtered.reduce((s, r) => s + r.pax, 0);
+    const paidSum = filtered.reduce((s, r) => s + r.paid, 0);
+    const totalSum = filtered.reduce((s, r) => s + r.total, 0);
+
+    footSummary.innerHTML =
+      '<div class="foot-summary-left">Total: ' + filtered.length + '</div>' +
+      '<div class="foot-summary-right">' +
+        '<div class="item"><span class="label">Pax</span><span class="value num">' + paxSum.toLocaleString('en-US') + '</span></div>' +
+        '<div class="item"><span class="label">Payments Total</span><span class="value num">' + money(paidSum) + '</span></div>' +
+        '<div class="item"><span class="label">Total</span><span class="value num">' + money(totalSum) + '</span></div>' +
+      '</div>';
+
+    entriesNote.textContent = filtered.length
+      ? 'Showing 1 to ' + filtered.length + ' of ' + filtered.length + ' entries'
+      : 'Showing 0 to 0 of 0 entries';
+  }
+
+  // ---- Instant filtering: every field re-renders the table immediately on
+  // change, no Filter/Clear buttons needed. ----
+  [departBegin, departEnd, bookBegin, bookEnd].forEach(el => el.addEventListener('change', renderAll));
+  [salesPersonSelect, destinationSelect, saleTypeSelect, paxStatusSelect].forEach(el => el.addEventListener('change', renderAll));
+  document.querySelectorAll('input[name="oe-status"]').forEach(el => el.addEventListener('change', renderAll));
+  [cancelWithPayment, cancelWithoutPayment].forEach(el => el.addEventListener('change', renderAll));
+  searchInput.addEventListener('input', renderAll);
+
+  // Delegated so it keeps working across renderAll() re-renders, which
+  // replace tbody's innerHTML on every filter/search change.
+  tbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.enroll-id-btn');
+    if (!btn) return;
+    const value = btn.dataset.copy;
+    navigator.clipboard.writeText(value).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = 'Copied <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>';
+      btn.classList.add('is-copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('is-copied'); }, 1200);
+    }).catch(() => {});
+  });
+
+  // ---- CSV export of the currently filtered rows; Copy/Excel/PDF are
+  // left as inert buttons (no backend to generate those formats in this
+  // static prototype). ----
+  function csvEscape(value) {
+    const s = String(value);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  document.getElementById('oe-csv-btn').addEventListener('click', () => {
+    const filtered = getFiltered();
+    const headers = ['Travel Consultant', 'Account Manager', 'OPS Rep', 'Sale Type', 'Enrollment End Date', 'Enrollment Status', 'Depart Date', 'End Date', 'Id', 'Group Leader Name', 'School', 'Destination Name', 'Pax', 'Payments Total', 'Total'];
+    const lines = [headers.join(',')];
+    filtered.forEach(r => {
+      lines.push([
+        r.consultant, r.manager || 'No Set', r.ops, r.saleType, r.enrollEnd || 'No Set', r.status,
+        r.depart, r.end, r.id, r.leader, r.school, r.destination, r.pax, r.paid.toFixed(2), r.total.toFixed(2)
+      ].map(csvEscape).join(','));
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'open-enrollments.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  renderAll();
+</script>
+
+</body>
+</html>

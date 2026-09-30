@@ -14,26 +14,19 @@
       id: 'proposals-pa', label: 'Proposals P&A',
       icon: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>',
       children: [
-        { id: 'proposals-pa-vendors', label: 'Vendors', href: '#' },
+        { id: 'proposals-pa-vendors', label: 'Vendors', href: 'vendors.html' },
         { id: 'proposals-pa-groups', label: 'Groups', href: '#' },
         { id: 'proposals-pa-product-types', label: 'Product Types', href: '#' },
-        { id: 'proposals-pa-search-product', label: 'Search Product', href: '#' }
+        { id: 'proposals-pa-search-product', label: 'Search Product', href: '#', action: 'search-product' }
       ]
     },
     {
-      id: 'bookings', label: 'Bookings',
+      id: 'bookings', label: 'Bookings Quotes',
       icon: '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
       children: [
-        { id: 'booking-requests', label: 'Booking Requests', href: 'booking-requests.html' },
-        { id: 'bookings-list', label: 'Bookings', href: 'bookings.html' },
-        {
-          id: 'quotes', label: 'Quotes',
-          children: [
-            { id: 'quotes-schools', label: 'Schools', href: '#' },
-            { id: 'quotes-vendors', label: 'Vendors', href: '#' },
-            { id: 'quotes-product-types', label: 'Product Types', href: '#' }
-          ]
-        }
+        { id: 'quotes-schools', label: 'Schools', href: 'schools.html' },
+        { id: 'bookings-list', label: 'Vendors', href: 'vendors.html' },
+        { id: 'product-types', label: 'Product Types', href: '' },
       ]
     },
     {
@@ -41,15 +34,15 @@
       icon: '<circle cx="9" cy="8" r="4"/><path d="M2 20c0-3.9 3.1-7 7-7h1"/><circle cx="18" cy="17" r="3"/><path d="M18 12.5v1M18 20.5v1M22.1 14.75l-.87.5M14.77 19.75l-.87.5M14.77 14.75l.87.5M22.1 19.75l-.87.5"/>',
       children: [
         {
-          id: 'motorcoach', label: 'Motorcoach', href: '#', badge: { count: 4, color: '#8e2d0a' },
+          id: 'motorcoach', label: 'Motorcoach', href: 'motorcoach-reports.html', badge: { count: 4, color: '#8e2d0a' },
           icon: '<rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 12h18"/><path d="M7 6V4M17 6V4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>'
         },
         {
-          id: 'airlines', label: 'Airlines', href: '#', badge: { count: 0, color: '#6b7280' },
+          id: 'airlines', label: 'Airlines', href: 'airlines-reports.html', badge: { count: 0, color: '#6b7280' },
           icon: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.3.5-.1 1.1.4 1.4l5.9 3.3-1.2 1.2c-.5.5-.8 1.1-.8 1.8v.3c0 .5-.2 1-.6 1.4l-1.9 1.9c-.4.4-.4 1 0 1.4l.6.6c.4.4 1 .4 1.4 0l1.9-1.9c.4-.4.9-.6 1.4-.6h.3c.7 0 1.3-.3 1.8-.8l1.2-1.2 3.3 5.9c.3.5.9.7 1.4.4l.5-.3c.4-.2.6-.6.5-1.1z"/>'
         },
         {
-          id: 'hotel', label: 'Hotel', href: '#', badge: { count: 6, color: '#7a9c4e' },
+          id: 'hotel', label: 'Hotel', href: 'hotels-reports.html', badge: { count: 6, color: '#7a9c4e' },
           icon: '<path d="M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7"/><path d="M3 18h18"/><path d="M7 11V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/>'
         },
         { id: 'operations-vendors', label: 'Vendors', href: 'vendors.html' },
@@ -70,6 +63,7 @@
             { id: 'travel-insurance-policies', label: 'Travel Insurance Policies', href: 'travel-insurance-policies.html' },
             { id: 'battleface-travel-protection', label: 'Battleface Travel Protection', href: 'battleface-policies.html' },
             { id: 'booking-quotes', label: 'Booking Quotes', href: 'booking-quotes-report.html' },
+            { id: 'open-enrollments', label: 'Open Enrollments', href: 'open-enrollments.html' },
             { id: 'party-package', label: 'Party Package', href: 'party-package-report.html' },
             { id: 'booked-products', label: 'Booked Products', href: '#' },
             { id: 'product-report', label: 'Product Report', href: 'product-report.html' }
@@ -160,10 +154,14 @@
     if (!item.children) {
       const badgeHtml = item.badge ? '<span class="sub-nav-badge" style="background:' + item.badge.color + '">' + item.badge.count + '</span>' : '';
       const iconHtml = item.icon ? '<svg class="sub-nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + item.icon + '</svg>' : '';
-      return '<a href="' + item.href + '"' + (item.id === activeId ? ' class="is-active"' : '') + '>' + badgeHtml + iconHtml + '<span>' + item.label + '</span></a>';
+      const actionAttr = item.action ? ' data-nav-action="' + item.action + '"' : '';
+      return '<a href="' + item.href + '"' + actionAttr + (item.id === activeId ? ' class="is-active"' : '') + '>' + badgeHtml + iconHtml + '<span>' + item.label + '</span></a>';
     }
 
-    const isOpen = containsActive(item, activeId);
+    // "Quotes" is a permanent shortcut shelf (Schools/Vendors/Product Types),
+    // not a collapsed detail — keep it open whenever the Bookings section
+    // itself is the active page, not just when one of its children is.
+    const isOpen = containsActive(item, activeId) || (item.id === 'quotes' && activeId === 'bookings');
     return '<div id="nav-' + item.id + '" class="sub-nav-group' + (isOpen ? ' is-open is-active-group' : '') +
       '" role="button" tabindex="0" aria-expanded="' + (isOpen ? 'true' : 'false') + '" aria-controls="subnav-' + item.id + '">' +
       '<span>' + item.label + '</span>' +
@@ -177,7 +175,7 @@
   function renderItem(item, activeId) {
     const isParentOfActive = item.children && item.children.some(c => containsActive(c, activeId));
     const isActive = item.id === activeId;
-    const isOpen = isParentOfActive;
+    const isOpen = isActive || isParentOfActive;
 
     if (!item.children) {
       const tag = item.href ? 'a' : 'div';
@@ -226,7 +224,7 @@
               '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>' +
               '<span class="sidebar-label">Settings</span>' +
             '</button>' +
-            '<a href="#" class="sidebar-footer-btn">' +
+            '<a href="#" id="sidebar-signout" class="sidebar-footer-btn">' +
               '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
               '<span class="sidebar-label">Sign-out</span>' +
             '</a>' +
@@ -294,6 +292,111 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeSettingsFlyout();
     });
+
+    // Delegated so this fires from the "Search Product" sidebar link on any
+    // page, replacing what was a native window.prompt() in the original app.
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-nav-action="search-product"]');
+      if (trigger) { e.preventDefault(); openSearchProductModal(); }
+    });
+
+    // Sign-out had no handler at all, so clicking it just jump-scrolled the
+    // page to the top (a real, confusing bug) — there's no auth backend in
+    // this prototype to actually sign out of, so this at least gives honest
+    // feedback instead of a silent no-op. Uses inline styling rather than a
+    // CSS class since sidebar.js is shared across every page and can't rely
+    // on any one page's own <style> block.
+    const signOutBtn = document.getElementById('sidebar-signout');
+    signOutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const label = signOutBtn.querySelector('.sidebar-label');
+      const original = label.textContent;
+      label.textContent = 'Not wired up yet';
+      label.style.opacity = '.6';
+      setTimeout(() => { label.textContent = original; label.style.opacity = ''; }, 1500);
+    });
+  }
+
+  // ---- "Search Product by Pricing ID" modal ----
+  // Self-contained (inline-injected CSS with a unique prefix) so it renders
+  // consistently regardless of which page's own stylesheet is loaded.
+  function ensureSearchProductModal() {
+    if (document.getElementById('gbs-spm-backdrop')) return;
+
+    const style = document.createElement('style');
+    style.id = 'gbs-spm-styles';
+    style.textContent = `
+      .gbs-spm-backdrop{ display:none; position:fixed; inset:0; background:rgba(36,26,21,.55); z-index:500; align-items:center; justify-content:center; padding:1.5rem; }
+      .gbs-spm-backdrop.is-open{ display:flex; }
+      .gbs-spm-panel{ background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:440px; box-shadow:0 20px 50px -12px rgba(36,26,21,.35); font-family:'Poppins',sans-serif; }
+      .gbs-spm-title{ font-size:20px; font-weight:800; color:#242322; letter-spacing:-0.01em; }
+      .gbs-spm-close{ width:32px; height:32px; border-radius:.5rem; display:flex; align-items:center; justify-content:center; color:#6f6a66; background:none; border:none; cursor:pointer; transition:background .15s ease, color .15s ease; }
+      .gbs-spm-close:hover{ background:#f6e9e3; color:#242322; }
+      .gbs-spm-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:#6f6a66; font-weight:700; margin:1.1rem 0 .45rem; display:block; }
+      .gbs-spm-input{ width:100%; border:1px solid #e2dfdc; border-radius:.5rem; padding:.6rem .85rem; font-size:.95rem; font-family:'Poppins',sans-serif; color:#242322; transition:border-color .15s ease, box-shadow .15s ease; }
+      .gbs-spm-input:focus{ outline:none; border-color:#8e2d0a; box-shadow:0 0 0 3px rgba(142,45,10,.15); }
+      .gbs-spm-error{ font-size:.8rem; color:#b3261e; margin-top:.5rem; min-height:1em; }
+      .gbs-spm-actions{ display:flex; align-items:center; gap:.65rem; margin-top:1.25rem; }
+      .gbs-spm-btn{ font-family:'Poppins',sans-serif; font-size:.85rem; font-weight:600; border-radius:.5rem; padding:.6rem 1.2rem; cursor:pointer; border:1px solid transparent; transition:background .15s ease, border-color .15s ease; }
+      .gbs-spm-btn-primary{ background:#8e2d0a; color:#fff; }
+      .gbs-spm-btn-primary:hover{ background:#6c2107; }
+      .gbs-spm-btn-outline{ background:#fff; color:#242322; border-color:#e2dfdc; }
+      .gbs-spm-btn-outline:hover{ background:#f6e9e3; border-color:#c9704d; }
+    `;
+    document.head.appendChild(style);
+
+    const backdrop = document.createElement('div');
+    backdrop.id = 'gbs-spm-backdrop';
+    backdrop.className = 'gbs-spm-backdrop';
+    backdrop.innerHTML =
+      '<div class="gbs-spm-panel" role="dialog" aria-modal="true" aria-labelledby="gbs-spm-title">' +
+        '<div class="flex items-start justify-between gap-3">' +
+          '<h2 class="gbs-spm-title" id="gbs-spm-title">Search Product by Pricing ID</h2>' +
+          '<button type="button" class="gbs-spm-close" id="gbs-spm-close-x" title="Close">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<form id="gbs-spm-form">' +
+          '<label class="gbs-spm-label" for="gbs-spm-input">Pricing ID</label>' +
+          '<input type="text" inputmode="numeric" class="gbs-spm-input" id="gbs-spm-input" placeholder="e.g. 8401" autocomplete="off">' +
+          '<p class="gbs-spm-error" id="gbs-spm-error"></p>' +
+          '<div class="gbs-spm-actions">' +
+            '<button type="submit" class="gbs-spm-btn gbs-spm-btn-primary">Search</button>' +
+            '<button type="button" class="gbs-spm-btn gbs-spm-btn-outline" id="gbs-spm-cancel">Cancel</button>' +
+          '</div>' +
+        '</form>' +
+      '</div>';
+    document.body.appendChild(backdrop);
+
+    const input = document.getElementById('gbs-spm-input');
+    const error = document.getElementById('gbs-spm-error');
+
+    function close() {
+      backdrop.classList.remove('is-open');
+      error.textContent = '';
+    }
+
+    document.getElementById('gbs-spm-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pricingId = input.value.trim();
+      if (!pricingId) { error.textContent = 'Enter a Pricing ID to search.'; return; }
+      window.location.href = 'request-item-detail.html?pricing=' + encodeURIComponent(pricingId);
+    });
+    document.getElementById('gbs-spm-close-x').addEventListener('click', close);
+    document.getElementById('gbs-spm-cancel').addEventListener('click', close);
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop.classList.contains('is-open')) close();
+    });
+  }
+
+  function openSearchProductModal() {
+    ensureSearchProductModal();
+    const backdrop = document.getElementById('gbs-spm-backdrop');
+    document.getElementById('gbs-spm-error').textContent = '';
+    document.getElementById('gbs-spm-input').value = '';
+    backdrop.classList.add('is-open');
+    document.getElementById('gbs-spm-input').focus();
   }
 
   window.GoBlueSidebar = { render: render };

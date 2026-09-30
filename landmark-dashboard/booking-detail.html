@@ -121,6 +121,10 @@
   .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
   .sub-sub-nav a:hover{ color:#fff; }
   .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
 
   .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
   .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
@@ -313,6 +317,31 @@
     .action-menu-handle{ display:block; width:36px; height:4px; border-radius:9999px; background:var(--line); margin:0 auto .65rem; }
     .action-menu-list{ max-height:none; flex:1; }
   }
+
+  /* ---- Confirm modal (replaces window.confirm for the destructive
+     Cancel Booking action) ---- */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(36,26,21,.5); z-index:80;
+    align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .modal-backdrop.is-open{ display:flex; }
+  .modal-panel{
+    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:420px;
+    box-shadow:0 20px 50px -12px rgba(36,26,21,.35);
+  }
+
+  /* ---- Toast: non-blocking feedback for the many admin actions on this
+     page (action menu items, itinerary pills, uploads) that have no backend
+     to act on in this static prototype — so clicking never feels silent. ---- */
+  .toast-stack{ position:fixed; left:50%; bottom:1.5rem; transform:translateX(-50%); z-index:90; display:flex; flex-direction:column; gap:.5rem; align-items:center; pointer-events:none; }
+  .toast{
+    display:inline-flex; align-items:center; gap:.6rem; background:var(--ink); color:#fff; font-size:.83rem; font-weight:600;
+    padding:.7rem 1.1rem; border-radius:.6rem; box-shadow:0 12px 28px -8px rgba(0,0,0,.4); max-width:min(90vw, 360px);
+    opacity:0; transform:translateY(8px); transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.is-visible{ opacity:1; transform:translateY(0); }
+  .toast.is-danger{ background:var(--brick); }
+  .toast svg{ flex-shrink:0; }
 </style>
 </head>
 <body class="antialiased">
@@ -503,7 +532,7 @@
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><circle cx="19" cy="8" r="2"/><path d="M17 21a4 4 0 0 0-3-3.87"/></svg>
                   User Actions
                 </button>
-                <button class="action-menu-item is-danger is-danger-separated" data-label="Cancel Booking">
+                <button class="action-menu-item is-danger is-danger-separated" data-label="Cancel Booking" id="cancel-booking-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
                   Cancel Booking
                 </button>
@@ -521,11 +550,11 @@
           <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Trip Info</h2>
           <div class="flex items-center gap-2 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap" onclick="event.stopPropagation()">
-              <button type="button" class="trip-action-btn is-muted">
+              <button type="button" class="trip-action-btn is-muted js-toast-action" data-toast-label="Proposal Itinerary">
                 Proposal Itinerary
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 2 2.9 6.26 6.9.6-5.2 4.53 1.57 6.75L12 16.9l-6.17 3.24 1.57-6.75-5.2-4.53 6.9-.6z"/></svg>
               </button>
-              <button type="button" class="trip-action-btn is-outline">
+              <button type="button" class="trip-action-btn is-outline js-toast-action" data-toast-label="Booking Itinerary">
                 Booking Itinerary
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 2 2.9 6.26 6.9.6-5.2 4.53 1.57 6.75L12 16.9l-6.17 3.24 1.57-6.75-5.2-4.53 6.9-.6z"/></svg>
               </button>
@@ -533,7 +562,7 @@
                 Booking Requests
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
               </button>
-              <button type="button" class="trip-action-btn is-solid">
+              <button type="button" class="trip-action-btn is-outline js-toast-action" data-toast-label="Itinerary Access Files">
                 Itinerary Access Files
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </button>
@@ -573,7 +602,7 @@
               <h3 class="text-center font-semibold text-base text-[var(--ink)] pb-3 border-b border-[var(--line)]">Products &amp; Details</h3>
 
               <p class="text-xs uppercase tracking-wide text-[var(--slate)] font-semibold mt-4">Products</p>
-              <div class="overflow-x-auto mt-2">
+              <div class="overflow-x-auto mt-2 table-scroll">
                 <table class="data-table">
                   <thead><tr><th>Type</th><th>Product Name</th></tr></thead>
                   <tbody>
@@ -730,12 +759,13 @@
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-documents" role="button" tabindex="0">
           <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Documents</h2>
           <div class="flex items-center gap-3">
-            <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Upload</button>
+            <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold js-upload-btn" data-upload-target="body-documents" onclick="event.stopPropagation()">Upload</button>
             <svg class="collapse-chevron is-open" data-icon-for="body-documents" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
         <div id="body-documents" class="mt-4">
-          <p class="text-sm text-[var(--slate)] text-center py-4">No internal documents have been uploaded for this booking yet.</p>
+          <p class="text-sm text-[var(--slate)] text-center py-4 js-upload-empty">No internal documents have been uploaded for this booking yet.</p>
+          <div class="space-y-2 hidden js-upload-list"></div>
         </div>
       </div>
 
@@ -744,14 +774,17 @@
         <div class="collapse-trigger w-full flex items-center justify-between" data-target="body-customer-docs" role="button" tabindex="0">
           <h2 class="panel-title text-[var(--ink)] flex items-center"><span class="panel-title-bar" style="background:var(--primary);"></span>Customer Trip Documents</h2>
           <div class="flex items-center gap-3">
-            <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" onclick="event.stopPropagation()">Upload</button>
+            <button class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold js-upload-btn" data-upload-target="body-customer-docs" onclick="event.stopPropagation()">Upload</button>
             <svg class="collapse-chevron is-open" data-icon-for="body-customer-docs" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
         <div id="body-customer-docs" class="mt-4">
-          <p class="text-sm text-[var(--slate)] text-center py-4">This section facilitates document uploads for customers to access and download from their dashboards.</p>
+          <p class="text-sm text-[var(--slate)] text-center py-4 js-upload-empty">This section facilitates document uploads for customers to access and download from their dashboards.</p>
+          <div class="space-y-2 hidden js-upload-list"></div>
         </div>
       </div>
+
+      <input type="file" id="doc-upload-input" class="hidden">
 
       <!-- ================= BOOKING AGREEMENTS ================= -->
       <div class="panel p-5 mt-5">
@@ -814,6 +847,21 @@
     </main>
   </div>
 </div>
+
+<!-- ================= CANCEL BOOKING CONFIRM MODAL ================= -->
+<div class="modal-backdrop" id="cancel-booking-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="cancel-booking-title">
+    <h2 class="text-xl font-extrabold text-[var(--ink)]" id="cancel-booking-title">Cancel this booking?</h2>
+    <p class="text-sm text-[var(--slate)] mt-2">This cancels the booking for all travelers. This cannot be undone.</p>
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="cancel-booking-dismiss">Keep Booking</button>
+      <button type="button" class="btn-danger rounded-lg px-4 py-2 text-sm font-semibold" id="cancel-booking-accept">Cancel Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOASTS ================= -->
+<div class="toast-stack" id="toast-stack"></div>
 
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
@@ -918,6 +966,98 @@
       parent.addEventListener('click', () => setGroupOpen(parent, subitems, !parent.classList.contains('is-open')));
     });
   })();
+
+  // ---- Toast: non-blocking feedback in place of window.alert ----
+  const toastStack = document.getElementById('toast-stack');
+  function showToast(message, isDanger) {
+    const toast = document.createElement('div');
+    toast.className = 'toast' + (isDanger ? ' is-danger' : '');
+    toast.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+      (isDanger
+        ? '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>'
+        : '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>') +
+      '</svg><span></span>';
+    toast.querySelector('span').textContent = message;
+    toastStack.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('is-visible'));
+    setTimeout(() => {
+      toast.classList.remove('is-visible');
+      setTimeout(() => toast.remove(), 250);
+    }, 3200);
+  }
+
+  // ---- Action menu items: this prototype has no backend for any of these
+  // (Refunds Process, Invoice, Mass Changes, etc.), so clicking previously
+  // just closed the menu with zero feedback — indistinguishable from the
+  // click not registering at all. Now every item confirms what was clicked;
+  // "Cancel Booking" is destructive, so it opens a confirm step instead. ----
+  document.querySelectorAll('#actions-menu-list .action-menu-item').forEach(item => {
+    if (item.id === 'cancel-booking-item') return;
+    item.addEventListener('click', () => showToast((item.dataset.label || item.textContent.trim()) + ' isn’t available in this prototype.'));
+  });
+
+  const cancelBookingBackdrop = document.getElementById('cancel-booking-backdrop');
+  document.getElementById('cancel-booking-item').addEventListener('click', () => {
+    cancelBookingBackdrop.classList.add('is-open');
+  });
+  document.getElementById('cancel-booking-dismiss').addEventListener('click', () => {
+    cancelBookingBackdrop.classList.remove('is-open');
+  });
+  document.getElementById('cancel-booking-accept').addEventListener('click', () => {
+    cancelBookingBackdrop.classList.remove('is-open');
+    showToast('Booking cancellation requested.', true);
+  });
+  cancelBookingBackdrop.addEventListener('click', (e) => {
+    if (e.target === cancelBookingBackdrop) cancelBookingBackdrop.classList.remove('is-open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cancelBookingBackdrop.classList.contains('is-open')) cancelBookingBackdrop.classList.remove('is-open');
+  });
+
+  // ---- Trip Info pill buttons that have no destination yet (Proposal
+  // Itinerary, Booking Itinerary, Itinerary Access Files) ----
+  document.querySelectorAll('.js-toast-action').forEach(btn => {
+    btn.addEventListener('click', () => showToast(btn.dataset.toastLabel + ' isn’t available in this prototype.'));
+  });
+
+  // ---- Every other href="#" link in the page content (Destination, Check
+  // In/Out, Campus Manager, Trip Page, product rows, agreement PDFs, etc.)
+  // previously jumped the page to top on click with no other effect. Give
+  // real feedback and stop the scroll-jump instead. Scoped to <main> so the
+  // shared sidebar/topbar (sidebar.js/topbar.js) are left untouched. ----
+  document.querySelectorAll('main a[href="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast((link.textContent.trim() || 'That link') + ' isn’t available in this prototype.');
+    });
+  });
+
+  // ---- Document / Customer Trip Document uploads: real client-side
+  // behavior — reads the chosen file's name and lists it, replacing the
+  // empty state, instead of the Upload button doing nothing. ----
+  const docUploadInput = document.getElementById('doc-upload-input');
+  let uploadTargetId = null;
+  document.querySelectorAll('.js-upload-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      uploadTargetId = btn.dataset.uploadTarget;
+      docUploadInput.click();
+    });
+  });
+  docUploadInput.addEventListener('change', () => {
+    const file = docUploadInput.files && docUploadInput.files[0];
+    if (!file || !uploadTargetId) return;
+    const container = document.getElementById(uploadTargetId);
+    container.querySelector('.js-upload-empty').classList.add('hidden');
+    const list = container.querySelector('.js-upload-list');
+    list.classList.remove('hidden');
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 text-sm p-2.5 rounded-lg border border-[var(--line-soft)]';
+    row.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--forest); flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><span class="truncate"></span>';
+    row.querySelector('span').textContent = file.name;
+    list.prepend(row);
+    docUploadInput.value = '';
+    showToast('File uploaded.');
+  });
 </script>
 
 </body>

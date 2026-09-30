@@ -115,6 +115,10 @@
   .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
   .sub-sub-nav a:hover{ color:#fff; }
   .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
 
   .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
   .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
@@ -179,6 +183,32 @@
   .vendor-empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2.5rem 1rem; color:var(--slate); min-height:180px; }
   .vendor-empty-state svg{ opacity:.4; margin-bottom:.75rem; }
   .vendor-empty-state p{ font-size:.85rem; }
+
+  /* ---- Confirm modal (replaces window.confirm for the destructive
+     Cancel Product action) — same modal-backdrop/modal-panel convention
+     used on booking-requests.html ---- */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(36,26,21,.5); z-index:80;
+    align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .modal-backdrop.is-open{ display:flex; }
+  .modal-panel{
+    background:#fff; border-radius:.9rem; padding:1.75rem 2rem; width:100%; max-width:420px;
+    box-shadow:0 20px 50px -12px rgba(36,26,21,.35);
+  }
+
+  /* ---- Toast: lightweight, non-blocking feedback for actions that have no
+     backend to persist to in this static prototype — replaces window.alert
+     so clicking a button never feels like a silent no-op. ---- */
+  .toast-stack{ position:fixed; left:50%; bottom:1.5rem; transform:translateX(-50%); z-index:90; display:flex; flex-direction:column; gap:.5rem; align-items:center; pointer-events:none; }
+  .toast{
+    display:inline-flex; align-items:center; gap:.6rem; background:var(--ink); color:#fff; font-size:.83rem; font-weight:600;
+    padding:.7rem 1.1rem; border-radius:.6rem; box-shadow:0 12px 28px -8px rgba(0,0,0,.4);
+    opacity:0; transform:translateY(8px); transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.is-visible{ opacity:1; transform:translateY(0); }
+  .toast.is-danger{ background:var(--brick); }
+  .toast svg{ flex-shrink:0; }
 </style>
 </head>
 <body class="antialiased">
@@ -221,9 +251,9 @@
           <h2 class="vendor-section-title">Actions</h2>
           <div class="flex flex-wrap items-center gap-3 mt-4">
             <button type="button" class="btn-success rounded-lg px-4 py-2 text-sm font-semibold" id="save-data-btn">Save Data</button>
-            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Finance Tasks</button>
-            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Override</button>
-            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold">Override Cost/Budget</button>
+            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="finance-tasks-btn">Finance Tasks</button>
+            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="override-btn">Override</button>
+            <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="override-cost-btn">Override Cost/Budget</button>
             <button type="button" class="btn-danger rounded-lg px-4 py-2 text-sm font-semibold ml-auto" id="cancel-product-btn">Cancel Product</button>
           </div>
           <p class="vendor-note-warning mt-3" id="confirmed-note">Note: Confirmed products cannot be changed. They must be canceled.</p>
@@ -303,14 +333,10 @@
 
           <div class="mt-6">
             <label class="field-label">Upload Document</label>
-            <input type="file" class="vendor-field-input" style="background:#fff;">
+            <input type="file" class="vendor-field-input" style="background:#fff;" id="upload-file-input">
           </div>
-          <button type="button" class="btn-success rounded-lg px-4 py-2 text-sm font-semibold mt-3">Upload File</button>
-
-          <div class="flex items-center justify-between mt-8 pt-5 border-t border-[var(--line-soft)]">
-            <button type="button" class="btn-success rounded-lg px-5 py-2.5 text-sm font-semibold">Edit</button>
-            <button type="button" class="btn-danger rounded-lg px-5 py-2.5 text-sm font-semibold">Cancel</button>
-          </div>
+          <button type="button" class="btn-success rounded-lg px-4 py-2 text-sm font-semibold mt-3" id="upload-file-btn">Upload File</button>
+          <div class="mt-3 space-y-2" id="uploaded-files-list"></div>
         </div>
 
         <!-- ---- Notes ---- -->
@@ -400,6 +426,21 @@
   </div>
 </div>
 
+<!-- ================= CANCEL PRODUCT CONFIRM MODAL ================= -->
+<div class="modal-backdrop" id="cancel-confirm-backdrop">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="cancel-confirm-title">
+    <h2 class="text-xl font-extrabold text-[var(--ink)]" id="cancel-confirm-title">Cancel this product?</h2>
+    <p class="text-sm text-[var(--slate)] mt-2">This cannot be undone. The product will be marked canceled on this request.</p>
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button type="button" class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold" id="cancel-confirm-dismiss">Keep Product</button>
+      <button type="button" class="btn-danger rounded-lg px-4 py-2 text-sm font-semibold" id="cancel-confirm-accept">Cancel Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOASTS ================= -->
+<div class="toast-stack" id="toast-stack"></div>
+
 <script src="sidebar.js"></script>
 <script src="topbar.js"></script>
 <script>
@@ -466,7 +507,10 @@
 
   const params = new URLSearchParams(window.location.search);
   const productId = Number(params.get('item'));
-  const item = items.find(i => i.productId === productId);
+  const pricingId = Number(params.get('pricing'));
+  const item = params.get('pricing')
+    ? items.find(i => i.pricingId === pricingId)
+    : items.find(i => i.productId === productId);
 
   if (item) {
     const title = item.sub || item.product;
@@ -504,15 +548,77 @@
     document.getElementById('item-not-found').classList.remove('hidden');
   }
 
-  // ---- Save Data / Cancel Product: no-op placeholders (no backend to persist to) ----
+  // ---- Toast: non-blocking feedback in place of window.alert ----
+  const toastStack = document.getElementById('toast-stack');
+  function showToast(message, isDanger) {
+    const toast = document.createElement('div');
+    toast.className = 'toast' + (isDanger ? ' is-danger' : '');
+    toast.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+      (isDanger
+        ? '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>'
+        : '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>') +
+      '</svg><span></span>';
+    toast.querySelector('span').textContent = message;
+    toastStack.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('is-visible'));
+    setTimeout(() => {
+      toast.classList.remove('is-visible');
+      setTimeout(() => toast.remove(), 250);
+    }, 3200);
+  }
+
+  // ---- Save Data / Cancel Product: no backend to persist to in this static
+  // prototype, so these give real, non-blocking confirmation feedback
+  // instead of either doing nothing or blocking on window.alert/confirm. ----
   document.getElementById('save-data-btn').addEventListener('click', () => {
-    alert('Data saved.');
+    showToast('Data saved.');
   });
+
+  const cancelConfirmBackdrop = document.getElementById('cancel-confirm-backdrop');
   document.getElementById('cancel-product-btn').addEventListener('click', () => {
-    if (confirm('Cancel this product? This cannot be undone.')) alert('Product canceled.');
+    cancelConfirmBackdrop.classList.add('is-open');
   });
+  document.getElementById('cancel-confirm-dismiss').addEventListener('click', () => {
+    cancelConfirmBackdrop.classList.remove('is-open');
+  });
+  document.getElementById('cancel-confirm-accept').addEventListener('click', () => {
+    cancelConfirmBackdrop.classList.remove('is-open');
+    showToast('Product canceled.', true);
+  });
+  cancelConfirmBackdrop.addEventListener('click', (e) => {
+    if (e.target === cancelConfirmBackdrop) cancelConfirmBackdrop.classList.remove('is-open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cancelConfirmBackdrop.classList.contains('is-open')) cancelConfirmBackdrop.classList.remove('is-open');
+  });
+
   document.getElementById('drivers-info-btn') && document.getElementById('drivers-info-btn').addEventListener('click', () => {
-    alert('No driver has been assigned yet.');
+    showToast('No driver has been assigned yet.');
+  });
+
+  // ---- Finance Tasks / Override / Override Cost/Budget: no dedicated screens
+  // exist in this prototype, but clicking now gives real feedback instead of
+  // silently doing nothing. ----
+  ['finance-tasks-btn', 'override-btn', 'override-cost-btn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', () => showToast(btn.textContent.trim() + ' isn’t available in this prototype.'));
+  });
+
+  // ---- Upload File: real client-side behavior — reads the chosen file's
+  // name and appends it to a visible list, instead of the button doing
+  // nothing when clicked. ----
+  const uploadInput = document.getElementById('upload-file-input');
+  const uploadedFilesList = document.getElementById('uploaded-files-list');
+  document.getElementById('upload-file-btn').addEventListener('click', () => {
+    const file = uploadInput.files && uploadInput.files[0];
+    if (!file) { showToast('Choose a file first.', true); return; }
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-2 text-sm p-2.5 rounded-lg border border-[var(--line-soft)]';
+    row.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--forest); flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><span class="truncate"></span>';
+    row.querySelector('span').textContent = file.name;
+    uploadedFilesList.prepend(row);
+    uploadInput.value = '';
+    showToast('File uploaded.');
   });
 
   // ---- Request Notes: appends a note card, replacing the empty state ----

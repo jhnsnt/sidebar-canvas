@@ -55,6 +55,17 @@
   .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
   .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
 
+  /* ---- Segmented view toggle (By Date / By Product Type): these two views
+     are mutually exclusive, so they read as one control instead of two
+     same-weight pill buttons ---- */
+  .view-toggle{ display:inline-flex; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:9999px; padding:3px; gap:2px; }
+  .view-toggle button{
+    padding:.5rem 1.05rem; border-radius:9999px; font-size:.82rem; font-weight:600; color:var(--slate);
+    transition:background .15s ease, color .15s ease;
+  }
+  .view-toggle button:hover:not(.is-active){ color:var(--ink); }
+  .view-toggle button.is-active{ background:var(--primary); color:#fff; }
+
   .field-label{ font-family:'Poppins',sans-serif; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.11em; color:var(--slate); font-weight:700; margin-bottom:.45rem; display:block; }
   .text-field{
     width:100%; border:1px solid var(--line); border-radius:.5rem; padding:.55rem .8rem; font-size:.85rem;
@@ -134,6 +145,10 @@
   .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
   .sub-sub-nav a:hover{ color:#fff; }
   .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
 
   .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
   .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
@@ -355,10 +370,15 @@
         <div class="flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--line-soft)]">
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="all-payments-btn">All payments</button>
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="add-product-btn">Add Product</button>
-          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="filter-product-type-btn">Filter by Product Type</button>
-          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="filter-dates-btn">Filter by Dates</button>
-          <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="details-btn">Details</button>
           <button class="btn-action-pill rounded-full px-5 py-2.5 text-sm font-semibold" id="accepted-proposal-btn">Accepted Proposal</button>
+
+          <!-- "Filter by Product Type" / "Filter by Dates" are mutually exclusive
+               view modes, not independent toggles — a segmented control makes
+               that relationship visible instead of two same-weight pills. -->
+          <div class="view-toggle ml-auto" role="group" aria-label="Group items by">
+            <button type="button" id="filter-dates-btn">By Date</button>
+            <button type="button" id="filter-product-type-btn">By Product Type</button>
+          </div>
         </div>
       </div>
 
@@ -858,7 +878,7 @@
     itemModalDates.textContent = dateRange || 'No date set';
 
     itemModalFields.innerHTML =
-      field('Product ID', '<a href="#" class="hover:underline">' + item.productId + '</a>') +
+      field('Product ID', item.productId) +
       field('Pricing ID', item.pricingId) +
       field('Cost', money(modalCost)) +
       field('Price', money(item.price)) +

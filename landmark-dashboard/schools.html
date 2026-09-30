@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landmark Educational Tours — Proposals</title>
+<link rel="icon" href="https://landmarkeducationaltours.com/images/landmark-logo.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#242322;
+    --paper:#f7f6f5;
+    --primary:#8e2d0a;
+    --primary-deep:#6c2107;
+    --primary-light:#c9704d;
+    --sidebar:#241d1a;
+    --sand:#f6e9e3;
+    --line:#e2dfdc;
+    --line-soft:#edebe9;
+    --slate:#6f6a66;
+    --forest:#1f6b45;
+    --forest-tint:#e9f3ee;
+    --amber:#a8710a;
+    --amber-tint:#f7eedb;
+    --brick:#b3261e;
+    --brick-tint:#fbe9e7;
+  }
+  body{ background:var(--paper); color:var(--ink); font-family:'Poppins',sans-serif; }
+  .num{ font-variant-numeric:tabular-nums; }
+
+  .page-title{ font-family:'Poppins',sans-serif; font-size:28px; line-height:1.25; font-weight:900; letter-spacing:-0.03em; }
+  .panel-title{ font-family:'Poppins',sans-serif; font-size:19px; font-weight:800; letter-spacing:-0.01em; color:var(--primary); }
+
+  .btn-primary{ background:var(--primary); color:#fff; transition:background .2s ease; }
+  .btn-primary:hover{ background:var(--primary-deep); }
+  .btn-outline{ background:#fff; color:var(--ink); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; }
+  .btn-outline:hover{ background:var(--sand); border-color:var(--primary-light); }
+
+  .search-input{
+    border:1px solid var(--line); border-radius:.6rem; padding:.5rem .75rem .5rem 2.25rem;
+    font-size:.85rem; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236f6a66' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat .65rem center;
+    transition:border-color .15s ease, box-shadow .15s ease; color:var(--ink); width:240px;
+  }
+  .search-input::placeholder{ color:var(--slate); }
+  .search-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    background:var(--sidebar); width:268px; transition:width .2s ease;
+    position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto;
+  }
+  .sidebar.is-collapsed{ width:76px; }
+  .sidebar.is-collapsed .sidebar-label,
+  .sidebar.is-collapsed .sidebar-chevron,
+  .sidebar.is-collapsed .sidebar-brand-text{ display:none; }
+  .sidebar.is-collapsed .sidebar-toggle svg{ transform:rotate(180deg); }
+
+  @media (max-width:1023px){
+    .sidebar{
+      position:fixed; inset:0 auto 0 0; z-index:50; width:260px;
+      transform:translateX(-100%); transition:transform .25s ease;
+    }
+    .sidebar.is-mobile-open{ transform:translateX(0); }
+    .sidebar.is-collapsed{ width:260px; }
+    .sidebar.is-collapsed .sidebar-label,
+    .sidebar.is-collapsed .sidebar-chevron,
+    .sidebar.is-collapsed .sidebar-brand-text{ display:block; }
+    .sidebar.is-collapsed .nav-item{ gap:.75rem; }
+  }
+  .sidebar-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(11,26,51,.5); z-index:40;
+  }
+  .sidebar-backdrop.is-visible{ display:block; }
+
+  .nav-item{
+    position:relative; display:flex; align-items:center; gap:.75rem; padding:.65rem .9rem .65rem 1.1rem;
+    color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; transition:background .15s ease, color .15s ease; cursor:pointer;
+    border-left:2px solid transparent;
+  }
+  .nav-item:hover{ background:rgba(255,255,255,.05); color:#fff; }
+  .nav-item.is-active{ background:rgba(0,84,161,.22); color:#fff; border-left-color:var(--primary-light); }
+  .nav-item svg{ flex-shrink:0; }
+  .sidebar-chevron{ margin-left:auto; transition:transform .15s ease; }
+  .nav-item.is-open .sidebar-chevron{ transform:rotate(180deg); }
+  .sidebar-logo-white{ filter:brightness(0) invert(1); }
+
+  .sub-nav{ padding:0 1.1rem 0 2.85rem; display:none; }
+  .sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-nav{ display:none !important; }
+  .sub-nav a{ display:flex; align-items:center; gap:.55rem; padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease; }
+  .sub-nav-icon{ flex-shrink:0; opacity:.85; }
+  .sub-nav-badge{ display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; border-radius:9999px; color:#fff; font-size:11px; font-weight:700; padding:0 5px; flex-shrink:0; }
+  .sub-nav a:hover{ color:#fff; }
+  .sub-nav a.is-active{ color:#fff; font-weight:700; }
+
+  .sub-nav-group{
+    display:flex; align-items:center; justify-content:space-between; gap:.5rem; cursor:pointer;
+    padding:.5rem 0; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:600; color:#8fa1b8; transition:color .15s ease;
+  }
+  .sub-nav-group:hover{ color:#fff; }
+  .sub-nav-group.is-active-group{ color:#fff; }
+  .sub-nav-group .sidebar-chevron{ width:12px; height:12px; flex-shrink:0; transition:transform .15s ease; }
+  .sub-nav-group.is-open .sidebar-chevron{ transform:rotate(180deg); }
+
+  .sub-sub-nav{ padding-left:1rem; display:none; }
+  .sub-sub-nav.is-open{ display:block; }
+  .sidebar.is-collapsed .sub-sub-nav{ display:none !important; }
+  .sub-sub-nav a{ display:block; padding:.4rem 0; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; color:#7d90a8; transition:color .15s ease; }
+  .sub-sub-nav a:hover{ color:#fff; }
+  .sub-sub-nav a.is-active{ color:#fff; font-weight:700; }
+  #subnav-quotes{ background:#fff; border-radius:.6rem; padding:.3rem .85rem; margin:.3rem 0; }
+  #subnav-quotes a{ color:var(--ink); font-weight:700; font-size:14.5px; padding:.7rem 0; }
+  #subnav-quotes a:hover{ color:var(--primary); }
+  #subnav-quotes a.is-active{ color:var(--primary); }
+
+  .sidebar-footer{ position:relative; margin-top:.5rem; padding-top:.5rem; border-top:1px solid rgba(255,255,255,.1); }
+  .sidebar-footer-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem 1.1rem 0; }
+  .sidebar-footer-btn{
+    display:flex; align-items:center; gap:.55rem; color:#8ea0b8; font-family:'Poppins',sans-serif; font-size:13px; font-weight:700;
+    background:none; border:none; cursor:pointer; padding:0; transition:color .15s ease;
+  }
+  .sidebar-footer-btn:hover{ color:#fff; }
+  .sidebar-footer-btn svg{ flex-shrink:0; }
+  .settings-flyout{
+    display:none; position:absolute; bottom:100%; left:12px; right:12px; margin-bottom:.6rem;
+    background:#fff; border-radius:.75rem; box-shadow:0 24px 48px -16px rgba(0,0,0,.45);
+    max-height:min(60vh, 420px); overflow-y:auto; padding:.4rem 0; z-index:60;
+  }
+  .settings-flyout.is-open{ display:block; }
+  .settings-flyout a{
+    display:block; padding:.7rem 1.1rem; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:700;
+    color:var(--ink); transition:background .15s ease;
+  }
+  .settings-flyout a:hover{ background:var(--paper); }
+  .sidebar.is-collapsed .settings-flyout{ display:none !important; }
+
+  /* ---- Top action icons ---- */
+  .top-icon-btn{
+    position:relative; width:38px; height:38px; border-radius:.6rem; background:var(--sand); color:var(--primary);
+    display:flex; align-items:center; justify-content:center; transition:background .15s ease; flex-shrink:0;
+  }
+  .top-icon-btn:hover{ background:#dbe9f8; }
+  .top-icon-btn.is-alert{ background:var(--brick-tint); color:var(--brick); }
+  .top-icon-btn.is-alert:hover{ background:#f6d9d9; }
+  .icon-badge-count{
+    position:absolute; top:-5px; right:-5px; background:var(--brick); color:#fff; font-size:11px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:16px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+  .top-icon-divider{ width:1px; align-self:stretch; background:var(--line); flex-shrink:0; margin:0 .1rem; }
+  .mobile-menu-btn{ display:none; }
+  @media (max-width:1023px){ .mobile-menu-btn{ display:flex; } }
+  @media (max-width:639px){ .top-icon-btn{ width:34px; height:34px; } }
+
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:.6rem; min-width:0; }
+
+  .table-scroll{ scrollbar-color:var(--slate) var(--paper); scrollbar-width:thin; }
+  .table-scroll::-webkit-scrollbar{ height:10px; }
+  .table-scroll::-webkit-scrollbar-track{ background:var(--paper); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb{ background:var(--line); border-radius:999px; }
+  .table-scroll::-webkit-scrollbar-thumb:hover{ background:var(--slate); }
+
+  .proposals-table{ width:100%; font-size:13.5px; border-collapse:collapse; }
+  .proposals-table th{
+    text-align:left; font-size:10.5px; line-height:1.4; text-transform:uppercase; letter-spacing:.1em; color:var(--slate);
+    font-weight:700; padding:0 .75rem .6rem; border-bottom:1px solid var(--ink); white-space:nowrap;
+  }
+  .proposals-table td{ padding:.9rem .75rem; border-bottom:1px solid var(--line-soft); color:var(--ink); vertical-align:middle; }
+  .proposals-table tbody tr:hover{ background:var(--paper); }
+  .proposals-table tbody tr:last-child td{ border-bottom:0; }
+  .proposal-view-link{ color:var(--primary); font-weight:600; font-size:13px; text-decoration:underline; background:none; border:none; cursor:pointer; padding:0; font-family:'Poppins',sans-serif; }
+  .proposal-view-link:hover{ color:var(--primary-deep); }
+  .proposal-school{ display:flex; align-items:center; gap:.65rem; font-weight:600; }
+
+  /* ---- Status: labeled pills instead of a bare color dot — a dot alone
+     has no legend anywhere on the page, so it isn't actually scannable to
+     someone new. Pending uses amber (matches the "pending" color used for
+     tasks/enrollments elsewhere), confirmed uses forest. ---- */
+  .status-pill{
+    display:inline-flex; align-items:center; gap:.35rem; font-size:11px; font-weight:700; padding:.25rem .65rem; border-radius:9999px;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .status-pill .dot{ width:6px; height:6px; border-radius:9999px; flex-shrink:0; }
+  .status-pill.is-pending{ background:var(--amber-tint); color:var(--amber); }
+  .status-pill.is-pending .dot{ background:var(--amber); }
+  .status-pill.is-confirmed{ background:var(--forest-tint); color:var(--forest); }
+  .status-pill.is-confirmed .dot{ background:var(--forest); }
+
+  /* ---- Status filter: segmented pill-tabs (same pattern as Open
+     Enrollments' Enrollment Status filter) instead of a bare <select>. ---- */
+  .status-tabs{ display:flex; flex-wrap:wrap; gap:.5rem; }
+  .status-tab{
+    position:relative; display:inline-flex; align-items:center; gap:.45rem; padding:.5rem 1rem;
+    border-radius:9999px; border:1.5px solid var(--line); background:#fff; cursor:pointer; user-select:none;
+    font-size:.8rem; font-weight:600; color:var(--slate); transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .status-tab input{ position:absolute; opacity:0; width:0; height:0; }
+  .status-tab .dot{ width:7px; height:7px; border-radius:9999px; flex-shrink:0; transition:background .15s ease; }
+  .status-tab.is-all .dot{ background:var(--slate); }
+  .status-tab.is-pending .dot{ background:var(--amber); }
+  .status-tab.is-confirmed .dot{ background:var(--forest); }
+  .status-tab:hover{ border-color:var(--primary-light); color:var(--ink); }
+  .status-tab:has(input:checked){ color:#fff; }
+  .status-tab:has(input:checked) .dot{ background:#fff; }
+  .status-tab.is-all:has(input:checked){ background:var(--sidebar); border-color:var(--sidebar); }
+  .status-tab.is-pending:has(input:checked){ background:var(--amber); border-color:var(--amber); }
+  .status-tab.is-confirmed:has(input:checked){ background:var(--forest); border-color:var(--forest); }
+
+  .filter-divider{ width:1px; align-self:stretch; background:var(--line-soft); flex-shrink:0; }
+
+  .proposal-comment-btn{
+    position:relative; width:30px; height:30px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--sand); color:var(--primary); border:none; cursor:pointer; transition:background .15s ease; flex-shrink:0;
+  }
+  .proposal-comment-btn:hover{ background:#ecd9cd; }
+  .comment-count-badge{
+    position:absolute; top:-5px; right:-5px; background:var(--primary); color:#fff; font-size:10px; font-weight:700;
+    line-height:1; padding:.2rem .3rem; border-radius:9999px; min-width:15px; text-align:center; font-family:'Poppins',sans-serif;
+  }
+
+  .empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem; padding:3rem 1rem; text-align:center; }
+  .empty-state svg{ color:var(--line); margin-bottom:.25rem; }
+  .empty-state-title{ font-size:.9rem; font-weight:700; color:var(--ink); }
+  .empty-state-text{ font-size:.8rem; color:var(--slate); }
+
+  .pagination{ display:flex; align-items:center; justify-content:center; gap:.5rem; margin-top:1.5rem; }
+  .page-pill{
+    min-width:36px; height:36px; padding:0 .6rem; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
+    background:var(--primary); color:#fff; font-family:'Poppins',sans-serif; font-size:13.5px; font-weight:700; border:none; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .page-pill:hover{ background:var(--primary-deep); }
+  .page-pill.is-active{ background:var(--primary-deep); box-shadow:0 0 0 2px var(--primary-light); }
+  .page-pill:disabled{ opacity:.4; cursor:not-allowed; }
+
+  /* ---- Quick-view modal: replaces the dead "View"/comment-icon links with
+     a real detail panel + a lightweight in-memory comment thread (session
+     only — there's no backend in this prototype). ---- */
+  .qv-overlay{
+    display:none; position:fixed; inset:0; background:rgba(36,26,21,.45); z-index:70;
+    align-items:center; justify-content:center; padding:1rem;
+  }
+  .qv-overlay.is-open{ display:flex; }
+  .qv-panel{
+    background:#fff; border-radius:.9rem; box-shadow:0 24px 48px -16px rgba(0,0,0,.45);
+    width:100%; max-width:440px; max-height:min(85vh,640px); overflow-y:auto; padding:1.5rem;
+  }
+  .qv-panel-header{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+  .qv-panel-title{ font-family:'Poppins',sans-serif; font-size:17px; font-weight:800; color:var(--ink); }
+  .qv-close-btn{
+    width:30px; height:30px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--paper); color:var(--slate); border:none; cursor:pointer; transition:background .15s ease, color .15s ease; flex-shrink:0;
+  }
+  .qv-close-btn:hover{ background:var(--sand); color:var(--ink); }
+  .qv-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:.55rem 0; border-bottom:1px solid var(--line-soft); }
+  .qv-row:last-of-type{ border-bottom:0; }
+  .qv-row .qv-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate); font-weight:700; flex-shrink:0; }
+  .qv-row .qv-value{ font-size:13.5px; font-weight:600; color:var(--ink); text-align:right; }
+  .qv-comment-section{ margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--line-soft); }
+  .qv-comment-section-title{ font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--slate); font-weight:700; margin-bottom:.6rem; }
+  .qv-comment-list{ display:flex; flex-direction:column; gap:.55rem; margin-bottom:.85rem; max-height:160px; overflow-y:auto; }
+  .qv-comment-item{ background:var(--paper); border-radius:.6rem; padding:.55rem .7rem; font-size:.82rem; color:var(--ink); }
+  .qv-comment-empty{ font-size:.8rem; color:var(--slate); font-style:italic; }
+  .qv-comment-form{ display:flex; gap:.5rem; align-items:flex-start; }
+  .qv-comment-form textarea{
+    flex:1; border:1px solid var(--line); border-radius:.6rem; padding:.55rem .7rem; font-size:.83rem;
+    font-family:'Poppins',sans-serif; color:var(--ink); resize:vertical; min-height:52px; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .qv-comment-form textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(142,45,10,.12); }
+</style>
+</head>
+<body class="antialiased">
+
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR (shared component, see sidebar.js) ================= -->
+  <div id="sidebar-root" style="display:contents"></div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="flex-1 min-w-0">
+
+    <!-- ================= TOP BAR (shared component, see topbar.js) ================= -->
+    <div id="topbar-root" style="display:contents"></div>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="p-4 md:p-6">
+
+      <!-- ---- Page header: breadcrumb + Back ---- -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div class="flex items-center gap-2 min-w-0 text-sm">
+          <a href="index.html" class="flex-shrink-0 text-[var(--slate)] hover:text-[var(--primary)] transition" title="Dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+          </a>
+          <span class="text-[var(--slate)]">/</span>
+          <span class="text-[var(--slate)]">Bookings</span>
+          <span class="text-[var(--slate)]">/</span>
+          <h1 class="page-title text-[var(--ink)] truncate" style="font-size:20px;">Proposals</h1>
+        </div>
+        <button class="btn-outline rounded-lg px-4 py-2 text-sm font-semibold inline-flex items-center gap-2" onclick="window.location.href='index.html'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+      </div>
+
+      <!-- ---- Proposals ---- -->
+      <div class="panel p-5 md:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="panel-title">Proposals</h2>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="status-tabs" id="proposals-status-tabs">
+              <label class="status-tab is-all"><input type="radio" name="proposal-status" value="" checked><span class="dot"></span>All</label>
+              <label class="status-tab is-pending"><input type="radio" name="proposal-status" value="pending"><span class="dot"></span>Pending</label>
+              <label class="status-tab is-confirmed"><input type="radio" name="proposal-status" value="confirmed"><span class="dot"></span>Confirmed</label>
+            </div>
+            <div class="filter-divider hidden sm:block"></div>
+            <input type="text" class="search-input" id="proposals-search" placeholder="Search by school…">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto mt-4 table-scroll">
+          <table class="proposals-table">
+            <thead>
+              <tr>
+                <th>School</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="proposals-tbody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state hidden" id="proposals-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <p class="empty-state-title">No proposals found</p>
+          <p class="empty-state-text">Try a different search term or status filter.</p>
+        </div>
+
+        <div class="pagination" id="proposals-pagination"></div>
+      </div>
+
+      <p class="text-xs text-[var(--slate)] mt-8 pb-6">Landmark Educational Tours CRM &middot; Internal use only</p>
+    </main>
+  </div>
+</div>
+
+<!-- ---- Quick-view modal (shared for the View link and the Comments icon) ---- -->
+<div class="qv-overlay" id="qv-overlay">
+  <div class="qv-panel">
+    <div class="qv-panel-header">
+      <h3 class="qv-panel-title" id="qv-school">&nbsp;</h3>
+      <button type="button" class="qv-close-btn" id="qv-close-btn" aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="qv-row"><span class="qv-label">Status</span><span class="qv-value" id="qv-status"></span></div>
+    <div class="qv-row"><span class="qv-label">Start Date</span><span class="qv-value num" id="qv-start"></span></div>
+    <div class="qv-row"><span class="qv-label">End Date</span><span class="qv-value num" id="qv-end"></span></div>
+
+    <div class="qv-comment-section">
+      <p class="qv-comment-section-title">Comments</p>
+      <div class="qv-comment-list" id="qv-comment-list"></div>
+      <div class="qv-comment-form">
+        <textarea id="qv-comment-input" placeholder="Add a comment…"></textarea>
+        <button type="button" class="btn-primary rounded-lg px-4 py-2 text-sm font-semibold" id="qv-comment-add">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+<script src="topbar.js"></script>
+<script src="table-scroll.js"></script>
+<script>
+  GoBlueSidebar.render('quotes-schools');
+  GoBlueTopBar.render();
+
+  // ---- Proposal data (page 1 matches the reference screenshot exactly;
+  // pages 2-5 are plausible mock entries added for pagination) ----
+  const proposals = [
+    { school: 'Bellows Free Academy Fairfax', start: '05/06/2027', end: '05/08/2027', status: 'pending' },
+    { school: 'Icahn Charter School 3 -8th Grade', start: '05/11/2027', end: '05/11/2027', status: 'pending' },
+    { school: 'Icahn Charter School 3 -7th Grade', start: '06/16/2027', end: '06/16/2027', status: 'pending' },
+    { school: 'La Salle Academy (France April 2027)', start: '04/16/2027', end: '04/23/2027', status: 'pending' },
+    { school: 'Walpole School', start: '02/04/2027', end: '02/06/2027', status: 'pending' },
+    { school: 'Ethical Culture Fieldston School', start: '02/03/2027', end: '02/07/2027', status: 'confirmed' },
+    { school: 'Stagg High School & Pacific Law Academy - DMV', start: '10/05/2026', end: '10/08/2026', status: 'confirmed' },
+    { school: 'Quincy Catholic Academy 2027', start: '05/05/2027', end: '05/07/2027', status: 'pending' },
+    { school: 'Millbrook High School', start: '04/22/2027', end: '04/24/2027', status: 'pending' },
+    { school: 'Hebrew Public: 7th grade', start: '05/16/2027', end: '05/19/2027', status: 'pending' },
+    { school: 'Trinity Preparatory School', start: '03/10/2027', end: '03/13/2027', status: 'pending' },
+    { school: 'Concord Academy 8th Grade', start: '05/20/2027', end: '05/22/2027', status: 'pending' },
+    { school: 'Riverside Christian School', start: '04/02/2027', end: '04/05/2027', status: 'confirmed' },
+    { school: 'North Shore Country Day School', start: '06/01/2027', end: '06/04/2027', status: 'pending' },
+    { school: 'Oakwood Friends School', start: '05/14/2027', end: '05/16/2027', status: 'pending' },
+    { school: 'Berkeley Carroll School - NYC', start: '10/12/2026', end: '10/14/2026', status: 'confirmed' },
+    { school: 'St. Andrew\'s Episcopal School', start: '03/22/2027', end: '03/25/2027', status: 'pending' },
+    { school: 'Chapin School 6th Grade', start: '05/09/2027', end: '05/11/2027', status: 'pending' },
+    { school: 'Lakeside School Boston Trip', start: '04/28/2027', end: '05/01/2027', status: 'pending' },
+    { school: 'Deerfield Academy', start: '11/03/2026', end: '11/06/2026', status: 'confirmed' },
+    { school: 'Windward School 7th Grade', start: '05/18/2027', end: '05/20/2027', status: 'pending' },
+    { school: 'Choate Rosemary Hall', start: '10/20/2026', end: '10/23/2026', status: 'pending' },
+    { school: 'Sacred Heart Academy Chicago', start: '04/09/2027', end: '04/12/2027', status: 'pending' },
+    { school: 'Horace Mann School', start: '05/25/2027', end: '05/28/2027', status: 'confirmed' },
+    { school: 'Groton School DC Trip', start: '03/16/2027', end: '03/19/2027', status: 'pending' },
+    { school: 'Sidwell Friends School', start: '05/02/2027', end: '05/05/2027', status: 'pending' },
+    { school: 'Phillips Exeter Academy', start: '10/28/2026', end: '10/31/2026', status: 'confirmed' },
+    { school: 'Blair Academy 8th Grade', start: '04/14/2027', end: '04/17/2027', status: 'pending' },
+    { school: 'Hotchkiss School NYC Trip', start: '05/30/2027', end: '06/02/2027', status: 'pending' },
+    { school: 'Miss Porter\'s School', start: '03/05/2027', end: '03/08/2027', status: 'pending' },
+    { school: 'Emma Willard School', start: '04/19/2027', end: '04/22/2027', status: 'confirmed' },
+    { school: 'Cranbrook Schools', start: '05/07/2027', end: '05/10/2027', status: 'pending' },
+    { school: 'Cate School California Trip', start: '10/14/2026', end: '10/17/2026', status: 'pending' },
+    { school: 'Thacher School', start: '03/29/2027', end: '04/01/2027', status: 'pending' },
+    { school: 'Woodberry Forest School', start: '05/12/2027', end: '05/15/2027', status: 'confirmed' },
+    { school: 'Episcopal High School DC', start: '04/06/2027', end: '04/09/2027', status: 'pending' },
+    { school: 'Lawrenceville School', start: '10/07/2026', end: '10/10/2026', status: 'pending' },
+    { school: 'Middlesex School', start: '05/23/2027', end: '05/26/2027', status: 'pending' },
+    { school: 'St. Paul\'s School NH', start: '03/12/2027', end: '03/15/2027', status: 'confirmed' },
+    { school: 'Loomis Chaffee School', start: '04/24/2027', end: '04/27/2027', status: 'pending' },
+    { school: 'Kent School', start: '05/03/2027', end: '05/06/2027', status: 'pending' },
+    { school: 'Taft School', start: '03/24/2027', end: '03/27/2027', status: 'confirmed' },
+    { school: 'Milton Academy DC Trip', start: '04/11/2027', end: '04/14/2027', status: 'pending' },
+    { school: 'Andover High School', start: '10/22/2026', end: '10/25/2026', status: 'pending' },
+    { school: 'Brooks School', start: '05/17/2027', end: '05/20/2027', status: 'pending' },
+    { school: 'Salisbury School', start: '03/07/2027', end: '03/10/2027', status: 'confirmed' },
+    { school: 'Hackley School', start: '04/26/2027', end: '04/29/2027', status: 'pending' },
+    { school: 'Trinity-Pawling School', start: '05/09/2027', end: '05/12/2027', status: 'pending' },
+    { school: 'Avon Old Farms School', start: '10/16/2026', end: '10/19/2026', status: 'pending' },
+    { school: 'Westminster School CT', start: '03/19/2027', end: '03/22/2027', status: 'confirmed' }
+  ];
+
+  // ---- Per-proposal comment threads: in-memory only (session state, no
+  // backend in this prototype), keyed by array index. ----
+  const proposalComments = proposals.map(() => []);
+
+  const PAGE_SIZE = 10;
+  let currentPage = 1;
+
+  const tbody = document.getElementById('proposals-tbody');
+  const emptyState = document.getElementById('proposals-empty');
+  const pagination = document.getElementById('proposals-pagination');
+  const searchInput = document.getElementById('proposals-search');
+  const statusTabs = document.querySelectorAll('input[name="proposal-status"]');
+
+  const statusLabels = { pending: 'Pending', confirmed: 'Confirmed' };
+
+  function getFiltered() {
+    const query = searchInput.value.trim().toLowerCase();
+    const status = (document.querySelector('input[name="proposal-status"]:checked') || {}).value || '';
+    return proposals
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => {
+        if (status && p.status !== status) return false;
+        if (query && !p.school.toLowerCase().includes(query)) return false;
+        return true;
+      });
+  }
+
+  function renderPage() {
+    const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+    tbody.innerHTML = '';
+    pageItems.forEach(({ p, i }) => {
+      const commentCount = proposalComments[i].length;
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><span class="proposal-school"><span class="status-pill is-' + p.status + '"><span class="dot"></span>' + statusLabels[p.status] + '</span>' + p.school + '</span></td>' +
+        '<td class="num">' + p.start + '</td>' +
+        '<td class="num">' + p.end + '</td>' +
+        '<td><div class="flex items-center gap-3">' +
+          '<button type="button" class="proposal-view-link" data-idx="' + i + '" data-focus="0">View</button>' +
+          '<button type="button" class="proposal-comment-btn" data-idx="' + i + '" data-focus="1" title="Comments">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
+            (commentCount ? '<span class="comment-count-badge">' + commentCount + '</span>' : '') +
+          '</button>' +
+        '</div></td>';
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.proposal-view-link, .proposal-comment-btn').forEach(el => {
+      el.addEventListener('click', () => openQuickView(Number(el.dataset.idx), el.dataset.focus === '1'));
+    });
+
+    emptyState.classList.toggle('hidden', pageItems.length > 0);
+
+    pagination.innerHTML = '';
+    if (totalPages > 1) {
+      const prevBtn = document.createElement('button');
+      prevBtn.type = 'button';
+      prevBtn.className = 'page-pill';
+      prevBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg>';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener('click', () => { currentPage--; renderPage(); });
+      pagination.appendChild(prevBtn);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'page-pill' + (i === currentPage ? ' is-active' : '');
+        btn.textContent = i;
+        btn.addEventListener('click', () => { currentPage = i; renderPage(); });
+        pagination.appendChild(btn);
+      }
+      const nextBtn = document.createElement('button');
+      nextBtn.type = 'button';
+      nextBtn.className = 'page-pill';
+      nextBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener('click', () => { currentPage++; renderPage(); });
+      pagination.appendChild(nextBtn);
+    }
+  }
+
+  // ---- Quick-view modal: replaces the old dead "View" link / comment
+  // button with a real detail panel that recaps the row's own data plus an
+  // in-memory per-proposal comment thread. ----
+  const qvOverlay = document.getElementById('qv-overlay');
+  const qvSchool = document.getElementById('qv-school');
+  const qvStatus = document.getElementById('qv-status');
+  const qvStart = document.getElementById('qv-start');
+  const qvEnd = document.getElementById('qv-end');
+  const qvCommentList = document.getElementById('qv-comment-list');
+  const qvCommentInput = document.getElementById('qv-comment-input');
+  const qvCommentAdd = document.getElementById('qv-comment-add');
+  let qvActiveIdx = null;
+
+  function renderComments() {
+    const comments = proposalComments[qvActiveIdx];
+    qvCommentList.innerHTML = comments.length
+      ? comments.map(c => '<div class="qv-comment-item">' + c + '</div>').join('')
+      : '<p class="qv-comment-empty">No comments yet.</p>';
+  }
+
+  function openQuickView(idx, focusComment) {
+    qvActiveIdx = idx;
+    const p = proposals[idx];
+    qvSchool.textContent = p.school;
+    qvStatus.innerHTML = '<span class="status-pill is-' + p.status + '"><span class="dot"></span>' + statusLabels[p.status] + '</span>';
+    qvStart.textContent = p.start;
+    qvEnd.textContent = p.end;
+    renderComments();
+    qvOverlay.classList.add('is-open');
+    qvCommentInput.value = '';
+    if (focusComment) qvCommentInput.focus();
+  }
+
+  function closeQuickView() { qvOverlay.classList.remove('is-open'); qvActiveIdx = null; }
+
+  document.getElementById('qv-close-btn').addEventListener('click', closeQuickView);
+  qvOverlay.addEventListener('click', (e) => { if (e.target === qvOverlay) closeQuickView(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && qvOverlay.classList.contains('is-open')) closeQuickView(); });
+
+  qvCommentAdd.addEventListener('click', () => {
+    const text = qvCommentInput.value.trim();
+    if (!text || qvActiveIdx === null) return;
+    proposalComments[qvActiveIdx].push(text);
+    qvCommentInput.value = '';
+    renderComments();
+    renderPage();
+  });
+
+  // ---- Instant filtering: search + status tabs re-render immediately,
+  // no Search/Clear button needed. ----
+  searchInput.addEventListener('input', () => { currentPage = 1; renderPage(); });
+  statusTabs.forEach(el => el.addEventListener('change', () => { currentPage = 1; renderPage(); }));
+
+  renderPage();
+</script>
+
+</body>
+</html>
